@@ -102,7 +102,15 @@ class Admins_shiftsController extends Controller
                
                 return redirect()->route('admin.admins_shifts.index')->with(['error'=>'عفوا الخزنه المختارة بالفعل مستخدمه حاليا لدي شيفت اخر 
                                                 ولا يمكنك استخدامها الا بعد انتهاء شيفت الاخر']);
-            }                                       
+            }      
+            // set shift code
+            $row = get_cols_where_row_orderby(new Admin_shifts(), array("shift_code"), array("com_code" => $com_code), 'id', 'DESC');
+            if (!empty($row)) {
+                $data_insert['shift_code'] = $row['shift_code'] + 1;
+            } else {
+                $data_insert['shift_code'] = 1;
+            }
+ 
 
 
             $data_insert ['admin_id']= $admin_id;

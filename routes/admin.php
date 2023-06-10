@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\Suppliers_categoriesController;
 use App\Http\Controllers\Admin\Admins_shiftsController;
 use App\Http\Controllers\Admin\AdminsControllers;
 use App\Http\Controllers\Admin\CollectController;
+use App\Http\Controllers\Admin\ExchangeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -230,14 +231,25 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
     // end admins shifts
  
  
-    // start admins shifts
+    // start collect_tranaction
         Route::get('/collect_tranaction/index',[CollectController::class, 'index'])->name('admin.collect_tranaction.index');
         Route::get('/collect_tranaction/create',[CollectController::class, 'create'])->name('admin.collect_tranaction.create');
         
         Route::post('/collect_tranaction/store',[CollectController::class, 'store'])->name('admin.collect_tranaction.store');
       
 
-    // end admins shifts
+    // end collect_tranaction
+
+
+    
+    // start Exchange_tranaction
+        Route::get('/exchange_tranaction/index',[ExchangeController::class, 'index'])->name('admin.exchange_tranaction.index');
+        Route::get('/exchange_tranaction/create',[ExchangeController::class, 'create'])->name('admin.exchange_tranaction.create');
+        
+        Route::post('/exchange_tranaction/store',[ExchangeController::class, 'store'])->name('admin.exchange_tranaction.store');
+      
+
+    // end EExchange_tranaction
 } );
 
 

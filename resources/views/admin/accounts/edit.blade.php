@@ -103,8 +103,8 @@
                         <label> حاله التفعيل</label>
                         <select class="form-control" name="is_archived" id="is_archived">
                             <option value="" selected="selected">اختر الحاله </option>
-                            <option {{ old('is_archived',$data['is_archived'])==0? 'selected':'' }} value="1">نعم </option>
-                            <option {{ old('is_archived',$data['is_archived'])==1? 'selected':'' }} value="0">لا </option>
+                            <option {{ old('is_archived',$data['is_archived'])==0? 'selected':'' }} value="0">نعم </option>
+                            <option {{ old('is_archived',$data['is_archived'])==1? 'selected':'' }} value="1">لا </option>
                         </select>
                         @error('is_archived')
                         <span class="text-danger">{{$message}}</span>

@@ -34,7 +34,7 @@
 
 
 
-               <td>@if($info->is_archived==1) مفعل @else معطل @endif</td>
+               <td>@if($info->is_archived==0) مفعل @else معطل @endif</td>
 
                <td>
                   <a href="{{ route('admin.accounts.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>

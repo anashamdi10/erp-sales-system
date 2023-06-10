@@ -53,8 +53,8 @@
 
           </ul>
         </li>
-        <li class="nav-item has-treeview {{ ( (request()->is('admin/account_types*') ||request()->is('admin/accounts*') ||request()->is('admin/customer*') ||request()->is('admin/suppliers_categories*') ||request()->is('admin/suppliers*')||request()->is('admin/collect_tranaction*')) && !request()->is('admin/suppliers_orders*') ) ? 'menu-open':''}} ">
-          <a href="#" class="nav-link {{  ((request()->is('admin/account_types*') ||request()->is('admin/accounts*') ||request()->is('admin/customer*') ||request()->is('admin/suppliers_categories*') ||request()->is('admin/suppliers*')||request()->is('admin/collect_tranaction*') )&& !request()->is('admin/suppliers_orders*'))? 'active':''}} ">
+        <li class="nav-item has-treeview {{ ( (request()->is('admin/account_types*') ||request()->is('admin/accounts*') ||request()->is('admin/customer*') ||request()->is('admin/suppliers_categories*') ||request()->is('admin/suppliers*')||request()->is('admin/collect_tranaction*')||request()->is('admin/exchange_tranaction*')) && !request()->is('admin/suppliers_orders*') ) ? 'menu-open':''}} ">
+          <a href="#" class="nav-link {{  ((request()->is('admin/account_types*') ||request()->is('admin/accounts*') ||request()->is('admin/customer*') ||request()->is('admin/suppliers_categories*') ||request()->is('admin/suppliers*')||request()->is('admin/collect_tranaction*') ||request()->is('admin/exchange_tranaction*'))&& !request()->is('admin/suppliers_orders*'))? 'active':''}} ">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
                الحسابات
@@ -102,6 +102,13 @@
               <a href="{{ route('admin.collect_tranaction.index') }}" class="nav-link {{  (request()->is('admin/collect_tranaction*')   )? 'active':''}}">
                 <p>
                   تحصيل النقدية  
+                </p>
+              </a>
+           </li>
+          <li class="nav-item">
+              <a href="{{ route('admin.exchange_tranaction.index') }}" class="nav-link {{  (request()->is('admin/exchange_tranaction*')   )? 'active':''}}">
+                <p>
+                  صرف النقدية  
                 </p>
               </a>
            </li>

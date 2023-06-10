@@ -113,7 +113,7 @@ class AccountsController extends Controller
             $data_insert['current_balance'] = $data_insert['start_balance'];
             $data_insert['notes'] = $request->notes;
             $data_insert['is_archived'] = $request->is_archived;
-            $data_insert['added_by'] = auth()->user()->id;
+            $data_insert['added_by'] = auth()->user()->name;
             $data_insert['created_at'] = date("Y-m-d H:i:s");
             $data_insert['date'] = date("Y-m-d");
             $data_insert['com_code'] = $com_code;

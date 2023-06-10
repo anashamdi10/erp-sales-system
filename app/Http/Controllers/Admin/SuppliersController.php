@@ -98,7 +98,7 @@ class SuppliersController extends Controller
             
             $data_insert['notes'] = $request->notes;
             $data_insert['active'] = $request->active;
-            $data_insert['added_by'] = auth()->user()->id;
+            $data_insert['added_by'] = auth()->user()->name;
             $data_insert['created_at'] = date("Y-m-d H:i:s");
             $data_insert['date'] = date("Y-m-d");
             $data_insert['com_code'] = $com_code;

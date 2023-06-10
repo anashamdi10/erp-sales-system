@@ -127,7 +127,7 @@ class CustomerController extends Controller
                 $data_insert_account['account_number'] = $data_insert['account_number'];
                 $data_insert_account['account_type'] = 3;
                 $data_insert_account['is_archived'] = $request->active;
-                $data_insert_account['added_by'] = auth()->user()->id;
+                $data_insert_account['added_by'] =  auth()->user()->name;
                 $data_insert_account['created_at'] = date("Y-m-d H:i:s");
                 $data_insert_account['date'] = date("Y-m-d");
                 $data_insert_account['com_code'] = $com_code;
