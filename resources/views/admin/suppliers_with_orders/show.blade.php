@@ -33,7 +33,7 @@
                     <div class="col-lg-6 text-right ">
                     <a href="{{route('admin.suppliers_orders.edit',$data['id'])}}" class="btn btn-sm btn-success" style="margin-right: 50px;"> تعديل</a>
                     <a href="{{ route('admin.suppliers_orders.delete',$data['id']) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
-                    <a href="{{ route('admin.suppliers_orders.do_approve',$data['id']) }}" class="btn btn-sm  are_you_sure btn-primary">الاعتماد</a>
+                    <button id="load_close_approve_invoice" class="btn btn-sm   btn-primary">الاعتماد</button>
 
                     </div>
                 </div>
@@ -207,6 +207,8 @@
                     <input type="hidden" id="ajax_load_edit_item_details" value="{{ route('admin.suppliers_orders.load_edit_item_details') }}">
                     <input type="hidden" id="ajax_load_model_add_details" value="{{ route('admin.suppliers_orders.load_model_add_details') }}">
                     <input type="hidden" id="ajax_edit_item_details" value="{{ route('admin.suppliers_orders.edit_item_details') }}">
+                    <input type="hidden" id="ajax_load_model_approve_invoice" value="{{ route('admin.suppliers_orders.load_model_approve_invoice') }}">
+                    <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}">
                     <input type="hidden" id="autoserailparent" value="{{$data['auto_serial'] }}">
 
                
@@ -310,6 +312,27 @@
                 </div>
                 <div class="modal-body" id="Edit_item_model_body" style="background-color: white !important; color:black">
                   
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between bg-info">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">إغلاق</button>
+
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+
+    <div class="modal fade " id="ModelApproveInvoice">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content bg-info">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center" style="width:100% ;">  اعتماد وترحيل فاتورة مشتريات </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="ModelApproveInvoice_body" style="background-color: white !important; color:black">
+        
                 </div>
             </div>
             <div class="modal-footer justify-content-between bg-info">

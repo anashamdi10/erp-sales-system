@@ -11,6 +11,10 @@ use App\Models\SuppliersModel;
 use App\Models\Inv_itemCard;
 use App\Models\Inv_ums;
 use App\Models\Store;
+use App\Models\Admin_shifts;
+use App\Models\Treasure;
+use App\Models\Treasuries_transactionModel;
+
 
 use Illuminate\Http\Request;
 
@@ -530,7 +534,49 @@ class Suppliers_orderControllers extends Controller
     }
 
 
-    public function do_approve(){}
+    public function load_model_approve_invoice(Request $request){
+       
+        if ($request->ajax()) {
+
+
+            $auto_serial = $request->autoserailparent;
+           
+            $com_code = auth()->user()->com_code;
+            $data = get_cols_where_row(new Suppliers_orderModel(), array('*'), array('auto_serial' => $auto_serial, "com_code" => 
+                                        $com_code, 'order_type' => 1));
+            
+            $user_shifts = get_user_shift(new Admin_shifts(),new Treasure(),new Treasuries_transactionModel());
+            
+            
+                                               
+                
+             
+            return view("admin.suppliers_with_orders.load_model_approve_invoice" , ["data"=>$data , 'user_shifts'=> $user_shifts]);
+            
+            
+        }
+    }
+    public function load_usershiftDiv(Request $request){
+       
+        if ($request->ajax()) {
+
+
+           
+           
+           
+            
+            $user_shifts = get_user_shift(new Admin_shifts(),new Treasure(),new Treasuries_transactionModel());
+            
+            
+                                               
+                
+             
+            return view("admin.suppliers_with_orders.load_usershifts" , [ 'user_shifts'=> $user_shifts]);
+            
+            
+        }
+    }
+ 
 
 
 

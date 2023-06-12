@@ -80,4 +80,17 @@ function get_sum_where($model=null,$field_name,$where=array()){
   return $sum;
 }
 
+function get_user_shift($Admin_shifts ,$Treasure,$Treasuries_transactionModel){
+    $com_code = auth()->user()->com_code;
+    $data = $Admin_shifts::select('shift_code', 'treasures_id')->where(['com_code'=> $com_code,
+                            'is_finished'=>0 , 'admin_id'=>auth()->user()->id])->first();
+    
+    if(!empty($data)){
+      $data['treasures_name'] = $Treasure::where(['com_code'=>$com_code,'id'=>$data['treasures_id']])->value('name');
+      $data['current_blance'] = $Treasuries_transactionModel::where(['shift_code'=>$data['shift_code'],'com_code'=>$com_code])->sum('money');
+      
+    }                        
+    return $data;
+}
+
 

@@ -179,7 +179,7 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/suppliers/ajax_search', [SuppliersController::class, 'ajax_search'])->name('admin.suppliers.ajax_search');
         // end suppliers
 
-        // start suppliers orders
+        // start suppliers orders  purchases
         Route::get('/suppliers_orders/index',[Suppliers_orderControllers::class, 'index'])->name('admin.suppliers_orders.index');
         Route::get('/suppliers_orders/create',[Suppliers_orderControllers::class, 'create'])->name('admin.suppliers_orders.create');
         Route::get('/suppliers_orders/edit/{id}',[Suppliers_orderControllers::class, 'edit'])->name('admin.suppliers_orders.edit');
@@ -199,10 +199,12 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/suppliers_orders/load_edit_item_details', [Suppliers_orderControllers::class, 'load_edit_item_details'])->name('admin.suppliers_orders.load_edit_item_details');
         Route::post('/suppliers_orders/load_model_add_details', [Suppliers_orderControllers::class, 'load_model_add_details'])->name('admin.suppliers_orders.load_model_add_details');
         Route::post('/suppliers_orders/edit_item_details', [Suppliers_orderControllers::class, 'edit_item_details'])->name('admin.suppliers_orders.edit_item_details');
-       
+        Route::post('/suppliers_orders/load_model_approve_invoice', [Suppliers_orderControllers::class, 'load_model_approve_invoice'])->name('admin.suppliers_orders.load_model_approve_invoice');
+        Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_orderControllers::class, 'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
+
         
         
-        // end suppliers orders
+        // end suppliers orders purchases
 
 
          // start Admin treasures
