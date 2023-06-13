@@ -54,14 +54,17 @@ class ExchangeController extends Controller
 
       
         $com_code = auth()->user()->com_code;
-        $trussery_data = get_cols_where_row(new Treasure(),array('last_isal_exchange'),array('id'=>$com_code, 'id'=>$request->treasures_id));
+        $trussery_data = get_cols_where_row(new Treasure(),array('last_isal_exchange'),array('com_code'=>$com_code, 'id'=>$request->treasures_id));
+        if(empty($trussery_data)){
+            return redirect()->back()->with(['error'=>'عفوا بيانات الخزنة غير موجوده '])->withInput();
+        }
         $check_exsits_shifts = get_cols_where_row(new Admin_shifts(),array('treasures_id' , 'shift_code'),array('com_code'=> $com_code,
                                                     'is_finished'=>0 , 'admin_id'=>auth()->user()->id ));
         if(empty( $check_exsits_shifts)){
             return redirect()->back()->with(['error'=> 'عفوا  بيانات الخزنة غير موجوده'  ])->withInput();
         }
 
-        $last_record_Treasuries_transaction =  get_cols_where_row_orderby(new Treasuries_transactionModel(),array('auto_serial'),array('id'=>$com_code), 'auto_serial',"DESC");
+        $last_record_Treasuries_transaction =  get_cols_where_row_orderby(new Treasuries_transactionModel(),array('auto_serial'),array('com_code'=>$com_code), 'auto_serial',"DESC");
  
         if(!empty( $last_record_Treasuries_transaction)) {
             $data_insert['auto_serial'] = $last_record_Treasuries_transaction['auto_serial']+1;

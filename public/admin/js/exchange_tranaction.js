@@ -24,7 +24,7 @@ $(document).ready(function(){
 
         var money = $('#money').val();
         if(money == ''|| money <= 0 ){
-            alert('من فضلك ادخل التاريخ التحصيل ');
+            alert('من فضلك ادخل قيمة  المبلغ المحصل ');
             $('#money').focus();
             return false;
         }

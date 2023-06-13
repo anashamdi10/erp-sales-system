@@ -437,23 +437,6 @@ $(document).ready(function() {
     });
     $(document).on('change', '#pill_type', function(e) {
 
-        var pill_type = $('#pill_type').val();
-        var total_cost = $('#total_cost').val();
-       
-        if(pill_type == 1){
-          
-            $('#what_remain').val(0)
-            $('#what_paid').val(total_cost);
-            $('#what_paid').attr("readonly",true);
-
-          
-        }else{
-           
-            $('#what_remain').val(total_cost)
-            $('#what_paid').val(0);
-            $('#what_paid').attr("readonly",false);
-           
-        }
 
         recalculate_approved();
     });
@@ -525,7 +508,7 @@ $(document).ready(function() {
             alert ("error");
             }
         });
-       
+        recalculate_approved();
     });
 
 
@@ -548,6 +531,7 @@ $(document).ready(function() {
             return false ;
         }
         var total_befor_discount = $('#total_befor_discount').val();
+        
         if(total_befor_discount == ""){
             alert('من فضلك ادخل قيمة الاجمالي قبل الخصم  ');
            
@@ -555,19 +539,19 @@ $(document).ready(function() {
         }
         var discount_type = $('#discount_type').val();
         var discount_percent = $('#discount_percent').val();
-        var discount_value = $('#discount_value').val();
+        
+       
         if(discount_type == 1){
             if(discount_percent>100) {
-                alert('عفوا  لا يمكن ان يكون نسبة الخصم  اكبر من 100 % !!!')
-              
+                alert('عفوا  لا يمكن ان يكون نسبة الخصم  اكبر من 100 % !!!');
                 $('#discount_percent').focuse();
                 return false ;
             };
         }else if(discount_type ==2){
            
-            if(discount_value>total_befor_discount) {
-                alert('عفوا  لا يمكن ان يكون نسبة الخصم  اكبر من اجماليالفاتورة قبل الخصم % !!!')
-               
+            if(parseFloat(discount_value)>parseFloat(total_befor_discount)) {
+                
+                alert('عفوا  لا يمكن ان يكون قيمة  الخصم  اكبر من اجمالي الفاتورة قبل الخصم  !!!')
                 $('#discount_value').focuse();
                 return false ;
             };
@@ -805,12 +789,23 @@ $(document).ready(function() {
            $('#total_cost').val(total_cost)  ;
         }
 
-
+        var pill_type = $('#pill_type').val();
+        var total_cost = $('#total_cost').val();
        
-        
-       
+        if(pill_type == 1){
+          
+            $('#what_remain').val(0)
+            $('#what_paid').val(total_cost);
+            $('#what_paid').attr("readonly",true);
 
-
+          
+        }else{
+           
+            $('#what_remain').val(total_cost)
+            $('#what_paid').val(0);
+            $('#what_paid').attr("readonly",false);
+           
+        }
 
     }
 

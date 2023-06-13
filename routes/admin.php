@@ -187,7 +187,7 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::get('/suppliers_orders/show/{id}',[Suppliers_orderControllers::class, 'show'])->name('admin.suppliers_orders.show');
         Route::get('/suppliers_orders/delete_details/{id}/{id_parent}',[Suppliers_orderControllers::class, 'delete_details'])->name('admin.suppliers_orders.delete_details');
         Route::get('/suppliers_orders/delete/{id}',[Suppliers_orderControllers::class, 'delete'])->name('admin.suppliers_orders.delete');
-        Route::get('/suppliers_orders/do_approved/{id}',[Suppliers_orderControllers::class, 'do_approve'])->name('admin.suppliers_orders.do_approve');
+        Route::get('/suppliers_orders/do_approve/{id}',[Suppliers_orderControllers::class, 'do_approve'])->name('admin.suppliers_orders.do_approve');
         
         Route::post('/suppliers_orders/store',[Suppliers_orderControllers::class, 'store'])->name('admin.suppliers_orders.store');
         Route::post('/suppliers_orders/update/{id}',[Suppliers_orderControllers::class, 'update'])->name('admin.suppliers_orders.update');
@@ -201,6 +201,7 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/suppliers_orders/edit_item_details', [Suppliers_orderControllers::class, 'edit_item_details'])->name('admin.suppliers_orders.edit_item_details');
         Route::post('/suppliers_orders/load_model_approve_invoice', [Suppliers_orderControllers::class, 'load_model_approve_invoice'])->name('admin.suppliers_orders.load_model_approve_invoice');
         Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_orderControllers::class, 'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
+        Route::post('/suppliers_orders/do_approve/{id}', [Suppliers_orderControllers::class, 'do_approve'])->name('admin.suppliers_orders.do_approve');
 
         
         

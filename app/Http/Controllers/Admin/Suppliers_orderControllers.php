@@ -546,11 +546,7 @@ class Suppliers_orderControllers extends Controller
                                         $com_code, 'order_type' => 1));
             
             $user_shifts = get_user_shift(new Admin_shifts(),new Treasure(),new Treasuries_transactionModel());
-            
-            
-                                               
-                
-             
+    
             return view("admin.suppliers_with_orders.load_model_approve_invoice" , ["data"=>$data , 'user_shifts'=> $user_shifts]);
             
             
@@ -559,22 +555,130 @@ class Suppliers_orderControllers extends Controller
     public function load_usershiftDiv(Request $request){
        
         if ($request->ajax()) {
-
-
-           
-           
-           
             
             $user_shifts = get_user_shift(new Admin_shifts(),new Treasure(),new Treasuries_transactionModel());
-            
-            
-                                               
-                
-             
             return view("admin.suppliers_with_orders.load_usershifts" , [ 'user_shifts'=> $user_shifts]);
+        }
+    }
+
+    public function do_approve ($auto_serial , Request $request){
+        $com_code = auth()->user()->com_code;
+        
+        // sheck if approve 
+        $data = get_cols_where_row(new Suppliers_orderModel(),array('is_approved', 'total_cost_items','id','account_number'),
+                                         array('auto_serial'=>$auto_serial, 'order_type'=>1,'com_code'=>$com_code));
+        if($data['is_approved']== 1){
+            return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا لا يمكن اعتماد الفاتورة معتمده من قبل');
+        }
+
+        $dataUpdateParent['tax_percent']= $request->tax_percent;
+        $dataUpdateParent['tax_value']= $request->tax_value;
+        $dataUpdateParent['total_befor_discount']= $request->total_befor_discount;
+        $dataUpdateParent['discount_type']= $request->discount_type;
+        $dataUpdateParent['discount_value']= $request->discount_value;
+        $dataUpdateParent['discount_percent']= $request->discount_percent;
+        $dataUpdateParent['total_cost']= $request->total_cost;
+        $dataUpdateParent['pill_type']= $request->pill_type;
+        $dataUpdateParent['what_paid']= $request->what_paid;
+        $dataUpdateParent['what_remain']= $request->what_remain;
+        $dataUpdateParent['auto_serial']= $auto_serial;
+        $dataUpdateParent['is_approved']= 1;
+        $dataUpdateParent['money_for_account']= $request->total_cost*(-1);
+        $dataUpdateParent['updated_at']= date("Y-m-d H:i:s");
+        $dataUpdateParent['updated_by']= auth()->user()->name;
+
+        
+        // check if pill type is cash 
+        if($request->pill_type == 1){
+            if($request->what_paid !=  $request->total_cost ){
+                return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا يجب ان يكون المبلغ بالكامل مدفوع في حاله ان فاتورة كاش');
+            }
+        }
+
+        // check if pill type is agrl 
+        if($request->pill_type == 2){
+            if($request->what_paid == $request->total_cost ){
+                return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا يجب ان يكون المبلغ بالكامل مدفوع  في حاله ان فاتورة اجل');
+            }
+
             
             
         }
+        
+        if($request->what_paid >0 ){
+            if($request->what_paid > $request->total_cost ){
+                return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا يجب ان يكون المبلغ  مدفوع اكبر من المبلغ الفاتورة ');
+            }
+
+            // check if the user has treasures id 0r money 
+            $user_shift = get_user_shift(new Admin_shifts(),new Treasure(), new Treasuries_transactionModel());
+            
+            if(empty($user_shift)){
+                return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا لا تمتلك شيفت خزنة مفتوحة لكي تتمكن من اتمام عملية الصرف ');
+
+            }
+            
+            
+            if($user_shift['current_blance']  < $request->what_paid ){
+                return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا لا تمتلك رصيد كاف في الخزنة الصرف لكي تتمكن من انمام عملية الصرف   ');
+
+            }
+        }
+
+        $flag = update(new Suppliers_orderModel(),$dataUpdateParent,array('auto_serial'=>$auto_serial, 'order_type'=>1,'com_code'=>$com_code));
+
+        if($flag){
+            // حركات مختلفة 
+            if($request->what_paid>0){
+
+                $trussery_data = get_cols_where_row(new Treasure(),array('last_isal_exchange'),array('com_code'=>$com_code, 'id'=>$user_shift['treasures_id']));
+                if(empty($trussery_data)){
+                   
+                    return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error',' عفوا غير قادر على الوصول الي  بيانات الخزنة المطلوبة   ');
+
+                }
+                
+                $last_record_Treasuries_transaction =  get_cols_where_row_orderby(new Treasuries_transactionModel(),array('auto_serial'),array('com_code'=>$com_code), 'auto_serial',"DESC");
+    
+                if(!empty( $last_record_Treasuries_transaction)) {
+                    $data_insert_Treasuries_transaction['auto_serial'] = $last_record_Treasuries_transaction['auto_serial']+1;
+                }else{
+                    $data_insert_Treasuries_transaction['auto_serial'] = 1;
+                }             
+
+                $data_insert_Treasuries_transaction['isal_number'] = $trussery_data['last_isal_exchange'] +1;
+                $data_insert_Treasuries_transaction['mov_date'] = date("Y-m-d");
+                $data_inser_Treasuries_transactiont['account_number'] = $data['account_number'];
+                $data_insert_Treasuries_transaction['mov_type'] = 9;
+                $data_insert_Treasuries_transaction['treasures_id'] = $user_shift['treasures_id'];
+                // debit مدين
+                $data_insert_Treasuries_transaction['money'] = $request->what_paid * (-1);
+
+                // creadit دائن
+                $data_insert_Treasuries_transaction['money_for_account'] =  $request->what_paid * (1);
+
+                $data_inser_Treasuries_transactiont['the_foregin_key']= $data['auto_serial'];
+                $data_insert_Treasuries_transaction['bayan'] = 'صرف نظير فاتورة مشتريات  رقم '.  $auto_serial;
+                $data_insert_Treasuries_transaction['is_account'] = 1;
+                $data_insert_Treasuries_transaction['is_approved'] = 1;
+                $data_insert_Treasuries_transaction['shift_code'] =  $user_shift['shift_code'];
+                $data_insert_Treasuries_transaction['com_code'] =  $com_code;
+                $data_insert_Treasuries_transaction['created_at']= date("Y-m-d H:i:s");
+                $data_insert_Treasuries_transaction['added_by']= auth()->user()->name;
+                
+                $flage = insert(new Treasuries_transactionModel, $data_insert_Treasuries_transaction);
+
+                if($flage){
+                    $data_to_update['last_isal_exchange'] = $data_insert_Treasuries_transaction['isal_number'];
+                    update(new Treasure() ,  $data_to_update , array('id'=>$com_code, 'id'=>$user_shift['treasures_id']));       
+                }
+            }
+                
+        }
+
+        
+
+
     }
  
 
