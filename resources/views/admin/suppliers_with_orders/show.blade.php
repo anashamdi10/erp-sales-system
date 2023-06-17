@@ -30,10 +30,12 @@
                     <div class="col-lg-6 " style="left: 400px;">
                         <h3 class="card-title"> تفاصيل فاتورة المشتريات </h3>
                     </div>
-                    <div class="col-lg-6 text-right ">
-                    <a href="{{route('admin.suppliers_orders.edit',$data['id'])}}" class="btn btn-sm btn-success" style="margin-right: 50px;"> تعديل</a>
-                    <a href="{{ route('admin.suppliers_orders.delete',$data['id']) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
-                    <button id="load_close_approve_invoice" class="btn btn-sm   btn-primary">الاعتماد</button>
+                    @if($data['is_approved']==0)
+                        <div class="col-lg-6 text-right ">
+                        <a href="{{route('admin.suppliers_orders.edit',$data['id'])}}" class="btn btn-sm btn-success" style="margin-right: 50px;"> تعديل</a>
+                        <a href="{{ route('admin.suppliers_orders.delete',$data['id']) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
+                        <button id="load_close_approve_invoice" class="btn btn-sm   btn-primary">الاعتماد</button>
+                    @endif    
 
                     </div>
                 </div>

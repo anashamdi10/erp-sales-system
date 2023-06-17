@@ -185,10 +185,11 @@ class Inv_itemcardController extends Controller
      */
     public function show($id)
     {
+        
         $data = get_cols_where_row(new Inv_itemCard(), array('*'), array('id' => $id));
-        $com_code = auth()->user()->com_code;
-
-        $data['added_by_admin'] = get_field_value(new Admin(), 'name', array('id' => $data['added_by']));
+       
+        
+        $data['added_by_admin'] = get_field_value(new Admin(), 'name', array('id' => auth()->user()->id));
         $data['inv_itemcard_categories_name'] = get_field_value(new Inv_itemcard_category(), 'name', array('id' => $data['inv_itemcard_categories_id']));
         $data['parent_item_name'] = get_field_value(new Inv_itemCard(), 'name', array('id' => $data['parent_inv_itemcard_id']));
         $data['uom_name'] = get_field_value(new Inv_ums(), 'name', array('id' => $data['uom_id']));

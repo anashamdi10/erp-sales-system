@@ -80,7 +80,7 @@
 
 
                         <div class="form-group">
-                            <label> بيانات  المخاون</label>
+                            <label> بيانات  المخازن</label>
                             <select name="store_id" id="store_id" class="form-control select2 ">
                                 <option  value="">اختر المخزن المستلم للفاتورة</option>
                                 @if (@isset($stores) && !@empty($stores))

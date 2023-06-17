@@ -92,7 +92,7 @@
               </a>
            </li>
           <li class="nav-item">
-              <a href="{{ route('admin.suppliers.index') }}" class="nav-link {{  (request()->is('admin/suppliers*') and !request()->is('admin/suppliers_categories*')  )? 'active':''}}">
+              <a href="{{ route('admin.suppliers.index') }}" class="nav-link {{  (request()->is('admin/suppliers*')   )? 'active':''}}">
                 <p>
                 حسابات  الموردين  
                 </p>
@@ -159,7 +159,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="{{route('inv_itemcard.index')}}" class="nav-link {{  (request()->is('admin/inv_itemcard*')  )? 'active':''}}">
+              <a href="{{route('inv_itemcard.index')}}" class="nav-link {{  (request()->is('admin/inv_itemcard*') and !request()->is('admin/inv_itemcard_categories*') )? 'active':''}}">
                 *
                 <p>
                   الاصناف
@@ -171,7 +171,7 @@
         </li>
 
         <li class="nav-item has-treeview  {{  (request()->is('admin/suppliers_orders*') )? 'menu-open':''}} ">
-          <a href="#" class="nav-link {{  (request()->is('admin/sales_material_types*') ||request()->is('admin/suppliers_orders*') )? 'active':''}} ">
+          <a href="#" class="nav-link {{  ( request()->is('admin/suppliers_orders*') )? 'active':''}} ">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
                حركات مخزنية

@@ -414,6 +414,7 @@ $(document).ready(function() {
 
         if($(this).val()==""){
             $('#discount_percent').val(0);
+            $('#discount_value').val(0);
             $('#discount_percent').attr("readonly" , true);
 
         }else{

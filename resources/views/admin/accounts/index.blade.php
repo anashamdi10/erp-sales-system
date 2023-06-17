@@ -93,7 +93,7 @@
                            <td>
                               <a href="{{ route('admin.accounts.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
                               <a href="{{ route('admin.accounts.delete',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
-                              <a href="{{ route('inv_itemcard.show',$info->id) }}" class="btn btn-sm   btn-info">عرض</a>
+                            
                            </td>
                         </tr>
                         @php
