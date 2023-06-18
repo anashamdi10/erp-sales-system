@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\AccountModel;
+
 function uploadImage($folder, $image)
 {
   $extension = strtolower($image->extension());
@@ -91,6 +93,69 @@ function get_user_shift($Admin_shifts ,$Treasure,$Treasuries_transactionModel){
       
     }                        
     return $data;
+}
+
+function refresh_account_blance($account_number= null , $AccountModel =null , $suppliersModel = null , $Treasuries_transactionModel,$suppliers_with_order , $returnFlage = false){
+  $com_code = auth()->user()->com_code;
+  // نجيب رصيد الافتتاحي للمورد 
+  $AccountData =  $AccountModel::select('start_balance')->where(['com_code'=>$com_code,'account_number'=>$account_number ])->first();
+  // صافي مجموع المشتريات والمبيعات للمورد
+
+  $Net_in_supplier_order = $suppliers_with_order::where(['com_code'=>$com_code,'account_number'=>$account_number ])->sum('money_for_account');
+
+  // صافي حركة النقدية بالخزنة على حساب المورد
+
+  $Net_in_treasuries_transaction = $Treasuries_transactionModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->sum('money_for_account');
+
+
+  // الرصيد النهائي للمورد 
+  $the_final_balance = $AccountData['start_balance'] + $Net_in_supplier_order +  $Net_in_treasuries_transaction ; 
+
+  $dataToUpdateAccount['current_blance'] =  $the_final_balance ;
+            
+              //  تحديث جدول الحسابات المالية 
+    $AccountModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->update($dataToUpdateAccount);    
+    
+    $dataToUpdateSupplier['current_blance'] =  $the_final_balance ;
+    $suppliersModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->update($dataToUpdateSupplier);       
+
+  if($returnFlage){
+    return $the_final_balance ;
+  }
+
+}
+
+function DoUpdateItemCard($item_card_model , $item_code, $Inv_itemcard_batches,$retail_uom_quantityToParent,$does_has_retailunit){
+  
+  $com_code = auth()->user()->com_code;
+  
+  $allQuantityBatches = get_sum_where( $Inv_itemcard_batches, 'quantity',array('com_code'=>$com_code ,
+                                             'item_code' =>$item_code , 'is_send_to_archived'=>0) );
+  $DataToUpdateQuantity['all_quantity'] = $allQuantityBatches;
+  if($does_has_retailunit == 1){
+      // all quantity is reatails كل الكمية بوجده التجزئة 
+      // example 21 kilo
+      
+      $Quantity_All_retail = $allQuantityBatches * $retail_uom_quantityToParent;
+
+      
+      //  2kilo  21/10  => int 2 kilo 
+      $parentQuantityUom = intval( $allQuantityBatches);
+      $DataToUpdateQuantity['quantity'] =$parentQuantityUom; 
+      
+      
+      // % models 21%10  1 
+      
+      
+      $DataToUpdateQuantity['quantity_retail']  = fmod( $Quantity_All_retail,$retail_uom_quantityToParent);
+      $DataToUpdateQuantity['quantity_all_retail'] =$Quantity_All_retail; 
+      
+  }else{
+      $DataToUpdateQuantity['quantity'] = $allQuantityBatches ;
+  }
+
+  update($item_card_model, $DataToUpdateQuantity,array('com_code'=>$com_code , 'item_code' =>$item_code) ); 
+
 }
 
 

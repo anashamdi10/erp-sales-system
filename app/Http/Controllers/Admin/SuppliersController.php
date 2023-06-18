@@ -133,7 +133,7 @@ class SuppliersController extends Controller
                 $data_insert_account['is_parent']=0;
                 $data_insert_account['notes'] = $request->notes;
                 $data_insert_account['account_number'] = $data_insert['account_number'];
-                $data_insert_account['account_type'] = 10;
+                $data_insert_account['account_type'] = 2;
                 $data_insert_account['is_archived'] = $request->active;
                 $data_insert_account['added_by'] = auth()->user()->id;
                 $data_insert_account['created_at'] = date("Y-m-d H:i:s");

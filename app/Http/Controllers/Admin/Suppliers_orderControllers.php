@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Suppliers_ordersRequest;
 use App\Models\Admin;
+use App\Models\AccountModel;
 use App\Models\Suppliers_orderModel;
 use App\Models\Suppliers_with_orders_detailsModel;
 use App\Models\SuppliersModel;
@@ -16,6 +17,7 @@ use App\Models\Treasure;
 use App\Models\Treasuries_transactionModel;
 use App\Models\Inv_itemcard_batches;
 use App\Models\Inv_itemcard_movements;
+
 
 
 use Illuminate\Http\Request;
@@ -46,7 +48,7 @@ class Suppliers_orderControllers extends Controller
     public function create()
     {
         $com_code = auth()->user()->com_code;
-        $suppliers = get_cols_where(new SuppliersModel(), array('supplier_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
+        $suppliers = get_cols_where(new SuppliersModel(), array('supplier_code', 'name'), array('com_code' => $com_code, 'active' => 0), 'id', 'DESC');
         $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
         return view('admin.suppliers_with_orders.create', ['suppliers' => $suppliers, 'stores' => $stores]);
     }
@@ -636,6 +638,12 @@ class Suppliers_orderControllers extends Controller
         $flag = update(new Suppliers_orderModel(),$dataUpdateParent,array('auto_serial'=>$auto_serial, 'order_type'=>1,'com_code'=>$com_code));
 
         if($flag){
+
+
+            // affect on supplier balance هتأثر في وصيد لبمورد 
+
+            refresh_account_blance($data['account_number'],new AccountModel(),new SuppliersModel(),
+                                    new Treasuries_transactionModel(), new Suppliers_orderModel(),false);
             // حركات مختلفة 
             if($request->what_paid>0){
 
@@ -656,7 +664,7 @@ class Suppliers_orderControllers extends Controller
 
                 $data_insert_Treasuries_transaction['isal_number'] = $trussery_data['last_isal_exchange'] +1;
                 $data_insert_Treasuries_transaction['mov_date'] = date("Y-m-d");
-                $data_inser_Treasuries_transactiont['account_number'] = $data['account_number'];
+                $data_insert_Treasuries_transaction['account_number'] = $data['account_number'];
                 $data_insert_Treasuries_transaction['mov_type'] = 9;
                 $data_insert_Treasuries_transaction['treasures_id'] = $user_shift['treasures_id'];
                 // debit مدين
@@ -665,7 +673,7 @@ class Suppliers_orderControllers extends Controller
                 // creadit دائن
                 $data_insert_Treasuries_transaction['money_for_account'] =  $request->what_paid * (1);
 
-                $data_inser_Treasuries_transactiont['the_foregin_key']= $data['auto_serial'];
+                $data_insert_Treasuries_transaction['the_foregin_key']= $data['auto_serial'];
                 $data_insert_Treasuries_transaction['bayan'] = 'صرف نظير فاتورة مشتريات  رقم '.  $auto_serial;
                 $data_insert_Treasuries_transaction['is_account'] = 1;
                 $data_insert_Treasuries_transaction['is_approved'] = 1;
@@ -673,12 +681,16 @@ class Suppliers_orderControllers extends Controller
                 $data_insert_Treasuries_transaction['com_code'] =  $com_code;
                 $data_insert_Treasuries_transaction['created_at']= date("Y-m-d H:i:s");
                 $data_insert_Treasuries_transaction['added_by']= auth()->user()->name;
-                
+               
                 $flage = insert(new Treasuries_transactionModel, $data_insert_Treasuries_transaction);
+                
 
                 if($flage){
                     $data_to_update['last_isal_exchange'] = $data_insert_Treasuries_transaction['isal_number'];
                     update(new Treasure() ,  $data_to_update , array('id'=>$com_code, 'id'=>$user_shift['treasures_id']));       
+                }else{
+                    return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','حدث خطأ ما ');
+  
                 }
             }
                 
@@ -689,7 +701,7 @@ class Suppliers_orderControllers extends Controller
         if (!empty($items)) {
         foreach ($items as $info) {
             //get itemCard Data
-            $itemCard_data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quantityToParent", "retail_uom_id"), array("com_code" => $com_code, "item_code" => $info->item_code));       
+            $itemCard_data = get_cols_where_row(new Inv_itemCard(), array("uom_id", "retail_uom_quantityToParent", "retail_uom_id",'cost_price_retail','does_has_retailunit' ), array("com_code" => $com_code, "item_code" => $info->item_code));       
                     
             
             
@@ -698,6 +710,10 @@ class Suppliers_orderControllers extends Controller
                 // get quantity before any action  in all stores 
                 $quantityBeforeMove = get_sum_where(new Inv_itemcard_batches(), 'quantity',
                                 array('item_code'=>$info->item_code,'com_code'=>$com_code));
+                // نجيب كمية الصنف بمخزن الفاتورة الحالي قبل الحركة 
+                $quantityBeforeMoveCurrentStore = get_sum_where(new Inv_itemcard_batches(), 'quantity',
+                array('item_code'=>$info->item_code,'com_code'=>$com_code, 'store_id' => $data['store_id']));
+                                
                 $Main_uom_name =get_field_value(new Inv_ums(),'name', array('com_code'=>$com_code,'id'=>$itemCard_data['uom_id']));
                
                         // بندخل كميات للخزن بوحده قياس الاب اجباري 
@@ -705,11 +721,15 @@ class Suppliers_orderControllers extends Controller
                         if($info->isparentuom == 1){
                             $quantity = $info->dliverd_quantity ; 
                             $unit_price = $info->unit_price;
+                           
+                           
                         }else{
                             // لو كان الوحده ابن 
-                            $quantity = ($info->dliverd_quantity) /$itemCard_data['retail_uom_quantityToParent'] ;
+                            $quantity = ($info->dliverd_quantity /$itemCard_data['retail_uom_quantityToParent'] );
                             $unit_price = $info->unit_price * $itemCard_data['retail_uom_quantityToParent'];
-
+                           
+                           
+                           
                         }
                             
                             // دخل بيانات جدول باتشات 
@@ -735,11 +755,12 @@ class Suppliers_orderControllers extends Controller
                         }
 
                         $OldBatchesExsist = get_cols_where_row(new Inv_itemcard_batches(), array('id','quantity','unit_cost_price'),$datainsert_batch);
-                        
+
                         if(!empty($OldBatchesExsist)){
                             // تحديث باتش قديمة 
 
                             $dataupdate_batch['quantity'] = $OldBatchesExsist['quantity'] + $quantity;
+                            
                             $dataupdate_batch['toatal_cost_price'] = $OldBatchesExsist['unit_cost_price'] * $dataupdate_batch['quantity'] ;
 
                             $dataupdate_batch['updated_at']= date("Y-m-d H:i:s");
@@ -751,42 +772,69 @@ class Suppliers_orderControllers extends Controller
                         }else{
                         // ادخال باتش جديده
 
-                        $datainsert_batch['quantity'] = $quantity; 
-                        $datainsert_batch['toatal_cost_price'] = $info->total_price;
-                        $datainsert_batch['com_code'] = $com_code;
-                        
-                        $datainsert_batch['created_at']= date("Y-m-d H:i:s");
-                        $datainsert_batch['added_by']= auth()->user()->name;
-                        
+                            $datainsert_batch['quantity'] = $quantity; 
+
+                            
+
+                            $datainsert_batch['toatal_cost_price'] = $info->total_price;
+                            $datainsert_batch['com_code'] = $com_code;
+                            
+                            $datainsert_batch['created_at']= date("Y-m-d H:i:s");
+                            $datainsert_batch['added_by']= auth()->user()->name;
+                            
 
 
-                        $row  = get_cols_where_row_orderby(new Inv_itemcard_batches(), array("auto_serial",'id','quantity'), array("com_code" => $com_code), 'id', 'DESC');
-                        if (!empty($row)) {
-                            $datainsert_batch['auto_serial'] = $row['auto_serial'] + 1;
-                        } else {
-                            $datainsert_batch['auto_serial'] = 1;
-                        }
+                            $row  = get_cols_where_row_orderby(new Inv_itemcard_batches(), array("auto_serial",'id','quantity'), array("com_code" => $com_code), 'id', 'DESC');
+                            if (!empty($row)) {
+                                $datainsert_batch['auto_serial'] = $row['auto_serial'] + 1;
+                            } else {
+                                $datainsert_batch['auto_serial'] = 1;
+                            }
 
-                        insert(new Inv_itemcard_batches(), $datainsert_batch);
+                            insert(new Inv_itemcard_batches(), $datainsert_batch);
     
                         }
 
-
-
-                        // item move card
-                        
+                        // كمية الصنف بكل المخازن بعد اتمام حركة بكل باتشات 
                         $quantityAfterMove = get_sum_where(new Inv_itemcard_batches() , 'quantity', 
                         array('com_code'=>$com_code , 'item_code' => $info->item_code));
+                        // كمية الصنف بمخزن الفاتورة الشراء بعد اتمام حركة بكل باتشات 
+                        $quantityAfterMoveCurrentStore = get_sum_where(new Inv_itemcard_batches() , 'quantity', 
+                        array('com_code'=>$com_code , 'item_code' => $info->item_code, 'store_id'=>$data['store_id']));
                         
+
 
                         $itemMovementInsert['inv_itemcard_movements_categories']= 1;
                         $itemMovementInsert['item_code']= $info->item_code;
                         $itemMovementInsert['items_movements_types']=1;
+                        // كود الفاتورة الاب
                         $itemMovementInsert['FK_table']=$auto_serial;
+
+                        // كود الصف الابن بتفاصيل الفاتورة 
                         $itemMovementInsert['FK_table_details']=$info->id;
                         $itemMovementInsert['byan']='نظير مشتريات من المورد  ' .' ' . $supplier_name . 'رقم الفاتورة ' .$auto_serial ;
+                        
+                        // كمية الصنف بكل المخازن قبل الحركة 
                         $itemMovementInsert['quantity_befor_movement']='عدد ' . " " . ($quantityBeforeMove *1) . ' ' . $Main_uom_name ;
-                        $itemMovementInsert['quantity_after_move']='عدد ' . " " . ($quantityAfterMove  *1) . ' ' . $Main_uom_name;
+                        $itemMovementInsert['quantity_after_move']='عدد ' . " " . ($quantityAfterMove *1) . ' ' . $Main_uom_name ;
+                        
+                        // كمية الصنف  بالمخزن الحالي بعد  الحركة 
+                        
+                        // كمية الصنف  بالمخزن الحالي قبل  الحركة 
+                        $itemMovementInsert['quantity_befor_move_store']='عدد ' . " " . ($quantityBeforeMoveCurrentStore *1) . ' ' . $Main_uom_name ;
+                        
+                        
+                        
+                        // كمية الصنف  بالمخزن الحالي بعد  الحركة 
+                        $itemMovementInsert['quantity_after_move_store']='عدد ' . " " . ($quantityAfterMoveCurrentStore  *1) . ' ' . $Main_uom_name;
+
+                        
+                        
+                        
+                        
+                        
+                        $itemMovementInsert['store_id']= $data['store_id'];
+                        
                         $itemMovementInsert['added_by']= auth()->user()->name;
                         $itemMovementInsert['created_at']= date("Y-m-d H:i:s");
                         $itemMovementInsert['date']= date("Y-m-d ");
@@ -796,7 +844,31 @@ class Suppliers_orderControllers extends Controller
 
 
                     }
+                    // تحديث اخر سعر شراء للصنف 
+                    if($info->isparentuom == 1){
+                       $dataToUpdateitemCardCost ['cost_price'] = $info->unit_price;
+                      
+                       if($itemCard_data['does_has_retailunit'] == 1){
+                           
+                            $dataToUpdateitemCardCost['cost_price_retail'] =$info->unit_price/$itemCard_data['retail_uom_quantityToParent'];
+                           
+                       }
+                        
+                    }else{
+                        // لو كان الوحده ابن 
+                        $dataToUpdateitemCardCost ['cost_price'] = $info->unit_price * $itemCard_data['retail_uom_quantityToParent'];
+                        $dataToUpdateitemCardCost ['cost_price_retail'] = $info->unit_price;
+                    }
+
+                    update(new Inv_itemCard(), $dataToUpdateitemCardCost ,array('com_code'=>$com_code , 'item_code' =>$info->item_code));
+
+                    //up date item card  quantity mirror  تحديث المراه الرئيسية للصنف 
+                    // نجيب كمية الصنف من جدول الباتشات 
+                    DoUpdateItemCard(new Inv_itemCard(),$info->item_code,new Inv_itemcard_batches(),$itemCard_data['retail_uom_quantityToParent'],
+                    $itemCard_data['does_has_retailunit']);
+
         }
+
 
         return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('success','تم الاعتماد وترحيل الفاتورة بنجاح ');
 

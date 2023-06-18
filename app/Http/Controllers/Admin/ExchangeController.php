@@ -8,9 +8,11 @@ use App\Models\Treasure;
 use App\Models\Mov_type;
 use App\Models\Admin_shifts;
 use App\Models\AccountModel;
+use App\Models\Suppliers_orderModel;
 use App\Http\Requests\Trasuries_transactionRequest;
 
 use App\Models\account_typeModel;
+use App\Models\SuppliersModel;
 
 
 use Illuminate\Http\Request;
@@ -93,13 +95,16 @@ class ExchangeController extends Controller
         $data_insert['added_by']= auth()->user()->name;
         
         $flage = insert(new Treasuries_transactionModel, $data_insert);
-
+        
         if($flage){
             $data_to_update['last_isal_exchange'] = $data_insert['isal_number'];
             update(new Treasure() ,  $data_to_update , array('id'=>$com_code, 'id'=>$request->treasures_id));       
+            refresh_account_blance($request->account_number,new AccountModel(),new SuppliersModel(),
+            new Treasuries_transactionModel(), new Suppliers_orderModel(),false);
+          
+            return redirect()->route('admin.exchange_tranaction.index')->with(['success'=> 'تم تحصيل بنجاح']);
         }
 
-        return redirect()->back()->with('seccess' , 'تم الصرف بنجاح ');
 
     }
 }

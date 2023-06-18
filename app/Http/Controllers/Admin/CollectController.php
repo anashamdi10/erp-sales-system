@@ -12,7 +12,8 @@ use App\Models\account_typeModel;
 use App\Models\Treasure;
 use App\Models\Mov_type;
 
-
+use App\Models\Suppliers_orderModel;
+use App\Models\SuppliersModel;
 use Illuminate\Http\Request;
 
 class CollectController extends Controller
@@ -109,7 +110,9 @@ class CollectController extends Controller
                 if($flage){
                     
                     Treasure::where(['com_code'=>$com_code , 'id'=>$request->treasures_id])->update(["last_isal_collect"=>$data_insert['isal_number']]);
-                    return redirect()->route('admin.collect_tranaction.index')->with(['success'=> 'تم تحصيل بنجاح '  ]);
+                    refresh_account_blance($request->account_number,new AccountModel(),new SuppliersModel(),new Treasuries_transactionModel(),new Suppliers_orderModel(),false);
+                    
+                    return redirect()->route('admin.collect_tranaction.index')->with(['success'=> 'تم تحصيل بنجاح']);
                 }else{
                     return redirect()->back()->with(['error'=> 'عفوا حدث خطأ م من فضلك حاول مرة اخرى '  ])->withInput();
 

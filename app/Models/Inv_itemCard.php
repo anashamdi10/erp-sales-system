@@ -14,6 +14,6 @@ class Inv_itemCard extends Model
          'does_has_retailunit', 'retail_uom_id', 'uom_id', 'retail_uom_quantityToParent',"added_by",
          'update_by', 'created_at', 'updated_at','active','date','com_code','barcode', 
          'price','nos_gomla_price','gomla_price','price_retail','nos_gomla_price_retail','gomla_price_retail','cost_price', 
-         'cost_price_retail','has_fixed_price','quantity','quantity_retail','quantity_all_retail','photo' 
+         'cost_price_retail','has_fixed_price','quantity','quantity_retail','quantity_all_retail','photo','all_quantity' 
     ];
 }

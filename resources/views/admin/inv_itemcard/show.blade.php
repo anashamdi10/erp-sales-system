@@ -146,11 +146,11 @@
 
 
                     <tr>
-                        <td> لوجو للشركة </td>
+                        <td> لوجو الصنف </td>
 
                         <td colspan="2">
                             <div class="image">
-                                <img class="custom_img" src="{{asset('admin/uploads').'/'.$data['photo']}}" alt="لوجو الشركة ">
+                                <img class="custom_img" src="{{asset('admin/uploads').'/'.$data['photo']}}" alt="لوجو الصنف ">
                             </div>
                         </td>
 

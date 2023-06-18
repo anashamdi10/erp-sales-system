@@ -473,17 +473,19 @@ $(document).ready(function() {
             recalculate_approved();
             return false ;
         }
-
-        if(parseFloat(treasures_balance) < parseFloat(what_paid)){
         
-
-        what_remain = total_cost - what_paid
-
-        $('#what_remain').val(what_remain);
-        recalculate_approved();
-    }
        
-    }   );
+        if(parseFloat(treasures_balance) > parseFloat(what_paid)){
+            
+
+            what_remain = total_cost - what_paid
+            
+            $('#what_remain').val(what_remain);
+            
+        }
+        
+        recalculate_approved();
+    });
 
    
 
@@ -509,7 +511,7 @@ $(document).ready(function() {
             alert ("error");
             }
         });
-        recalculate_approved();
+      
     });
 
 
@@ -746,67 +748,55 @@ $(document).ready(function() {
 
 
     function recalculate_approved (){
-        var total_cost_items = $('#total_cost_items').val();
-        total_cost_items= parseFloat(total_cost_items);
-        var tax_percent = $('#tax_percent').val();
-        if(tax_percent ==''){
-            tax_percent= 0;
-        }
-
+        var total_cost_items = $("#total_cost_items").val();
+        if (total_cost_items == "") { total_cost_items = 0; }
+        total_cost_items = parseFloat(total_cost_items);
+        var tax_percent = $("#tax_percent").val();
+        if (tax_percent == "") { tax_percent = 0 };
         tax_percent = parseFloat(tax_percent);
-        
-        var tax_value = total_cost_items * tax_percent/100 ; 
+    
+        var tax_value = total_cost_items * tax_percent / 100;
         tax_value = parseFloat(tax_value);
-        $('#tax_value').val(tax_value*1);
-
-        var total_befor_discount = tax_value + total_cost_items ;
-
-        $('#total_befor_discount').val(total_befor_discount)  ;
-        var discount_type = $('#discount_type').val();
-
-        if(!discount_type == '' ){
-          
-            var discount_percent = $('#discount_percent').val();
+        $("#tax_value").val(tax_value * 1);
+        var total_befor_discount = total_cost_items + tax_value;
+        $("#total_befor_discount").val(total_befor_discount);
+        var discount_type = $("#discount_type").val();
+        if (discount_type != "") {
+          if (discount_type == 1) {
+            var discount_percent = $("#discount_percent").val();
+            if (discount_percent == "") { discount_percent = 0; }
             discount_percent = parseFloat(discount_percent);
-            if(discount_type == 1){
-               
-                var discount_value = total_befor_discount *discount_percent /100;
-                $('#discount_value').val(discount_value*1)  ;
-                var total_cost  = total_befor_discount - discount_value;
-                $('#total_cost').val(total_cost*1)  ;
-
-
-            }else{
-               
-                var total_cost  = total_befor_discount - discount_percent;
-                $('#discount_value').val(discount_percent*1)  ;
-                $('#total_cost').val(total_cost*1)  ;
-            }
-
-
-        
-        }else{
-            var total_cost  = total_befor_discount ;
-           $('#total_cost').val(total_cost)  ;
+            var discount_value = total_befor_discount * discount_percent / 100;
+            $("#discount_value").val(discount_value * 1);
+            var total_cost = total_befor_discount - discount_value;
+            $("#total_cost").val(total_cost * 1);
+    
+          } else {
+            var discount_percent = $("#discount_percent").val();
+            if (discount_percent == "") { discount_percent = 0; }
+            discount_percent = parseFloat(discount_percent);
+            $("#discount_value").val(discount_percent * 1);
+            var total_cost = total_befor_discount - discount_percent;
+            $("#total_cost").val(total_cost * 1);
+          }
+    
+    
+    
+        } else {
+          $("#discount_value").val(0);
+          var total_cost = total_befor_discount;
+          $("#total_cost").val(total_cost);
+    
         }
-
-        var pill_type = $('#pill_type').val();
-        var total_cost = $('#total_cost').val();
-       
-        if(pill_type == 1){
-          
-            $('#what_remain').val(0)
-            $('#what_paid').val(total_cost);
-            $('#what_paid').attr("readonly",true);
-
-          
-        }else{
-           
-            $('#what_remain').val(total_cost)
-            $('#what_paid').val(0);
-            $('#what_paid').attr("readonly",false);
-           
-        }
+        what_paid = $("#what_paid").val();
+        if (what_paid == "") what_paid = 0;
+        what_paid = parseFloat(what_paid);
+        total_cost = parseFloat(total_cost);
+        $what_remain = total_cost - what_paid;
+        $("#what_remain").val($what_remain * 1);
+    
+    
+      }
 
     }
 
@@ -815,4 +805,4 @@ $(document).ready(function() {
 
 
     
-});
+);

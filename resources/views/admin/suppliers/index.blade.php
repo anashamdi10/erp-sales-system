@@ -65,7 +65,7 @@
                            
 
 
-                           <td>@if($info->active==1) مفعل @else معطل @endif</td>
+                           <td>@if($info->active==0) مفعل @else معطل @endif</td>
 
                            <td>
                               <a href="{{ route('admin.suppliers.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
