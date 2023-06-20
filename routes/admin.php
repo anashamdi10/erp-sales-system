@@ -191,7 +191,6 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         
         Route::post('/suppliers_orders/store',[Suppliers_orderControllers::class, 'store'])->name('admin.suppliers_orders.store');
         Route::post('/suppliers_orders/update/{id}',[Suppliers_orderControllers::class, 'update'])->name('admin.suppliers_orders.update');
-        Route::post('/suppliers_orders/ajax_search', [Suppliers_orderControllers::class, 'ajax_search'])->name('admin.suppliers_orders.ajax_search');
         Route::post('/suppliers_orders/add_new_details', [Suppliers_orderControllers::class, 'add_new_details'])->name('admin.suppliers_orders.ajax_add_new_details');
         Route::post('/suppliers_orders/get_item_uoms', [Suppliers_orderControllers::class, 'get_item_uoms'])->name('admin.suppliers_orders.get_item_uoms');
         Route::post('/suppliers_orders/reload_itemsdetails', [Suppliers_orderControllers::class, 'reload_itemsdetails'])->name('admin.suppliers_orders.reload_itemsdetails');
@@ -202,6 +201,7 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/suppliers_orders/load_model_approve_invoice', [Suppliers_orderControllers::class, 'load_model_approve_invoice'])->name('admin.suppliers_orders.load_model_approve_invoice');
         Route::post('/suppliers_orders/load_usershiftDiv', [Suppliers_orderControllers::class, 'load_usershiftDiv'])->name('admin.suppliers_orders.load_usershiftDiv');
         Route::post('/suppliers_orders/do_approve/{id}', [Suppliers_orderControllers::class, 'do_approve'])->name('admin.suppliers_orders.do_approve');
+        Route::post('/suppliers_orders/ajax_search', [Suppliers_orderControllers::class, 'ajax_search'])->name('admin.suppliers_orders.ajax_search');
 
         
         

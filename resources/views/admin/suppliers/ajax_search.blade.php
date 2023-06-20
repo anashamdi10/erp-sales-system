@@ -46,7 +46,9 @@
    </table>
    <br>
 
-   {{ $data->links() }}
+   <div class="col-md-12" id="ajax_pagination_in_search">
+      {{ $data->links() }}
+   </div>
 
    @else
    <div class="alert alert-danger">

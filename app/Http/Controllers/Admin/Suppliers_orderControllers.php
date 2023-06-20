@@ -42,7 +42,11 @@ class Suppliers_orderControllers extends Controller
             }
         };
 
-        return view('admin.suppliers_with_orders.index', ['data' => $data]);
+        $suppliers = get_cols_where(new SuppliersModel(), array('supplier_code', 'name'), array('com_code' => $com_code, 'active' => 0), 'id', 'DESC');
+        $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
+
+
+        return view('admin.suppliers_with_orders.index', ['data' => $data , 'suppliers'=>$suppliers,'stores'=>$stores ]);
     }
 
     public function create()
@@ -875,6 +879,113 @@ class Suppliers_orderControllers extends Controller
 
         }
 
+    }
+
+    public function ajax_search(Request $request)
+    {
+
+
+
+        if ($request->ajax()) {
+            $search_by_text = $request->search_by_text;
+            $supplier_code = $request->supplier_code;
+            $store_id = $request->store_id;
+            $searchbyradio = $request->searchbyradio;
+            $to_order_date = $request->to_order_date;
+            $from_order_date = $request->from_order_date;
+
+
+            
+                if ($supplier_code == 'all') {
+                    $field1 = "id";
+                    $operator1 = ">";
+                    $value1 = 0;
+                } else{
+                    $field1 = "supplier_code";
+                    $operator1 = "=";
+                    $value1 = $supplier_code;
+              
+                }
+                if ($store_id == 'all') {
+                    $field2 = "id";
+                    $operator2 = ">";
+                    $value2 = 0;
+                } else{
+                    $field2 = "store_id";
+                    $operator2 = "=";
+                    $value2 = $store_id;
+              
+                }
+
+            
+
+            if ($from_order_date == '') {
+                $field3 = "id";
+                $operator3 = ">";
+                $value3 = 0;
+            } else {
+                $field3 = "order_date";
+                $operator3 = ">=";
+                $value3 = $from_order_date;
+            }
+            if ($to_order_date == '') {
+                $field4 = "id";
+                $operator4 = ">";
+                $value4 = 0;
+            } else {
+                $field4 = "order_date";
+                $operator4 = "<=";
+                $value4 = $to_order_date;
+            }
+
+
+
+            if ($search_by_text != "") {
+
+                if ($searchbyradio == 'Doc_No') {
+                   
+                    $field5 = 'Doc_No';
+                    $operator5 = "=";
+                    $value5 =  $search_by_text;
+                } else {
+                    
+                    $field5 = 'auto_serial';
+                    $operator5 = "=";
+                    $value5 =  $search_by_text;
+                } 
+            } else {
+
+                $field5 = 'id';
+                $operator5 = ">";
+                $value5 = 0;
+            }
+
+
+
+
+
+
+            $data = Suppliers_orderModel::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)
+                ->where($field3, $operator3, $value3)->where($field4,$operator4,$value4)->where($field5,$operator5,$value5)
+                ->orderBy('id', 'DESC')->paginate(PAGINATEION_COUNT);
+
+
+
+
+
+                if (!empty($data)) {
+                    foreach ($data as $info) {
+                        $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+                        $info->supplier_name = SuppliersModel::where('supplier_code', $info->supplier_code)->value('name');
+                        $info->store_name = Store::where('id', $data['store_id'])->value('name');
+        
+                        if ($info->updated_by > 0 and $info->updated_by != null) {
+                            $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
+                        }
+                    }
+                };
+            return view('admin.suppliers_with_orders.ajax_search', ['data' => $data]);
+        }
     }
  
 

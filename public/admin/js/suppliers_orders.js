@@ -267,15 +267,8 @@ $(document).ready(function() {
 
  
 
-    $(document).on('input', '#search_by_text', function(e) {
-        
-        make_search();
-    });
+  
 
- 
-    $('input[type=radio][name=searchbyradio]').change(function() {
-        make_search();
-    });
 
 
 
@@ -703,30 +696,7 @@ $(document).ready(function() {
 
     }
 
-    function make_search() {
-        var search_by_text = $("#search_by_text").val();
-        var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
-        var token_search = $("#token_search").val();
-        var ajax_search_url = $("#ajax_search_url").val();
 
-        
-        jQuery.ajax({
-            url: ajax_search_url,
-            type: 'post',
-            dataType: 'html',
-            cache: false,
-            data: {
-                search_by_text: search_by_text,
-                "_token": token_search,
-                searchbyradio: searchbyradio,
-               
-            },
-            success: function(data) {
-                $("#ajax_responce_serarchDiv").html(data);
-            },
-            error: function() {}
-        });
-    }
 
 
     function recalculate_Add(){
@@ -798,7 +768,71 @@ $(document).ready(function() {
     
       }
 
+
+      function make_search(){
+        var search_by_text = $('#search_by_text').val();
+        var store_id = $('#store_id').val();
+        var supplier_code = $('#supplier_code').val();
+        var searchbyradio = $("input[type=radio][ name=searchbyradio]:checked").val();
+        var token_search = $("#token_search").val();
+        var ajax_search_url = $("#ajax_search_url").val();
+        var to_order_date = $("#to_order_date").val();
+        var from_order_date = $("#from_order_date").val();
+        
+        
+        jQuery.ajax({
+            url: ajax_search_url,
+            type: 'post',
+            dataType: 'html',
+            cache: false,
+            data: {
+                search_by_text: search_by_text,
+                store_id:store_id,
+                supplier_code:supplier_code,
+                to_order_date:to_order_date,
+                from_order_date:from_order_date,
+                searchbyradio:searchbyradio,
+                "_token": token_search
+            },
+            success: function(data) {
+                $("#ajax_responce_serarchDiv").html(data);
+            },
+            error: function() {}
+        });
     }
+
+    $(document).on('input', '#search_by_text', function(e) {
+        
+        make_search();
+    });
+
+ 
+    $('input[type=radio][name=searchbyradio]').change(function() {
+    
+        make_search();
+    });
+
+    
+    $(document).on('change', '#to_order_date',function() {
+       
+        make_search();
+    });
+    $(document).on('change', '#from_order_date',function() {
+       
+        make_search();
+    });
+    $(document).on('change', '#supplier_code',function() {
+        
+        make_search();
+    });
+    $(document).on('change', '#store_id',function() {
+       
+        make_search();
+    });
+
+
+
+}
 
     
 
