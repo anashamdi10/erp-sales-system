@@ -1,11 +1,11 @@
 $(document).ready(function() {
   
-    $(document).on('change', '#item_code_add', function(e) {
+    $(document).on('change', '#item_code', function(e) {
         var item_code = $(this).val();
 
         if(item_code !=""){
             var token_search = $("#token_search").val();
-            var ajax_get_item_uoms_url = $("#ajax_get_item_uoms_url").val();
+            var ajax_get_item_uoms_url = $("#ajax_get_uoms").val();
     
     
             
@@ -24,7 +24,7 @@ $(document).ready(function() {
                     $("#UomDivAdd").html(data);
                     $('.related_to_itemCard').show();
 
-                    var type = $('#item_code_add').children('option:selected').data('type');
+                    var type = $('#item_code').children('option:selected').data('type');
 
                     if(type==2){
                         $('.related_to_date').show();
@@ -47,7 +47,31 @@ $(document).ready(function() {
        
     });
 
-
+    $(document).on('click', '#AddNewInvoiceModel_show', function(e) {
+        var token_search = $("#token_search").val();
+        var ajax_load_add_invoice = $("#ajax_load_add_invoice").val();
+        jQuery.ajax({
+            url: ajax_load_add_invoice,
+            type: 'post',
+            dataType: 'html',
+            cache: false,
+            data: {
+                "_token": token_search,
+              
+               
+            },
+            success: function(data) {
+               
+                $('#AddNewInvoiceModel_body').html(data);
+                $('#AddNewInvoiceModel').modal('show');
+                
+                
+            },
+            error: function() {
+              
+                alert("حدث خطأ ما")
+            }
+    });
     
 
     $(document).on('click', '#AddToBill', function(e) {
@@ -629,38 +653,14 @@ $(document).ready(function() {
             }
         }
 
+        
+
+
+
+
+
 
     })
-
-    $(document).on('input', '#search_by_text', function(e) {
-        
-        make_search();
-    });
-
- 
-    $('input[type=radio][name=searchbyradio]').change(function() {
-    
-        make_search();
-    });
-
-    
-    $(document).on('change', '#to_order_date',function() {
-       
-        make_search();
-    });
-    $(document).on('change', '#from_order_date',function() {
-       
-        make_search();
-    });
-    $(document).on('change', '#supplier_code',function() {
-        
-        make_search();
-    });
-    $(document).on('change', '#store_id',function() {
-       
-        make_search();
-    });
-
 
 
     function reload_items_details(){
@@ -825,6 +825,34 @@ $(document).ready(function() {
         });
     }
 
+    $(document).on('input', '#search_by_text', function(e) {
+        
+        make_search();
+    });
+
+ 
+    $('input[type=radio][name=searchbyradio]').change(function() {
+    
+        make_search();
+    });
+
+    
+    $(document).on('change', '#to_order_date',function() {
+       
+        make_search();
+    });
+    $(document).on('change', '#from_order_date',function() {
+       
+        make_search();
+    });
+    $(document).on('change', '#supplier_code',function() {
+        
+        make_search();
+    });
+    $(document).on('change', '#store_id',function() {
+       
+        make_search();
+    });
 
 
 
@@ -833,6 +861,4 @@ $(document).ready(function() {
     
 
 
-
-    
-);
+)})

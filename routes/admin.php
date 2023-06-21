@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\Admins_shiftsController;
 use App\Http\Controllers\Admin\AdminsControllers;
 use App\Http\Controllers\Admin\CollectController;
 use App\Http\Controllers\Admin\ExchangeController;
+use App\Http\Controllers\Admin\SalesInvoiceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -253,6 +254,37 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
       
 
     // end EExchange_tranaction
+
+
+        // start sales incoices    مبيعات
+        Route::get('/SalesInvoices/index',[SalesInvoiceController::class, 'index'])->name('admin.SalesInvoices.index');
+        Route::get('/SalesInvoices/create',[SalesInvoiceController::class, 'create'])->name('admin.SalesInvoices.create');
+        Route::get('/SalesInvoices/edit/{id}',[SalesInvoiceController::class, 'edit'])->name('admin.SalesInvoices.edit');
+        Route::get('/SalesInvoices/delete_stores/{id}',[SalesInvoiceController::class, 'delete'])->name('admin.SalesInvoices.delete');
+        Route::get('/SalesInvoices/show/{id}',[SalesInvoiceController::class, 'show'])->name('admin.SalesInvoices.show');
+        Route::get('/SalesInvoices/delete_details/{id}/{id_parent}',[SalesInvoiceController::class, 'delete_details'])->name('admin.SalesInvoices.delete_details');
+        Route::get('/SalesInvoices/delete/{id}',[SalesInvoiceController::class, 'delete'])->name('admin.SalesInvoices.delete');
+        Route::get('/SalesInvoices/do_approve/{id}',[SalesInvoiceController::class, 'do_approve'])->name('admin.SalesInvoices.do_approve');
+        
+        Route::post('/SalesInvoices/store',[SalesInvoiceController::class, 'store'])->name('admin.SalesInvoices.store');
+        Route::post('/SalesInvoices/update/{id}',[SalesInvoiceController::class, 'update'])->name('admin.SalesInvoices.update');
+        Route::post('/SalesInvoices/add_new_details', [SalesInvoiceController::class, 'add_new_details'])->name('admin.SalesInvoices.ajax_add_new_details');
+        Route::post('/SalesInvoices/get_item_uoms', [SalesInvoiceController::class, 'get_item_uoms'])->name('admin.SalesInvoices.get_item_uoms');
+        Route::post('/SalesInvoices/reload_itemsdetails', [SalesInvoiceController::class, 'reload_itemsdetails'])->name('admin.SalesInvoices.reload_itemsdetails');
+        Route::post('/SalesInvoices/reload_parent_pill', [SalesInvoiceController::class, 'reload_parent_pill'])->name('admin.SalesInvoices.reload_parent_pill');
+        Route::post('/SalesInvoices/load_edit_item_details', [SalesInvoiceController::class, 'load_edit_item_details'])->name('admin.SalesInvoices.load_edit_item_details');
+        Route::post('/SalesInvoices/load_model_add', [SalesInvoiceController::class, 'load_model_add'])->name('admin.SalesInvoices.load_model_add');
+        Route::post('/SalesInvoices/edit_item_details', [SalesInvoiceController::class, 'edit_item_details'])->name('admin.SalesInvoices.edit_item_details');
+        Route::post('/SalesInvoices/load_model_approve_invoice', [SalesInvoiceController::class, 'load_model_approve_invoice'])->name('admin.SalesInvoices.load_model_approve_invoice');
+        Route::post('/SalesInvoices/load_usershiftDiv', [SalesInvoiceController::class, 'load_usershiftDiv'])->name('admin.SalesInvoices.load_usershiftDiv');
+        Route::post('/SalesInvoices/do_approve/{id}', [SalesInvoiceController::class, 'do_approve'])->name('admin.SalesInvoices.do_approve');
+        Route::post('/SalesInvoices/ajax_search', [SalesInvoiceController::class, 'ajax_search'])->name('admin.SalesInvoices.ajax_search');
+
+        
+        
+        // end sales incoices
+
+
 } );
 
 
