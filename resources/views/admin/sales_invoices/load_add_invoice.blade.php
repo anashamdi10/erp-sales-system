@@ -33,7 +33,7 @@
     <div class="col-md-3">
         <div class="form-group">
             <label> بيانات المناديب</label>
-            <select name="customer_code" id="customer_code" class="form-control select2 ">
+            <select name="customer_code" id="supplier_code" class="form-control select2 ">
                 <option value=""> اختر المندوب</option>
                 @if (@isset($customers) && !@empty($customers))
                 @foreach ($customers as $info )
@@ -49,24 +49,40 @@
 <hr style="border: 1px solid #3c8dbc;">
 
 <div class="row">
+
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label> بيانات المخازن</label>
+            <select name="store_id" id="store_id" class="form-control select2 ">
+                <option value="">اختر المخزن  </option>
+                @if (@isset($stores) && !@empty($stores))
+                @foreach ($stores as $info )
+                <option value="{{ $info->id }}"> {{ $info->name }} </option>
+                @endforeach
+                @endif
+            </select>
+           
+        </div>
+    </div>
     <div class="col-md-3">
         <div class="form-group">
             <label> نوع البيع </label>
-            <select class="form-control" name="is_has_customer" id="is_has_customer">
+            <select class="form-control" name="sales_item_type" id="sales_item_type">
                 <option value="1" selected>قطاعي </option>
-                <option value="2">نص حملة</option>
-                <option value="3"> حملة</option>
+                <option value="2">نص جملة</option>
+                <option value="3"> جملة</option>
             </select>
         </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-3">
         <div class="form-group">
             <label> بيانات الاصناف</label>
             <select name="item_code" id="item_code" class="form-control select2 ">
                 <option value="">اختر الصنف</option>
                 @if (@isset($items_cards) && !@empty($items_cards))
                 @foreach ($items_cards as $info )
-                <option data-type="{{$info->item_type}}" value="{{ $info->item_code }}"> {{ $info->name }} </option>
+                <option data-item-type="{{$info->item_type}}" value="{{ $info->item_code }}"> {{ $info->name }} </option>
                 @endforeach
                 @endif
             </select>
@@ -75,16 +91,17 @@
             @enderror
         </div>
     </div>
-    <div class="col-md-4 related_to_itemCard" style="display: none;" id="UomDivAdd"></div>
+    <div class="col-md-3" style="display: none;" id="UomDivAdd"></div>
+    <div class="col-md-6 " style="display: none;" id="inv_itemcard_batchesDiv"></div>
 
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="form-group ">
             <label> الكمية </label>
             <input value="1" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" type="text" id="quantity" class="form-control">
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="form-group ">
             <label> السعر </label>
             <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" type="text" id="price" class="form-control">
@@ -102,15 +119,15 @@
         </div>
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="form-group ">
             <label> الإجمالي </label>
             <input readonly oninput="this.value=this.value.replace(/[^0-9.]/g,'');" type="text" id="total_cost" class="form-control">
         </div>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-3">
         <div class="form-group ">
-            <button style="margin-top: 36px;" class="btn btn-sm btn-danger">أضف للفاتورة</button>
+            <button id="add_item" style="margin-top: 36px;" class="btn btn-sm btn-danger">أضف للفاتورة</button>
         </div>
     </div>
 
@@ -122,13 +139,18 @@
     <thead class="custom_thead">
         <th>المخزن </th>
         <th> نوع البيع </th>
-        <th>  الصنف</th>
-        <th>  وحدة البيع  </th>
-        <th>  سعر الوحدة </th>
+        <th> الصنف</th>
+        <th> وحدة البيع </th>
+        <th> سعر الوحدة </th>
         <th>الكمية </th>
 
         <th>الإجمالي </th>
+        <th></th>
 
     </thead>
 
-</table>   
+    <tbody id ='itemsrowtableContainterBody'>
+
+    </tbody>
+
+</table>

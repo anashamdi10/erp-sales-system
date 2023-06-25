@@ -270,6 +270,9 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/SalesInvoices/update/{id}',[SalesInvoiceController::class, 'update'])->name('admin.SalesInvoices.update');
         Route::post('/SalesInvoices/add_new_details', [SalesInvoiceController::class, 'add_new_details'])->name('admin.SalesInvoices.ajax_add_new_details');
         Route::post('/SalesInvoices/get_item_uoms', [SalesInvoiceController::class, 'get_item_uoms'])->name('admin.SalesInvoices.get_item_uoms');
+        Route::post('/SalesInvoices/get_itemcard_batches', [SalesInvoiceController::class, 'get_item_batches'])->name('admin.SalesInvoices.get_inv_itemcard_batches');
+        Route::post('/SalesInvoices/get_item_price', [SalesInvoiceController::class, 'get_item_price'])->name('admin.SalesInvoices.get_item_price');
+        Route::post('/SalesInvoices/add_sales_row', [SalesInvoiceController::class, 'add_sales_row'])->name('admin.SalesInvoices.add_sales_row');
         Route::post('/SalesInvoices/reload_itemsdetails', [SalesInvoiceController::class, 'reload_itemsdetails'])->name('admin.SalesInvoices.reload_itemsdetails');
         Route::post('/SalesInvoices/reload_parent_pill', [SalesInvoiceController::class, 'reload_parent_pill'])->name('admin.SalesInvoices.reload_parent_pill');
         Route::post('/SalesInvoices/load_edit_item_details', [SalesInvoiceController::class, 'load_edit_item_details'])->name('admin.SalesInvoices.load_edit_item_details');

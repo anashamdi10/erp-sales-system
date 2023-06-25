@@ -24,6 +24,9 @@
       <input type="hidden" id="ajax_search_url" value="{{ route('admin.SalesInvoices.ajax_search') }}">
       <input type="hidden" id="ajax_get_uoms" value="{{ route('admin.SalesInvoices.get_item_uoms') }}">
       <input type="hidden" id="ajax_load_add_invoice" value="{{ route('admin.SalesInvoices.load_model_add') }}">
+      <input type="hidden" id="ajax_get_inv_itemcard_batches" value="{{ route('admin.SalesInvoices.get_inv_itemcard_batches') }}">
+      <input type="hidden" id="ajax_get_item_price" value="{{ route('admin.SalesInvoices.get_item_price') }}">
+      <input type="hidden" id="ajax_add_sales_row" value="{{ route('admin.SalesInvoices.add_sales_row') }}">
       <button id="AddNewInvoiceModel_show" class="btn btn-sm btn-success" data-toggle="modal" data-target="#AddNewInvoiceModel">إيضافة فاتورة جديدة </button>
    </div>
    <!-- /.card-header -->
@@ -47,29 +50,8 @@
                <th></th>
 
             </thead>
-            <tbody>
-               @foreach ($data as $info )
-               <tr>
-                  <td>{{ $info->auto_serial }}</td>
-                  <td>{{ $info->supplier_name }}</td>
-                  <td>{{ $info->order_date }}</td>
-                  <td>@if($info->pill_type==1) كاش @elseif($info->pill_type==2) أجل@else غير محدد @endif</td>
-                  <td>{{ $info->total_cost }}</td>
-                  <td>@if($info->is_approved==0) مفتوحة @else معتمدة @endif</td>
-
-
-                  <td style="text-align: center;">
-                     @if($info->is_approved==0)
-                     <a href="{{ route('admin.suppliers_orders.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
-                     <a href="{{ route('admin.suppliers_orders.delete',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
-                     @endif
-                     <a href="{{ route('admin.suppliers_orders.show',$info->id) }}" class="btn btn-sm   btn-info">الاصناف </a>
-                  </td>
-               </tr>
-               @php
-               $i++;
-               @endphp
-               @endforeach
+            <tbody >
+               
             </tbody>
          </table>
          <br>
@@ -85,26 +67,27 @@
    </div>
 
 
-   <div class="modal fade " id="AddNewInvoiceModel">
-      <div class="modal-dialog modal-xl">
-         <div class="modal-content bg-info">
-            <div class="modal-header">
-               <h4 class="modal-title text-center" style="width:100% ;"> إيضافة فاتورة مبيعات جديدة </h4>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-               </button>
-            </div>
-            <div class="modal-body" id="AddNewInvoiceModel_body" style="background-color: white !important; color:black">
-              
-            </div>
-         </div>
-         <div class="modal-footer justify-content-between bg-info">
-            <button type="button" class="btn btn-outline-light" data-dismiss="modal">إغلاق</button>
+   <div class="modal fade  " id="AddNewInvoiceModal">
+          <div class="modal-dialog modal-xl" >
+            <div class="modal-content bg-info">
+              <div class="modal-header">
+                <h4 class="modal-title text-center">   اضافة فاتورة مبيعات جديدة</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+              </div>
+              <div class="modal-body" id="AddNewInvoiceModalBody" style="background-color: white !important; color:black;">
+             
 
-         </div>
-      </div>
-      <!-- /.modal-content -->
-   </div>
+        
+              </div>
+              <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
 </div>
 
 
