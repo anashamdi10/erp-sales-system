@@ -8,10 +8,10 @@
       @foreach ( $inv_itemcard_batches as $info )
       @if($item_card_Data['item_type']==2)
    <!-- لو كان بتواريخ استهلاكي -->
-<option value="{{ $info->quantity }}"> عدد {{ $info->quantity*(1) }} {{ $uom_Data['name'] }} انتاج {{ $info->production_date }}  بتكلفة {{ $info->unit_cost_price*1 }}  للوحدة   </option>
+<option data-quantity = '{{$info->quantity}}' value="{{ $info->auto_serial }}"> عدد {{ $info->quantity*(1) }} {{ $uom_Data['name'] }} انتاج {{ $info->production_date }}  بتكلفة {{ $info->unit_cost_price*1 }}  للوحدة   </option>
 
       @else
-      <option value="{{ $info->quantity }}"> عدد {{ $info->quantity*(1) }} {{ $uom_Data['name'] }} بتكلفة {{ $info->unit_cost_price*1 }}  للوحدة  </option>
+      <option data-quantity = '{{$info->quantity}}' value="{{ $info->auto_serial }}"> عدد {{ $info->quantity*(1) }} {{ $uom_Data['name'] }} بتكلفة {{ $info->unit_cost_price*1 }}  للوحدة  </option>
 
       @endif
       
@@ -29,10 +29,10 @@
 
   @if($item_card_Data['item_type']==2)
 //لو كان بتواريخ استهلاكي
-<option value="{{$quantity }}"> عدد {{ $quantity*(1) }} {{ $uom_Data['name'] }} انتاج {{ $info->production_date }} بتكلفة {{ $unit_cost_price*1 }}  للوحدة   </option>
+<option data-quantity = '{{$quantity}}' value="{{ $info->auto_serial }}"> عدد {{ $quantity*(1) }} {{ $uom_Data['name'] }} انتاج {{ $info->production_date }} بتكلفة {{ $unit_cost_price*1 }}  للوحدة   </option>
 
   @else
-  <option value="{{ $quantity }}"> عدد {{ $quantity*(1) }} {{ $uom_Data['name'] }}  بتكلفة {{ $unit_cost_price*1 }}  للوحدة   </option>
+  <option data-quantity = '{{$quantity}}' value="{{ $info->auto_serial }}"> عدد {{ $quantity*(1) }} {{ $uom_Data['name'] }}  بتكلفة {{ $unit_cost_price*1 }}  للوحدة   </option>
 
   @endif
   

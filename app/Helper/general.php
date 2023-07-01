@@ -2,6 +2,8 @@
 
 use App\Models\AccountModel;
 
+use function PHPUnit\Framework\returnValue;
+
 function uploadImage($folder, $image)
 {
   $extension = strtolower($image->extension());
@@ -58,10 +60,16 @@ function get_cols_where_row_orderby($model, $columns_names = array(), $where = a
 }
 
 /*get some cols table */
-function insert($model, $arrayToInsert=array())
+function insert($model, $arrayToInsert=array(), $returnData = false)
 {
   $flag = $model::create($arrayToInsert);
-  return $flag;
+  if($returnData = true){
+
+    $data = get_cols_where_row($model , array('*'), $arrayToInsert);
+    return $data;
+  }else{
+    return $flag ;
+  }
 }
 function get_field_value($model, $field_name , $where = array())
 {

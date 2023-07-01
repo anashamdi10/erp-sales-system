@@ -276,7 +276,13 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/SalesInvoices/reload_itemsdetails', [SalesInvoiceController::class, 'reload_itemsdetails'])->name('admin.SalesInvoices.reload_itemsdetails');
         Route::post('/SalesInvoices/reload_parent_pill', [SalesInvoiceController::class, 'reload_parent_pill'])->name('admin.SalesInvoices.reload_parent_pill');
         Route::post('/SalesInvoices/load_edit_item_details', [SalesInvoiceController::class, 'load_edit_item_details'])->name('admin.SalesInvoices.load_edit_item_details');
-        Route::post('/SalesInvoices/load_model_add', [SalesInvoiceController::class, 'load_model_add'])->name('admin.SalesInvoices.load_model_add');
+        Route::post('/SalesInvoices/load_model_offer_price', [SalesInvoiceController::class, 'load_model_offer_price'])->name('admin.SalesInvoices.load_model_offer_price');
+        Route::post('/SalesInvoices/load_model_sales_invoice', [SalesInvoiceController::class, 'load_model_sales_invoice'])->name('admin.SalesInvoices.load_model_sales_invoice');
+        Route::post('/SalesInvoices/do_add_new_sales_invoice', [SalesInvoiceController::class, 'do_add_new_sales_invoice'])->name('admin.SalesInvoices.do_add_new_sales_invoice');
+        Route::post('/SalesInvoices/do_update_sales_invoice', [SalesInvoiceController::class, 'do_update_sales_invoice'])->name('admin.SalesInvoices.do_update_sales_invoice');
+        Route::post('/SalesInvoices/add_items_to_invoice', [SalesInvoiceController::class, 'add_items_to_invoice'])->name('admin.SalesInvoices.add_items_to_invoice');
+
+
         Route::post('/SalesInvoices/edit_item_details', [SalesInvoiceController::class, 'edit_item_details'])->name('admin.SalesInvoices.edit_item_details');
         Route::post('/SalesInvoices/load_model_approve_invoice', [SalesInvoiceController::class, 'load_model_approve_invoice'])->name('admin.SalesInvoices.load_model_approve_invoice');
         Route::post('/SalesInvoices/load_usershiftDiv', [SalesInvoiceController::class, 'load_usershiftDiv'])->name('admin.SalesInvoices.load_usershiftDiv');
