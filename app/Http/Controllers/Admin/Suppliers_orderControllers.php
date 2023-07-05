@@ -721,7 +721,7 @@ class Suppliers_orderControllers extends Controller
                 $Main_uom_name =get_field_value(new Inv_ums(),'name', array('com_code'=>$com_code,'id'=>$itemCard_data['uom_id']));
                
                         // بندخل كميات للخزن بوحده قياس الاب اجباري 
-                            // لو كان الوحجه اب if ...
+                            // لو كان الوحده اب if ...
                         if($info->isparentuom == 1){
                             $quantity = $info->dliverd_quantity ; 
                             $unit_price = $info->unit_price;

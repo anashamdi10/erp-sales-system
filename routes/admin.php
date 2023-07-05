@@ -281,6 +281,8 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/SalesInvoices/do_add_new_sales_invoice', [SalesInvoiceController::class, 'do_add_new_sales_invoice'])->name('admin.SalesInvoices.do_add_new_sales_invoice');
         Route::post('/SalesInvoices/do_update_sales_invoice', [SalesInvoiceController::class, 'do_update_sales_invoice'])->name('admin.SalesInvoices.do_update_sales_invoice');
         Route::post('/SalesInvoices/add_items_to_invoice', [SalesInvoiceController::class, 'add_items_to_invoice'])->name('admin.SalesInvoices.add_items_to_invoice');
+        Route::post('/SalesInvoices/add_new_item_sales_row', [SalesInvoiceController::class, 'add_new_item_sales_row'])->name('admin.SalesInvoices.add_new_item_sales_row');
+        Route::post('/SalesInvoices/reload_invoice_details', [SalesInvoiceController::class, 'reload_invoice_details'])->name('admin.SalesInvoices.reload_invoice_details');
 
 
         Route::post('/SalesInvoices/edit_item_details', [SalesInvoiceController::class, 'edit_item_details'])->name('admin.SalesInvoices.edit_item_details');
@@ -301,5 +303,3 @@ Route::group(['namespace'=>'Admin' , 'prefix' =>'admin', 'middleware'=>'guest:ad
     Route::get('login',[LoginController::class, 'showLogin'])->name('admin.showlogin');
     Route::post('login',[LoginController::class, 'login'])->name('admin.login');
 } );
-
-
