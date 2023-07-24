@@ -938,8 +938,6 @@ class Suppliers_orderControllers extends Controller
                 $value4 = $to_order_date;
             }
 
-
-
             if ($search_by_text != "") {
 
                 if ($searchbyradio == 'Doc_No') {
