@@ -139,7 +139,7 @@ class Suppliers_orderControllers extends Controller
                 }
             }
             // if pill still open 
-           
+        
 
 
             return view('admin.suppliers_with_orders.show', ['data' => $data, 'details' => $details]);
@@ -396,7 +396,7 @@ class Suppliers_orderControllers extends Controller
 
                 if ($parent_pill_data['is_approved'] == 0) {
                     $items_cards = get_cols_where(new Inv_itemCard(), array("name", "item_code", "item_type"), array('active' => 1, 'com_code' => $com_code), 'id', 'DESC');
-                   
+                
                     return view("admin.suppliers_with_orders.load_add_new_item_details", ['parent_pill_data' => $parent_pill_data,  'items_cards' => $items_cards ]);
                 };
             }
@@ -406,7 +406,7 @@ class Suppliers_orderControllers extends Controller
 
     public function edit_item_details(Request $request)
     {
-      
+    
 
         if ($request->ajax()) {
 
@@ -478,7 +478,7 @@ class Suppliers_orderControllers extends Controller
                 return redirect()->back()->with(['error'=>'عفوا حصل خطأ']);
             }
 
-             
+            
             if ($parent_pill_data['is_approved'] == 1) {
                 return redirect()->back()->with(['error'=>'عفوا لا يمكن الحذف بتفاصيل فاتورة معتمده ومؤرشفة']);
             }
@@ -491,7 +491,7 @@ class Suppliers_orderControllers extends Controller
             }
             
         } catch (\Exception $ex) {
-         return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
+            return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
         }
     }
 
@@ -508,7 +508,7 @@ class Suppliers_orderControllers extends Controller
                 return redirect()->back()->with(['error'=>'عفوا حصل خطأ']);
             }
 
-             
+            
             if ($parent_pill_data['is_approved'] == 1) {
                 return redirect()->back()->with(['error'=>'عفوا لا يمكن الحذف بتفاصيل فاتورة معتمده ومؤرشفة']);
             }
@@ -534,24 +534,24 @@ class Suppliers_orderControllers extends Controller
             }else{
                 return redirect()->back()->with(['error'=>'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
             };
-           
+        
 
 
 
             
         } catch (\Exception $ex) {
-         return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
+            return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
         }
     }
 
 
     public function load_model_approve_invoice(Request $request){
-       
+    
         if ($request->ajax()) {
 
 
             $auto_serial = $request->autoserailparent;
-           
+        
             $com_code = auth()->user()->com_code;
             $data = get_cols_where_row(new Suppliers_orderModel(), array('*'), array('auto_serial' => $auto_serial, "com_code" => 
                                         $com_code, 'order_type' => 1));
@@ -564,7 +564,7 @@ class Suppliers_orderControllers extends Controller
         }
     }
     public function load_usershiftDiv(Request $request){
-       
+    
         if ($request->ajax()) {
             
             $user_shifts = get_user_shift(new Admin_shifts(),new Treasure(),new Treasuries_transactionModel());
@@ -577,9 +577,9 @@ class Suppliers_orderControllers extends Controller
         
         // sheck if approve 
         $data = get_cols_where_row(new Suppliers_orderModel(),array('is_approved','store_id', 'total_cost_items','id','account_number' , 'supplier_code'),
-                                         array('auto_serial'=>$auto_serial, 'order_type'=>1,'com_code'=>$com_code));
+                                        array('auto_serial'=>$auto_serial, 'order_type'=>1,'com_code'=>$com_code));
         $supplier_name = get_field_value(new SuppliersModel(),'name', array("supplier_code"=>$data['supplier_code']));
-                                       
+                                    
         if($data['is_approved']== 1){
             return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا لا يمكن اعتماد الفاتورة معتمده من قبل');
         }
@@ -644,16 +644,19 @@ class Suppliers_orderControllers extends Controller
         if($flag){
 
 
-            // affect on supplier balance هتأثر في وصيد لبمورد 
-
-            refresh_account_blance($data['account_number'],new AccountModel(),new SuppliersModel(),
-                                    new Treasuries_transactionModel(), new Suppliers_orderModel(),false);
+        
             // حركات مختلفة 
             if($request->what_paid>0){
 
+
+                // affect on supplier balance هتأثر في وصيد لبمورد 
+
+                refresh_account_blance_suppliers($data['account_number'],new AccountModel(),new SuppliersModel(),new Treasuries_transactionModel(),
+                                        new Suppliers_orderModel(),false);
+
                 $trussery_data = get_cols_where_row(new Treasure(),array('last_isal_exchange'),array('com_code'=>$com_code, 'id'=>$user_shift['treasures_id']));
                 if(empty($trussery_data)){
-                   
+                
                     return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error',' عفوا غير قادر على الوصول الي  بيانات الخزنة المطلوبة   ');
 
                 }
@@ -685,7 +688,7 @@ class Suppliers_orderControllers extends Controller
                 $data_insert_Treasuries_transaction['com_code'] =  $com_code;
                 $data_insert_Treasuries_transaction['created_at']= date("Y-m-d H:i:s");
                 $data_insert_Treasuries_transaction['added_by']= auth()->user()->name;
-               
+            
                 $flage = insert(new Treasuries_transactionModel, $data_insert_Treasuries_transaction);
                 
 
@@ -694,7 +697,7 @@ class Suppliers_orderControllers extends Controller
                     update(new Treasure() ,  $data_to_update , array('id'=>$com_code, 'id'=>$user_shift['treasures_id']));       
                 }else{
                     return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','حدث خطأ ما ');
-  
+
                 }
             }
                 
@@ -719,21 +722,21 @@ class Suppliers_orderControllers extends Controller
                 array('item_code'=>$info->item_code,'com_code'=>$com_code, 'store_id' => $data['store_id']));
                                 
                 $Main_uom_name =get_field_value(new Inv_ums(),'name', array('com_code'=>$com_code,'id'=>$itemCard_data['uom_id']));
-               
+            
                         // بندخل كميات للخزن بوحده قياس الاب اجباري 
                             // لو كان الوحده اب if ...
                         if($info->isparentuom == 1){
                             $quantity = $info->dliverd_quantity ; 
                             $unit_price = $info->unit_price;
-                           
-                           
+                        
+                        
                         }else{
                             // لو كان الوحده ابن 
                             $quantity = ($info->dliverd_quantity /$itemCard_data['retail_uom_quantityToParent'] );
                             $unit_price = $info->unit_price * $itemCard_data['retail_uom_quantityToParent'];
-                           
-                           
-                           
+                        
+                        
+                        
                         }
                             
                             // دخل بيانات جدول باتشات 
@@ -850,13 +853,13 @@ class Suppliers_orderControllers extends Controller
                     }
                     // تحديث اخر سعر شراء للصنف 
                     if($info->isparentuom == 1){
-                       $dataToUpdateitemCardCost ['cost_price'] = $info->unit_price;
-                      
-                       if($itemCard_data['does_has_retailunit'] == 1){
-                           
+                        $dataToUpdateitemCardCost ['cost_price'] = $info->unit_price;
+                    
+                        if($itemCard_data['does_has_retailunit'] == 1){
+                        
                             $dataToUpdateitemCardCost['cost_price_retail'] =$info->unit_price/$itemCard_data['retail_uom_quantityToParent'];
-                           
-                       }
+                        
+                        }
                         
                     }else{
                         // لو كان الوحده ابن 
@@ -904,8 +907,9 @@ class Suppliers_orderControllers extends Controller
                     $field1 = "supplier_code";
                     $operator1 = "=";
                     $value1 = $supplier_code;
-              
+            
                 }
+                
                 if ($store_id == 'all') {
                     $field2 = "id";
                     $operator2 = ">";
@@ -914,7 +918,7 @@ class Suppliers_orderControllers extends Controller
                     $field2 = "store_id";
                     $operator2 = "=";
                     $value2 = $store_id;
-              
+            
                 }
 
             
@@ -941,7 +945,7 @@ class Suppliers_orderControllers extends Controller
             if ($search_by_text != "") {
 
                 if ($searchbyradio == 'Doc_No') {
-                   
+                
                     $field5 = 'Doc_No';
                     $operator5 = "=";
                     $value5 =  $search_by_text;
@@ -985,7 +989,7 @@ class Suppliers_orderControllers extends Controller
             return view('admin.suppliers_with_orders.ajax_search', ['data' => $data]);
         }
     }
- 
+
 
 
 

@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 class TreasuresController extends Controller
 {
     public function index(){
-       $data = Treasure::select()->orderby('id','DESC')->paginate(PAGINATEION_COUNT);
+        $data = Treasure::select()->orderby('id','DESC')->paginate(PAGINATEION_COUNT);
         if(!empty($data)){
             foreach($data as $info){
                 $info->added_by_admin = Admin::where('id',$info->added_by)->value('name');
@@ -24,7 +24,7 @@ class TreasuresController extends Controller
             }
         };
 
-       return view('admin.treasures.index',['data'=>$data]);
+        return view('admin.treasures.index',['data'=>$data]);
     }
 
     public function create(){
@@ -45,7 +45,7 @@ class TreasuresController extends Controller
                         ->with(['error'=>'عفوا يوجد خزنة رئيسية بالفعل مسجلة من قبل لا يمكن ان يكون هناك اكتر من خزينة رئيسية !!'])
                         ->withInput();
                     }
-                     
+                    
                 }
                 
 
@@ -61,7 +61,7 @@ class TreasuresController extends Controller
 
                 Treasure::create($data);
 
-                  return redirect()->route('admin.treasures.index')->with(['success'=>'لقد تم إضافة بيانات بنجاح']);
+                return redirect()->route('admin.treasures.index')->with(['success'=>'لقد تم إضافة بيانات بنجاح']);
 
             }else{
                 return redirect()->back()->with(['error'=>'عفوا اسم الخزنة مسجل من قبل '])->withInput();
@@ -70,7 +70,7 @@ class TreasuresController extends Controller
 
         } catch (\Exception $ex) {
             return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
-           
+        
         }
     }
 
@@ -149,7 +149,7 @@ class TreasuresController extends Controller
 
             if(!empty($treasuries_delivery)){
                 foreach( $treasuries_delivery as $info){
-                   
+                
                     $info->name = Treasure::where('id',$info->treasures_can_delivery_id)->value('name');      
                     $info->added_by_admin=Admin::where('id',$info->added_by)->value('name');    
 
@@ -218,7 +218,7 @@ class TreasuresController extends Controller
     }
 
     public function delete_treasures_delivery($id){
-       try {
+        try {
             $treasures_delivery = Treasuries_delivery::find($id);
             if(!empty($treasures_delivery)){
                 $flag = $treasures_delivery->delete();
@@ -229,9 +229,9 @@ class TreasuresController extends Controller
                 };
             }else{
                 return redirect()->back()->with(['error'=>'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
-       };
-       } catch (\Exception $ex) {
-        return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
-       }
+        };
+        } catch (\Exception $ex) {
+            return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
+        }
     }
 }

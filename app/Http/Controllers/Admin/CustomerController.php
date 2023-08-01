@@ -56,18 +56,18 @@ class CustomerController extends Controller
             }
 
              //set account number
-             $row = get_cols_where_row_orderby(new AccountModel(), array("account_number"), array("com_code" => $com_code), 'id', 'DESC');
-             if (!empty($row)) {
-                 $data_insert['account_number'] = $row['account_number'] + 1;
-             } else {
-                 $data_insert['account_number'] = 1;
-             }
+            $row = get_cols_where_row_orderby(new AccountModel(), array("account_number"), array("com_code" => $com_code), 'id', 'DESC');
+            if (!empty($row)) {
+                $data_insert['account_number'] = $row['account_number'] + 1;
+            } else {
+                $data_insert['account_number'] = 1;
+            }
 
 
 
             $data_insert['name'] = $request->name;
             $data_insert['address'] = $request->address;
-          
+        
 
             $data_insert['start_balance_status'] = $request->start_balance_status;
             if ($data_insert['start_balance_status'] == 1) {
@@ -99,7 +99,7 @@ class CustomerController extends Controller
             if($flag){
                 // insert into accounts 
                 $data_insert_account['name'] = $request->name;
-               
+            
             
 
                 $data_insert_account['start_balance_status'] = $request->start_balance_status;
@@ -221,8 +221,7 @@ class CustomerController extends Controller
         $com_code = auth()->user()->com_code;
         if ($request->ajax()) {
             $search_by_text = $request->search_by_text;
-           
-           
+        
             $searchbyradio = $request->searchbyradio;
 
             if ($search_by_text != '') {
@@ -245,7 +244,7 @@ class CustomerController extends Controller
                 $operator1 = ">";
                 $value1 = 0;
             }
-           
+        
             $data = Customer::where($field1, $operator1, $value1)->where(['com_code'=>$com_code])->orderBy('id', 'DESC')->paginate(PAGINATEION_COUNT);
             if (!empty($data)) {
                 foreach ($data as $info) {

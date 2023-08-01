@@ -230,17 +230,16 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::get('/admin_shift/create',[Admins_shiftsController::class, 'create'])->name('admin.admin_shift.create');
         
         Route::post('/admin_shift/store',[Admins_shiftsController::class, 'store'])->name('admin.admin_shift.store');
-      
+    
 
     // end admins shifts
- 
- 
+
     // start collect_tranaction
         Route::get('/collect_tranaction/index',[CollectController::class, 'index'])->name('admin.collect_tranaction.index');
         Route::get('/collect_tranaction/create',[CollectController::class, 'create'])->name('admin.collect_tranaction.create');
         
         Route::post('/collect_tranaction/store',[CollectController::class, 'store'])->name('admin.collect_tranaction.store');
-      
+    
 
     // end collect_tranaction
 
@@ -251,7 +250,7 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::get('/exchange_tranaction/create',[ExchangeController::class, 'create'])->name('admin.exchange_tranaction.create');
         
         Route::post('/exchange_tranaction/store',[ExchangeController::class, 'store'])->name('admin.exchange_tranaction.store');
-      
+    
 
     // end EExchange_tranaction
 
@@ -265,6 +264,7 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::get('/SalesInvoices/delete_details/{id}/{id_parent}',[SalesInvoiceController::class, 'delete_details'])->name('admin.SalesInvoices.delete_details');
         Route::get('/SalesInvoices/delete/{id}',[SalesInvoiceController::class, 'delete'])->name('admin.SalesInvoices.delete');
         Route::get('/SalesInvoices/do_approve/{id}',[SalesInvoiceController::class, 'do_approve'])->name('admin.SalesInvoices.do_approve');
+        Route::get('/SalesInvoices/delete_invoice/{id}',[SalesInvoiceController::class, 'delete_invoice'])->name('admin.SalesInvoices.delete_invoice');
         
         Route::post('/SalesInvoices/store',[SalesInvoiceController::class, 'store'])->name('admin.SalesInvoices.store');
         Route::post('/SalesInvoices/update/{id}',[SalesInvoiceController::class, 'update'])->name('admin.SalesInvoices.update');
@@ -282,7 +282,13 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/SalesInvoices/do_update_sales_invoice', [SalesInvoiceController::class, 'do_update_sales_invoice'])->name('admin.SalesInvoices.do_update_sales_invoice');
         Route::post('/SalesInvoices/add_items_to_invoice', [SalesInvoiceController::class, 'add_items_to_invoice'])->name('admin.SalesInvoices.add_items_to_invoice');
         Route::post('/SalesInvoices/add_new_item_sales_row', [SalesInvoiceController::class, 'add_new_item_sales_row'])->name('admin.SalesInvoices.add_new_item_sales_row');
+        // reload_item_in_invoice
         Route::post('/SalesInvoices/reload_invoice_details', [SalesInvoiceController::class, 'reload_invoice_details'])->name('admin.SalesInvoices.reload_invoice_details');
+        Route::post('/SalesInvoices/delete_item_sales_details_row', [SalesInvoiceController::class, 'delete_item_sales_details_row'])->name('admin.SalesInvoices.delete_item_sales_details_row');
+        Route::post('/SalesInvoices/do_close_and_approve', [SalesInvoiceController::class, 'do_close_and_approve'])->name('admin.SalesInvoices.do_close_and_approve');
+        Route::post('/SalesInvoices/load_usershiftDiv', [SalesInvoiceController::class, 'load_usershiftDiv'])->name('admin.SalesInvoices.load_usershiftDiv');
+        Route::post('/SalesInvoices/load_sales_invoice_details', [SalesInvoiceController::class, 'load_sales_invoice_details'])->name('admin.SalesInvoices.load_sales_invoice_details');
+
 
 
         Route::post('/SalesInvoices/edit_item_details', [SalesInvoiceController::class, 'edit_item_details'])->name('admin.SalesInvoices.edit_item_details');

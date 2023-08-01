@@ -44,7 +44,7 @@
                         <div class="form-group">
                             <label>  رقم الفاتورة المسجل بأصل فاتورة المشتريات</label>
                             <input type="text" name="Doc_No" id="Doc_No" class="form-control" value="{{old('Doc_No')}}" >
-                           
+                        
                         </div>
                         <div class="form-group">
                             <label> بيانات  الموردين</label>

@@ -92,8 +92,8 @@
                         <label> حاله التفعيل</label>
                         <select class="form-control" name="active" id="active">
                             <option value="" selected="selected">اختر الحاله </option>
-                            <option @if(old('active')==1 || old('active') =="")) selected="selected" @endif value="0">نعم </option>
-                            <option @if(old('active')==0 and old('active'!='' )) selected="selected" @endif value="1">لا </option>
+                            <option @if(old('active')==1 || old('active') =="")) selected="selected" @endif value="1">نعم </option>
+                            <option @if(old('active')==0 and old('active'!='' )) selected="selected" @endif value="0">لا </option>
                         </select>
                         @error('active')
                         <span class="text-danger">{{$message}}</span>

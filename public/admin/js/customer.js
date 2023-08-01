@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  
+
     $(document).on('change', '#start_balance_status', function(e) {
         if ($(this).val() == "") {
             $("#start_balance").val("");
@@ -27,7 +27,7 @@ $(document).ready(function() {
         make_search();
     });
 
- 
+
     $('input[type=radio][name=searchbyradio]').change(function() {
         make_search();
     });
@@ -48,7 +48,7 @@ $(document).ready(function() {
                 search_by_text: search_by_text,
                 "_token": token_search,
                 searchbyradio: searchbyradio,
-               
+            
             },
             success: function(data) {
                 $("#ajax_responce_serarchDiv").html(data);

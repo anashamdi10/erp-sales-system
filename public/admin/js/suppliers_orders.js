@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  
+
     $(document).on('change', '#item_code_add', function(e) {
         var item_code = $(this).val();
 
@@ -17,8 +17,7 @@ $(document).ready(function() {
                 data: {
                     item_code: item_code,
                     "_token": token_search,
-                  
-                   
+
                 },
                 success: function(data) {
                     $("#UomDivAdd").html(data);
@@ -44,14 +43,12 @@ $(document).ready(function() {
             $('.related_to_date').hide(); 
         }
         
-       
+    
     });
 
 
-    
-
     $(document).on('click', '#AddToBill', function(e) {
-     
+    
         var item_code_add = $('#item_code_add').val();
         if(item_code_add == ''){
             alert("من فضلك اختر الصنف ");
@@ -64,8 +61,7 @@ $(document).ready(function() {
             $('#uom_id_Add').focuse();
             return false;
         }
-
-       
+    
 
         var isparentuom = $('#uom_id_Add').children('option:selected').data('isparentuom');
 
@@ -82,10 +78,10 @@ $(document).ready(function() {
             return false;
         }
 
-       
+    
 
         var type = $('#item_code_add').children('option:selected').data('type');
-       
+    
         if(type == 2){
             var production_date = $('#production_date').val();
             if(production_date == ''){
@@ -112,7 +108,7 @@ $(document).ready(function() {
             var production_date = $('#production_date').val();
         }
 
-       
+    
 
 
         var total_add = $('#total_add').val();
@@ -126,7 +122,7 @@ $(document).ready(function() {
         var token_search = $("#token_search").val();
         var ajax_search_url = $("#ajax_add_new_details").val();
 
-       
+    
 
         
         jQuery.ajax({
@@ -247,10 +243,6 @@ $(document).ready(function() {
 
     })
 
-
-
-
-
     $(document).on('change', '#price_add', function(e) {
         recalculate_Add();
     });
@@ -258,26 +250,18 @@ $(document).ready(function() {
         recalculate_Add();
     });
     $(document).on('change', '#price_edit', function(e) {
-       
+    
         recalculate_edit();
     });
     $(document).on('change', '#quantity_edit', function(e) {
         recalculate_edit();
     });
 
- 
 
-  
-
-
-
-
-
-   
     $(document).on('click', '#ajax_pagination_in_search ', function(e) {
         e.preventDefault();
         var search_by_text = $("#search_by_text").val();
-       
+    
         var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
         
         var token_search = $("#token_search").val();
@@ -315,12 +299,12 @@ $(document).ready(function() {
                 autoserailparent: autoserailparent,"_token": token_search,id:id   
             },
             success: function(data) {
-              
-             $('#Edit_item_model_body').html(data);
-             $('#Edit_item_model').modal('show');
+            
+                $('#Edit_item_model_body').html(data);
+                $('#Edit_item_model').modal('show');
             },
             error: function() {
-              
+            
             }
         });
 
@@ -340,12 +324,12 @@ $(document).ready(function() {
                 autoserailparent: autoserailparent,"_token": token_search,id:id   
             },
             success: function(data) {
-              
-             $('#Add_item_model_body').html(data);
-             $('#Add_item_model').modal('show');
+            
+                $('#Add_item_model_body').html(data);
+                $('#Add_item_model').modal('show');
             },
             error: function() {
-              
+            
             }
         });
 
@@ -367,8 +351,8 @@ $(document).ready(function() {
             },
             success: function(data) {
             
-             $('#ModelApproveInvoice_body').html(data);
-             $('#ModelApproveInvoice  ').modal('show');
+                $('#ModelApproveInvoice_body').html(data);
+                $('#ModelApproveInvoice  ').modal('show');
             },
             error: function() {
             alert ("error");
@@ -453,8 +437,6 @@ $(document).ready(function() {
             }
         }
 
-
-
         if(parseFloat(total_cost) < parseFloat(what_paid) ){
             alert("عفوا لا يمكن ان يكون المدفوع اكبر من اجمالي الفاتورة ");
             recalculate_approved();
@@ -467,7 +449,7 @@ $(document).ready(function() {
             return false ;
         }
         
-       
+    
         if(parseFloat(treasures_balance) > parseFloat(what_paid)){
             
 
@@ -479,12 +461,8 @@ $(document).ready(function() {
         
         recalculate_approved();
     });
-
-   
-
-
     $(document).on('mouseenter', '#do_close_approve_invoice', function(e) {
-     
+    
         var token_search = $("#token_search").val();
         var ajax_search_url = $("#ajax_load_usershiftDiv").val();
         
@@ -498,13 +476,13 @@ $(document).ready(function() {
             },
             success: function(data) {
             
-             $('#shift_div').html(data);
+                $('#shift_div').html(data);
             },
             error: function() {
             alert ("error");
             }
         });
-      
+    
     });
 
 
@@ -523,20 +501,20 @@ $(document).ready(function() {
         var tax_value = $('#tax_value').val();
         if(tax_value == ""){
             alert('من فضلك ادخل قيمة ضريبة القيمة المضافة  ');
-           
+        
             return false ;
         }
         var total_befor_discount = $('#total_befor_discount').val();
         
         if(total_befor_discount == ""){
             alert('من فضلك ادخل قيمة الاجمالي قبل الخصم  ');
-           
+        
             return false ;
         }
         var discount_type = $('#discount_type').val();
         var discount_percent = $('#discount_percent').val();
         
-       
+    
         if(discount_type == 1){
             if(discount_percent>100) {
                 alert('عفوا  لا يمكن ان يكون نسبة الخصم  اكبر من 100 % !!!');
@@ -544,7 +522,7 @@ $(document).ready(function() {
                 return false ;
             };
         }else if(discount_type ==2){
-           
+        
             if(parseFloat(discount_value)>parseFloat(total_befor_discount)) {
                 
                 alert('عفوا  لا يمكن ان يكون قيمة  الخصم  اكبر من اجمالي الفاتورة قبل الخصم  !!!')
@@ -560,13 +538,13 @@ $(document).ready(function() {
 
         if(discount_value == ""){
             alert('من فضلك ادخل قيمة الخصم  ');
-           
+        
             return false ;
         }
         var total_cost = $('#total_cost').val();
         if(total_cost == ""){
             alert('من فضلك ادخل قيمة إحمالي الفاتورة النهائي  ');
-           
+        
             return false ;
         }
         var pill_type = $('#pill_type').val();
@@ -637,7 +615,7 @@ $(document).ready(function() {
         make_search();
     });
 
- 
+
     $('input[type=radio][name=searchbyradio]').change(function() {
     
         make_search();
@@ -645,11 +623,11 @@ $(document).ready(function() {
 
     
     $(document).on('change', '#to_order_date',function() {
-       
+    
         make_search();
     });
     $(document).on('change', '#from_order_date',function() {
-       
+    
         make_search();
     });
     $(document).on('change', '#supplier_code',function() {
@@ -657,14 +635,14 @@ $(document).ready(function() {
         make_search();
     });
     $(document).on('change', '#store_id',function() {
-       
+    
         make_search();
     });
 
 
 
     function reload_items_details(){
-       
+    
         var  autoserailparent = $('#autoserailparent').val();
         var token_search = $("#token_search").val();
         var ajax_search_url = $("#ajax_reload_itemsdetails").val();
@@ -678,21 +656,20 @@ $(document).ready(function() {
                 autoserailparent: autoserailparent,
                 "_token": token_search,
                 
-               
+            
             },
             success: function(data) {
-               
-              $('#ajax_responce_serarchDivDetails').html(data);
+            
+                $('#ajax_responce_serarchDivDetails').html(data);
             },
             error: function() {
-              
+            
             }
         });
 
 
     }
     function reload_parent_pill(){
-       
         var  autoserailparent = $('#autoserailparent').val();
         var token_search = $("#token_search").val();
         var ajax_search_url = $("#ajax_reload_parent_pill").val();
@@ -706,14 +683,14 @@ $(document).ready(function() {
                 autoserailparent: autoserailparent,
                 "_token": token_search,
                 
-               
+            
             },
             success: function(data) {
-               
-              $('#ajax_responce_serarchDivparentpill').html(data);
+            
+                $('#ajax_responce_serarchDivparentpill').html(data);
             },
             error: function() {
-              
+            
             }
         });
 
@@ -756,7 +733,7 @@ $(document).ready(function() {
         $("#total_befor_discount").val(total_befor_discount);
         var discount_type = $("#discount_type").val();
         if (discount_type != "") {
-          if (discount_type == 1) {
+            if (discount_type == 1) {
             var discount_percent = $("#discount_percent").val();
             if (discount_percent == "") { discount_percent = 0; }
             discount_percent = parseFloat(discount_percent);
@@ -765,21 +742,21 @@ $(document).ready(function() {
             var total_cost = total_befor_discount - discount_value;
             $("#total_cost").val(total_cost * 1);
     
-          } else {
+        } else {
             var discount_percent = $("#discount_percent").val();
             if (discount_percent == "") { discount_percent = 0; }
             discount_percent = parseFloat(discount_percent);
             $("#discount_value").val(discount_percent * 1);
             var total_cost = total_befor_discount - discount_percent;
             $("#total_cost").val(total_cost * 1);
-          }
+        }
     
     
     
         } else {
-          $("#discount_value").val(0);
-          var total_cost = total_befor_discount;
-          $("#total_cost").val(total_cost);
+            $("#discount_value").val(0);
+            var total_cost = total_befor_discount;
+            $("#total_cost").val(total_cost);
     
         }
         what_paid = $("#what_paid").val();
@@ -790,10 +767,10 @@ $(document).ready(function() {
         $("#what_remain").val($what_remain * 1);
     
     
-      }
+    }
 
 
-      function make_search(){
+    function make_search(){
         var search_by_text = $('#search_by_text').val();
         var store_id = $('#store_id').val();
         var supplier_code = $('#supplier_code').val();
@@ -825,14 +802,6 @@ $(document).ready(function() {
         });
     }
 
-
-
-
 }
 
-    
-
-
-
-    
 );

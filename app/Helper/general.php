@@ -102,8 +102,8 @@ function get_user_shift($Admin_shifts ,$Treasure,$Treasuries_transactionModel){
     }                        
     return $data;
 }
-
-function refresh_account_blance($account_number= null , $AccountModel =null , $suppliersModel = null , $Treasuries_transactionModel,$suppliers_with_order , $returnFlage = false){
+// function احتساب و تحديث رصيد الحساب المالي المورد 
+function refresh_account_blance_suppliers($account_number= null , $AccountModel =null , $suppliersModel = null , $Treasuries_transactionModel,$suppliers_with_order , $returnFlage = false){
   $com_code = auth()->user()->com_code;
   // نجيب رصيد الافتتاحي للمورد 
   $AccountData =  $AccountModel::select('start_balance')->where(['com_code'=>$com_code,'account_number'=>$account_number ])->first();
@@ -132,13 +132,41 @@ function refresh_account_blance($account_number= null , $AccountModel =null , $s
   }
 
 }
+// function احتساب و تحديث رصيد الحساب المالي العميل 
+function refresh_account_blance_customer($account_number= null , $AccountModel =null , $customerModel = null , $Treasuries_transactionModel,$SalesInvoicesModel , $returnFlage = false){
+  $com_code = auth()->user()->com_code;
+  // نجيب رصيد الافتتاحي للعميل 
+  $AccountData =  $AccountModel::select('start_balance')->where(['com_code'=>$com_code,'account_number'=>$account_number ])->first();
+  // صافي مجموع المبيعات المرتجعات للعميل
+
+  $Net_sales_invoices_for_customer = $SalesInvoicesModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->sum('money_for_account');
+
+  // صافي حركة النقدية بالخزنة على حساب العميل
+
+  $Net_in_treasuries_transaction = $Treasuries_transactionModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->sum('money_for_account');
+
+
+  // الرصيد النهائي للعميل 
+  $the_final_balance = $AccountData['start_balance'] + $Net_sales_invoices_for_customer +  $Net_in_treasuries_transaction ; 
+
+  $dataToUpdateAccount['current_blance'] =  $the_final_balance ;
+              //  تحديث جدول الحسابات المالية 
+  $AccountModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->update($dataToUpdateAccount);        
+  $dataToUpdateSupplier['current_blance'] =  $the_final_balance ;
+  $customerModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->update($dataToUpdateSupplier);       
+
+  if($returnFlage){
+    return $the_final_balance ;
+  }
+
+}
 
 function DoUpdateItemCard($item_card_model , $item_code, $Inv_itemcard_batches,$retail_uom_quantityToParent,$does_has_retailunit){
   
   $com_code = auth()->user()->com_code;
   
   $allQuantityBatches = get_sum_where( $Inv_itemcard_batches, 'quantity',array('com_code'=>$com_code ,
-                                             'item_code' =>$item_code , 'is_send_to_archived'=>0) );
+                                            'item_code' =>$item_code , 'is_send_to_archived'=>0) );
   $DataToUpdateQuantity['all_quantity'] = $allQuantityBatches;
   if($does_has_retailunit == 1){
       // all quantity is reatails كل الكمية بوجده التجزئة 

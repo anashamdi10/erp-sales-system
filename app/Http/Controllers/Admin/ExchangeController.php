@@ -13,6 +13,8 @@ use App\Http\Requests\Trasuries_transactionRequest;
 
 use App\Models\account_typeModel;
 use App\Models\SuppliersModel;
+use App\Models\Customer;
+use App\Models\Sales_invoices;
 
 
 use Illuminate\Http\Request;
@@ -46,7 +48,7 @@ class ExchangeController extends Controller
         }
 
         $mov_type = get_cols_where(new Mov_type(), array("name", "id"), array("active" => 1 , 'in_screen'=>1,
-                     'is_private_internal'=>0), 'id', 'ASC');
+                    'is_private_internal'=>0), 'id', 'ASC');
         
         return view('admin.exchange_transaction.index', ['data' => $data, 'check_exsits_shifts'=> $check_exsits_shifts , 
                     'accounts' => $accounts ,  'mov_type'=>$mov_type]);
@@ -54,7 +56,7 @@ class ExchangeController extends Controller
 
     public function store (Trasuries_transactionRequest $request){
 
-      
+    
         $com_code = auth()->user()->com_code;
         $trussery_data = get_cols_where_row(new Treasure(),array('last_isal_exchange'),array('com_code'=>$com_code, 'id'=>$request->treasures_id));
         if(empty($trussery_data)){
@@ -67,7 +69,7 @@ class ExchangeController extends Controller
         }
 
         $last_record_Treasuries_transaction =  get_cols_where_row_orderby(new Treasuries_transactionModel(),array('auto_serial'),array('com_code'=>$com_code), 'auto_serial',"DESC");
- 
+
         if(!empty( $last_record_Treasuries_transaction)) {
             $data_insert['auto_serial'] = $last_record_Treasuries_transaction['auto_serial']+1;
         }else{
@@ -98,10 +100,17 @@ class ExchangeController extends Controller
         
         if($flage){
             $data_to_update['last_isal_exchange'] = $data_insert['isal_number'];
-            update(new Treasure() ,  $data_to_update , array('id'=>$com_code, 'id'=>$request->treasures_id));       
-            refresh_account_blance($request->account_number,new AccountModel(),new SuppliersModel(),
-            new Treasuries_transactionModel(), new Suppliers_orderModel(),false);
-          
+            update(new Treasure() ,  $data_to_update , array('id'=>$com_code, 'id'=>$request->treasures_id));
+
+            $account_type = AccountModel::where(["account_number"=>$request->account_number, 'com_code'=>$com_code ])->value('account_type');
+            if($account_type == 2){     
+                refresh_account_blance_suppliers($request->account_number,new AccountModel(),new SuppliersModel(),
+                new Treasuries_transactionModel(), new Suppliers_orderModel(),false);
+            } elseif ($account_type == 3) {
+                refresh_account_blance_customer($request->account_number,new AccountModel(),new Customer(),
+                    new Treasuries_transactionModel(),new Sales_invoices(),false);
+            }
+        
             return redirect()->route('admin.exchange_tranaction.index')->with(['success'=> 'تم تحصيل بنجاح']);
         }
 

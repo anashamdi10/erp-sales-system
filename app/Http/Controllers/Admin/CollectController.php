@@ -11,6 +11,8 @@ use App\Models\AccountModel;
 use App\Models\account_typeModel;
 use App\Models\Treasure;
 use App\Models\Mov_type;
+use App\Models\Customer;
+use App\Models\Sales_invoices;
 
 use App\Models\Suppliers_orderModel;
 use App\Models\SuppliersModel;
@@ -37,7 +39,7 @@ class CollectController extends Controller
         $check_exsits_shifts = get_cols_where_row( new Admin_shifts(),array('shift_code', 'treasures_id', ),array('com_code'=> $com_code,
                             'is_finished'=>0 , 'admin_id'=>auth()->user()->id ) );    
         
-               
+            
         if(!empty($check_exsits_shifts)){
             $check_exsits_shifts['treasure_name'] = Treasure::where('id', $check_exsits_shifts['treasures_id'])->value('name');
         };    
@@ -49,7 +51,7 @@ class CollectController extends Controller
 
 
 
-       
+    
         $accounts = get_cols_where(new AccountModel(), array("name", "account_number", "account_type"), array("com_code" => $com_code, "is_archived"=>0, "is_parent" => 0), 'id', 'DESC');
         
         foreach ($accounts as $info) {
@@ -70,7 +72,7 @@ class CollectController extends Controller
                 $com_code = auth()->user()->com_code;
                 // get last isal treasures
                 $treasury_data = get_cols_where_row(new Treasure(), array('last_isal_collect'),array('com_code'=>$com_code , 'id'=>$request->treasures_id));
-               
+            
                 // check if user has open shift or not 
                 $check_exsits_shifts = get_cols_where_row( new Admin_shifts(),array('shift_code', 'treasures_id', ),array('com_code'=> $com_code,
                 'is_finished'=>0 , 'admin_id'=>auth()->user()->id ) );  
@@ -86,7 +88,7 @@ class CollectController extends Controller
                 }else{
                     $data_insert['auto_serial'] = 1;
                 }                                           
-              
+            
                 $data_insert['mov_date'] = $request->mov_date;
                 $data_insert['isal_number'] = $treasury_data['last_isal_collect']+1;
                 $data_insert['treasures_id'] = $request->treasures_id;
@@ -110,8 +112,14 @@ class CollectController extends Controller
                 if($flage){
                     
                     Treasure::where(['com_code'=>$com_code , 'id'=>$request->treasures_id])->update(["last_isal_collect"=>$data_insert['isal_number']]);
-                    refresh_account_blance($request->account_number,new AccountModel(),new SuppliersModel(),new Treasuries_transactionModel(),new Suppliers_orderModel(),false);
-                    
+                $account_type = AccountModel::where(["account_number" => $request->account_number, 'com_code' => $com_code])->value('account_type');
+                if ($account_type == 2) {
+                    refresh_account_blance_suppliers($request->account_number,new AccountModel(),new SuppliersModel(),
+                        new Treasuries_transactionModel(),new Suppliers_orderModel(),false);
+                } elseif ($account_type == 3) {
+                    refresh_account_blance_customer($request->account_number,new AccountModel(),new Customer(),
+                        new Treasuries_transactionModel(),new Sales_invoices(),false);
+                }                    
                     return redirect()->route('admin.collect_tranaction.index')->with(['success'=> 'تم تحصيل بنجاح']);
                 }else{
                     return redirect()->back()->with(['error'=> 'عفوا حدث خطأ م من فضلك حاول مرة اخرى '  ])->withInput();
@@ -127,7 +135,7 @@ class CollectController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with(['error'=> 'عفوا حدث خطأ ما ' . ' ' . $e->getMessage() ])->withInput();
         }
-       
+    
     }
 
 

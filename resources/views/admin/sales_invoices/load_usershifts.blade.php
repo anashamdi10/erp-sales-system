@@ -12,13 +12,6 @@
 
 <div class="form-group col-lg-6">
     <label> الرصيد متاح للخزنة </label>
-    <input readonly type="text" name="treasures_balance" id="treasures_balance" class="form-control" 
-    @if(!@empty($user_shifts))
-        value=" {{$user_shifts['current_blance']*1}} "
-    @else
-        value = "0"
-
-    @endif
-    
-    >
+    <input readonly type="text" name="treasures_balance" id="treasures_balance"
+        class="form-control" @if(!@empty($user_shifts)) value=" {{$user_shifts['current_blance']*1}} " @else value="0" @endif>
 </div>
