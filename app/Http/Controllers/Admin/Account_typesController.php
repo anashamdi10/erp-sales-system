@@ -11,11 +11,7 @@ use Illuminate\Http\Request;
 class Account_typesController extends Controller
 {
     public function index(){
-        $data = get_cols(new account_typeModel(), array('*'), 'id', "ASC", PAGINATEION_COUNT);
-       
-
+        $data = get_cols(new account_typeModel(), array('*'), 'relatediternalaccounts', "ASC", PAGINATEION_COUNT);
         return view('admin.account_types.index', ['data'=>$data]);
     }
-
-  
 }

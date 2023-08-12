@@ -6,7 +6,7 @@
 الحسابات المالية
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.customer.index') }}">  العملاء </a>
+<a href="{{ route('admin.customer.index') }}"> العملاء </a>
 @endsection
 
 
@@ -22,8 +22,8 @@
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-        
-        <form action="{{route('admin.customer.update',$data['id'])}}" method="post" >
+
+        <form action="{{route('admin.customer.update',$data['id'])}}" method="post">
             @csrf
             <div class="row">
                 <div class="col-md-6">
@@ -35,18 +35,9 @@
                         @enderror
                     </div>
                 </div>
-               
-
-
-               
-              
-
-
-               
-
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>  العنوان </label>
+                        <label> العنوان </label>
                         <input type="text" name="address" id="address" class="form-control" value="{{old('address',$data['address'])}}">
                         @error('address')
                         <span class="text-danger">{{$message}}</span>
@@ -56,15 +47,23 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>  ملاحظات </label>
+                        <label> الجوال</label>
+                        <input type="text" name="phones" id="phones" class="form-control" value="{{old('phones',$data['phones'])}}">
+                        @error('phones')
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label> ملاحظات </label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{old('notes',$data['notes'])}}">
                         @error('notes')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
                 </div>
-
-
 
                 <div class="col-md-6">
                     <div class="form-group">

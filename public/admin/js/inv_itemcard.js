@@ -333,9 +333,9 @@ $(document).ready(function () {
         make_search();  
     });
 
-   $('input[type=radio][name=searchbyradio]').change(function(){
+    $('input[type=radio][name=searchbyradio]').change(function(){
         make_search();
-   });
+    });
 
 
 
@@ -370,7 +370,7 @@ $(document).ready(function () {
 
 
     $(document).on('click', '#ajax_pagination_in_search a', function(e) {
-        e.prventDefult();
+        e.preventDefault();
         var search_by_text = $('#search_by_text').val();
         var item_type = $('#item_type_search').val();
         var inv_itemcard_categories_id = $('#inv_itemcard_categories_id_search').val();
@@ -397,6 +397,100 @@ $(document).ready(function () {
         });
 
     });
+
+    $(document).on('change', '#stores', function (e) {
+        make_search_sow();
+    });
+    $(document).on('change', '#inv_itemcard_movements_categories', function (e) {
+        make_search_sow();
+    });
+    $(document).on('change', '#inv_itemcard_movements_types', function (e) {
+        make_search_sow();
+    });
+    $(document).on('change', '#from_order_date', function (e) {
+        make_search_sow();
+    });
+    $(document).on('change', '#to_order_date', function (e) {
+        make_search_sow();
+    });
+    $(document).on('change', '#sort_id', function (e) {
+        make_search_sow();
+    });
+    $(document).on('click', '#show', function (e) {
+        make_search_sow();
+    });
+
+
+
+
+
+    function make_search_sow() {
+        var stores = $('#stores').val();
+        var inv_itemcard_movements_categories = $('#inv_itemcard_movements_categories').val();
+        var inv_itemcard_movements_types = $('#inv_itemcard_movements_types').val();
+        var from_order_date = $("#from_order_date").val();
+        var to_order_date = $("#to_order_date").val();
+        var sort_id = $("#sort_id").val();
+        var token_search = $("#token_search").val();
+        var ajax_search_url = $("#ajax_search_url_show").val();
+
+        
+
+        jQuery.ajax({
+            url: ajax_search_url,
+            type: 'post',
+            dataType: 'html',
+            cache: false,
+            data: {
+                stores: stores,
+                inv_itemcard_movements_categories: inv_itemcard_movements_categories,
+                inv_itemcard_movements_types: inv_itemcard_movements_types, sort_id: sort_id,
+                from_order_date: from_order_date, to_order_date: to_order_date,
+                "_token": token_search
+            },
+            success: function (data) {
+                $("#ajax_search_show").html(data);
+            },
+            error: function () { }
+        });
+    }
+
+
+    $(document).on('click', '#ajax_pagination_in_search_show a', function (e) {
+        
+        e.preventDefault();
+        
+        var stores = $('#stores').val();
+        var inv_itemcard_movements_categories = $('#inv_itemcard_movements_categories').val();
+        var inv_itemcard_movements_types = $('#inv_itemcard_movements_types').val();
+        var from_order_date = $("#from_order_date").val();
+        var to_order_date = $("#to_order_date").val();
+        var sort_id = $("#sort_id").val();
+        var token_search = $("#token_search").val();
+        var url = $(this).attr("href");
+
+
+
+        jQuery.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'html',
+            cache: false,
+            data: {
+                stores: stores,
+                inv_itemcard_movements_categories: inv_itemcard_movements_categories,
+                inv_itemcard_movements_types: inv_itemcard_movements_types, sort_id: sort_id,
+                from_order_date: from_order_date, to_order_date: to_order_date,
+                "_token": token_search
+            },
+            success: function (data) {
+                $("#ajax_pagination_in_search_show").html(data);
+            },
+            error: function () { }
+        });
+
+    });
+
     
 });
 

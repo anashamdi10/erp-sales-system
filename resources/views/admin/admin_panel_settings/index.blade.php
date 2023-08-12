@@ -18,11 +18,14 @@
 @endsection
 
 @section('content')
+<div class="form-group text-center" style="margin-bottom: 50px; z-index: 10; position: fixed; top: 100px; left: 0px">
+    <a href="{{route('admin.adminPanelSettings.edit')}}" class="btn btn-sm btn-primary " style="margin-right: 50px; padding: 5px 40px;"> تعديل</a>
+</div>
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">بيانات الضبط العام </h3>
+                <h4 class="text-center ">بيانات الضبط العام </h4>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -61,11 +64,19 @@
                         <td class="width30"> اسم الحساب المالي للموردين الاب </td>
                         <td>{{$data['suppliers_parent_account_name']}} رقم الحساب مالي ({{$data['suppliers_parent_account_number']}})</td>
                     </tr>
+                    <tr>
+                        <td class="width30"> اسم الحساب المالي للمناديب الاب </td>
+                        <td>{{$data['delegates_parent_account_name']}} رقم الحساب مالي ({{$data['delegates_parent_account_number']}})</td>
+                    </tr>
+                    <tr>
+                        <td class="width30"> اسم الحساب المالي للموظفين الاب </td>
+                        <td>{{$data['employees_parent_account_name']}} رقم الحساب مالي ({{$data['employees_parent_account_number']}})</td>
+                    </tr>
 
 
 
 
-                    
+
                     <tr>
                         <td class="width30">رسالة التنبيه اعلى الشاشة للشركة </td>
                         <td>{{ $data['general_alert']}} </td>
@@ -102,7 +113,6 @@
                             لايوجد تحديث
                             @endif
 
-                            <a href="{{route('admin.adminPanelSettings.edit')}}" class="btn btn-sm btn-success" style="margin-right: 50px;"> تعديل</a>
                         </td>
 
 

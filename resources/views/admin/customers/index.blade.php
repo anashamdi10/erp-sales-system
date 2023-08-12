@@ -45,6 +45,10 @@
                      <th>الكود </th>
                      <th> رقم الحساب </th>
                      <th> الرصيد </th>
+                     <th> العنوان </th>
+                     <th> الجوال </th>
+
+                     <th> ملاحظات </th>
                      <th>حالة التفعيل</th>
 
                      <th></th>
@@ -59,16 +63,21 @@
                         <td>{{ $info->customer_code }}</td>
                         <td>{{ $info->	account_number }}</td>
 
-                        <td>{{ $info->	current_blance }}</td>
-
-
-
-                        <td>@if($info->active==1) مفعل @else معطل @endif</td>
 
                         <td>
-                           <a href="{{ route('admin.customer.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
-                           <a href="" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
+                           @if($info->is_parent==0)
+                           @if($info->current_blance > 0 )
+                           مدين ب ({{ $info->current_blance *1 }}) جنيه
+                           @elseif($info->current_blance < 0) دائن ب ({{ $info->current_blance *(-1) }}) جنيه @else متزن @endif @else من ميزان المراجعه @endif </td>
+                        <td>{{ $info->	address }}</td>
+                        <td>{{ $info->	phones }}</td>
+                        <td>{{ $info->	notes }}</td>
 
+
+                        <td @if($info->active==1) class = "bg-success text-center" @else class = "bg-danger text-center" @endif>@if($info->active==1) مفعل @else معطل @endif</td>
+
+                        <td class="text-center">
+                           <a href="{{ route('admin.customer.edit',$info->id) }}" class="btn btn-sm   btn-primary">تعديل</a>
                         </td>
                      </tr>
                      @php

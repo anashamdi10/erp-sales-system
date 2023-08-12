@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\AdminsControllers;
 use App\Http\Controllers\Admin\CollectController;
 use App\Http\Controllers\Admin\ExchangeController;
 use App\Http\Controllers\Admin\SalesInvoiceController;
+use App\Http\Controllers\Admin\DelegatesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,7 +48,7 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
     Route::get('/treasures/create',[TreasuresController::class, 'create'])->name('admin.treasures.create');
     Route::get('/treasures/edit/{id}',[TreasuresController::class, 'edit'])->name('admin.treasures.edit');
     Route::get('/treasures/details/{id}',[TreasuresController::class, 'details'])->name('admin.treasures.details');
-    Route::get('/treasures/Add_treasures_delivery/{id}',[TreasuresController::class, 'add_treasures_delivery'])->name('admin.treasures.add_treasures_delivery');
+    Route::get('/treasures/add_treasures_delivery/{id}',[TreasuresController::class, 'add_treasures_delivery'])->name('admin.treasures.add_treasures_delivery_detials');
     Route::get('/treasures/delete_treasures_delivery/{id}',[TreasuresController::class, 'delete_treasures_delivery'])->name('admin.delete_treasures_delivery');
 
 
@@ -111,8 +112,12 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
     // start item card
 
     Route::resource('/inv_itemcard', Inv_itemcardController::class);
-    Route::post('/inv_itemcard/ajax_search', [Inv_itemcardController::class, 'ajax_search'])->name('admin.inv_itemcard.ajax_search');
     Route::get('/inv_itemcard/delete/{id}',[Inv_itemcardController::class, 'delete'])->name('inv_itemcard.delete');
+
+    
+    Route::post('/inv_itemcard/ajax_search', [Inv_itemcardController::class, 'ajax_search'])->name('admin.inv_itemcard.ajax_search');
+    Route::post('/uoms/ajax_search_show', [Inv_itemcardController::class, 'ajax_search_show'])->name('admin.inv_itemcard.ajax_search_show');
+
 
     // end item card
 
@@ -214,8 +219,7 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::get('/admins_accounts/create',[AdminsControllers::class, 'create'])->name('admin.admins_accounts.create');
         Route::get('/admins_accounts/edit/{id}',[AdminsControllers::class, 'edit'])->name('admin.admins_accounts.edit');
         Route::get('/admins_accounts/details/{id}',[AdminsControllers::class, 'details'])->name('admin.admins_accounts.details');
-        Route::get('/admins_accounts/Add_treasures_delivery/{id}',[AdminsControllers::class, 'admins_accounts'])->name('admin.treasures.add_treasures_delivery');
-        Route::get('/admins_accounts/delete_treasures_delivery/{id}',[AdminsControllers::class, 'admins_accounts'])->name('admin.delete_treasures_delivery');
+    
 
 
         Route::post('/admins_accounts/store',[AdminsControllers::class, 'store'])->name('admin.admins_accounts.store');
@@ -239,6 +243,8 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::get('/collect_tranaction/create',[CollectController::class, 'create'])->name('admin.collect_tranaction.create');
         
         Route::post('/collect_tranaction/store',[CollectController::class, 'store'])->name('admin.collect_tranaction.store');
+        Route::post('/collect_tranaction/show_current_balance_account', [CollectController::class, 'show_current_balance_account'])->name('admin.collect_tranaction.show_current_balance_account');
+        Route::post('/collect_tranaction/search', [CollectController::class, 'search'])->name('admin.collect_tranaction.search');
     
 
     // end collect_tranaction
@@ -250,9 +256,12 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::get('/exchange_tranaction/create',[ExchangeController::class, 'create'])->name('admin.exchange_tranaction.create');
         
         Route::post('/exchange_tranaction/store',[ExchangeController::class, 'store'])->name('admin.exchange_tranaction.store');
+        Route::post('/exchange_tranaction/show_current_balance_account', [ExchangeController::class, 'show_current_balance_account'])->name('admin.exchange_tranaction.show_current_balance_account');
+        Route::post('/exchange_tranaction/search', [ExchangeController::class, 'search'])->name('admin.ExchangeController.search');
+
     
 
-    // end EExchange_tranaction
+    // end Exchange_tranaction
 
 
         // start sales incoices    مبيعات
@@ -297,9 +306,24 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/SalesInvoices/do_approve/{id}', [SalesInvoiceController::class, 'do_approve'])->name('admin.SalesInvoices.do_approve');
         Route::post('/SalesInvoices/ajax_search', [SalesInvoiceController::class, 'ajax_search'])->name('admin.SalesInvoices.ajax_search');
 
-        
-        
-        // end sales incoices
+
+
+    // end sales incoices
+
+
+    // start delegates 
+    Route::get('/delegates/index', [DelegatesController::class, 'index'])->name('admin.delegates.index');
+    Route::get('/delegates/create', [DelegatesController::class, 'create'])->name('admin.delegates.create');
+    Route::get('/delegates/edit/{id}', [DelegatesController::class, 'edit'])->name('admin.delegates.edit');
+    Route::get('/delegates/delete_stores/{id}', [DelegatesController::class, 'delete'])->name('admin.delegates.delete');
+
+
+
+    Route::post('/delegates/store', [DelegatesController::class, 'store'])->name('admin.delegates.store');
+    Route::post('/delegates/update/{id}', [DelegatesController::class, 'update'])->name('admin.delegates.update');
+    Route::post('/delegates/ajax_search', [DelegatesController::class, 'ajax_search'])->name('admin.delegates.ajax_search');
+    Route::post('/delegates/show_details', [DelegatesController::class, 'show_details'])->name('admin.delegates.show_details');
+        // end delegates
 
 
 } );

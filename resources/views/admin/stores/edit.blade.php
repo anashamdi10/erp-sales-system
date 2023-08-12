@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
- تعديل  المخازن 
+    تعديل  المخازن 
 @endsection
 
 @section('contentheader')
@@ -52,7 +52,7 @@
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror    
                         </div>
-                       
+                    
                         
                         <div class="form-group">
                             <label>    حاله التفعيل</label>
@@ -80,7 +80,7 @@
                         </div>
 
                     </form>
-               
+            
 
 
 

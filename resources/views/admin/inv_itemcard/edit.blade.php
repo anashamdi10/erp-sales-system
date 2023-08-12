@@ -48,7 +48,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> نوع الصنف</label>
-                        <select class="form-control" name="item_type" id="item_type">
+                        <select @if($count_use_it_before) disabled @endif class="form-control" name="item_type" id="item_type">
                             <option value="" selected="selected">اختر النوع </option>
                             <option {{ old('item_type',$data['item_type'])==1? 'selected':''}} value="1">مخزني </option>
                             <option {{ old('item_type',$data['item_type'])==2? 'selected':''}} value="2">استهلاكي بتاريخ صلاحية </option>
@@ -95,7 +95,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> وحده قياس اب</label>
-                        <select name="uom_id" id="uom_id" class="form-control ">
+                        <select @if($count_use_it_before) disabled @endif name="uom_id" id="uom_id" class="form-control ">
                             <option value=""> اختر الوحدة اب</option>
                             @if (@isset($Inv_ums_parent) && !@empty($Inv_ums_parent))
                             @foreach ($Inv_ums_parent as $info )
@@ -112,7 +112,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> هل للصتف وحده تحزئة ابن</label>
-                        <select class="form-control" name="does_has_retailunit" id="does_has_retailunit">
+                        <select @if($count_use_it_before) disabled @endif class="form-control" name="does_has_retailunit" id="does_has_retailunit">
                             <option selected="selected" value="">اختر الحالة </option>
                             <option {{ old('does_has_retailunit',$data['does_has_retailunit'])==1? 'selected':'' }} value="1">نعم </option>
                             <option {{ old('does_has_retailunit',$data['does_has_retailunit'])==0? 'selected':'' }} value="0">لا </option>
@@ -130,7 +130,7 @@
                 <div class="col-md-6" id="retail_uom_idDiv">
                     <div class="form-group">
                         <label> وحدة القياس التجزئة الابن بالنسبة للأب(<span class="parentuomname"></span>)</label>
-                        <select name="retail_uom_id" id="retail_uom_id" class="form-control ">
+                        <select @if($count_use_it_before) disabled @endif name="retail_uom_id" id="retail_uom_id" class="form-control ">
                             <option value=""> اختر الوحدة اب</option>
                             @if (@isset($Inv_ums_child) && !@empty($Inv_ums_child))
                             @foreach ($Inv_ums_child as $info )
@@ -146,7 +146,7 @@
                 <div class="col-md-6 retailed_retail_counter" @if(old('does_has_retailunit',$data['does_has_retailunit'])!=1 ) style="display: none;" @endif>
                     <div class="form-group">
                         <label> عدد وحدات التجزئة (<span class="childuomname"></span>) بالنسبة للاب (<span class="parentuomname"></span>)</label>
-                        <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" type="text" name="retail_uom_quantityToParent" id="retail_uom_quantityToParent" class="form-control" placeholder="ادخل عدد وحدات التجزئة" value="{{old('retail_uom_quantityToParent', $data['retail_uom_quantityToParent'])}}">
+                        <input @if($count_use_it_before) disabled @endif oninput="this.value=this.value.replace(/[^0-9.]/g,'');" type="text" name="retail_uom_quantityToParent" id="retail_uom_quantityToParent" class="form-control" placeholder="ادخل عدد وحدات التجزئة" value="{{old('retail_uom_quantityToParent', $data['retail_uom_quantityToParent'])}}">
                         @error('retail_uom_quantityToParent')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
@@ -286,7 +286,7 @@
 <script>
     var uom_id = $('#uom_id').val();
     if (uom_id != "") {
-        var name = $('#uom_id option:select').text();
+        var name = $('#uom_id option:selected').text();
         $('.parentuomname').text(name);
     }
     var retail_uom_id = $('#retail_uom_id').val();

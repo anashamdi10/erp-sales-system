@@ -12,15 +12,15 @@ use Illuminate\Http\Request;
 class Admin_panel_settingsController extends Controller
 {
     public function index(){
-        $data = Admin_setting::where('com_code',auth()->user()->com_code)->first();
-
-         
-
+        $com_code = auth()->user()->com_code;
+        $data = Admin_setting::where('com_code', $com_code)->first();
         if(!empty($data)){
             if($data['updated_by']>0 and $data['updated_by']!=null){
                 $data['updated_by_admin']= Admin::where('id',$data['updated_by'])->value('name');
                 $data['customer_parent_account_name']= AccountModel::where('account_number',$data['customer_parent_account_number'])->value('name');
                 $data['suppliers_parent_account_name']= AccountModel::where('account_number',$data['suppliers_parent_account_number'])->value('name');
+                $data['delegates_parent_account_name']= AccountModel::where('account_number',$data['delegates_parent_account_number'])->value('name');
+                $data['employees_parent_account_name']= AccountModel::where('account_number',$data['employees_parent_account_number'])->value('name');
 
             }
         };
@@ -44,6 +44,8 @@ class Admin_panel_settingsController extends Controller
             $admin_panel_setting->phone = $request->phone;
             $admin_panel_setting->customer_parent_account_number = $request->customer_parent_account_number;
             $admin_panel_setting->suppliers_parent_account_number = $request->suppliers_parent_account_number;
+            $admin_panel_setting->delegates_parent_account_number = $request->delegates_parent_account_number;
+            $admin_panel_setting->employees_parent_account_number = $request->employees_parent_account_number;
             $admin_panel_setting->general_alert = $request->general_alert;
             $admin_panel_setting->updated_by = auth()->user()->name;
             $admin_panel_setting->updated_at =date("Y-m-d H:i:s");
@@ -53,8 +55,6 @@ class Admin_panel_settingsController extends Controller
                     'photo'=>'required|mimes:png,jpg,jpeg|max:2000',
                     
                 ]);
-
-               
 
                 $the_file_path = uploadImage('admin/uploads', $request->photo);
                 $admin_panel_setting->photo = $the_file_path;

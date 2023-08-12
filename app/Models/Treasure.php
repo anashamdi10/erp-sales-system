@@ -11,7 +11,7 @@ class Treasure extends Model
     protected $table = "treasures";
     protected $fillable = [
         'id', 'name', 'is_master', 'last_isal_exchange', 'last_isal_collect','created_at', 'updated_at', 'added_by',
-         'updated_by', 'com_code','date','active'
+        'updated_by', 'com_code','date','active'
     ];
 
 }

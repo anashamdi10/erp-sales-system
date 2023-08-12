@@ -43,7 +43,7 @@
                      <tr>
                         <td>{{ $i }}</td>
                         <td>{{ $info->name }}</td>
-                        
+
 
                         <td>@if($info->active==1) مفعل @else معطل @endif</td>
 
@@ -60,7 +60,7 @@
                            {{ $date }} <br>
                            {{ $time }}
                            {{ $newDateTimeType }} <br>
-                           <span >بواسطة</span>
+                           <span>بواسطة</span>
                            {{ $info->added_by }}
 
 
@@ -70,31 +70,31 @@
                         </td>
 
                         <td>
-                        @if( $info->updated_at!=null )
-                            @php
-                            $dt=new DateTime($info->updated_at);
-                            $date=$dt->format("Y-m-d");
-                            $time=$dt->format("h:i ");
-                            $newDateTime=date("A",strtotime($time));
-                            $newDateTimeType= (($newDateTime=='AM')?'مساء ':'صباحا');
-                            @endphp
-                            {{ $date }}<br>
-                            {{ $time }}
-                            {{ $newDateTimeType }}<br>
-                            <span >بواسطة</span>
-                            {{ $info->updated_by }}
+                           @if( $info->updated_at!=null )
+                           @php
+                           $dt=new DateTime($info->updated_at);
+                           $date=$dt->format("Y-m-d");
+                           $time=$dt->format("h:i ");
+                           $newDateTime=date("A",strtotime($time));
+                           $newDateTimeType= (($newDateTime=='AM')?'مساء ':'صباحا');
+                           @endphp
+                           {{ $date }}<br>
+                           {{ $time }}
+                           {{ $newDateTimeType }}<br>
+                           <span>بواسطة</span>
+                           {{ $info->updated_by }}
 
 
 
-                            @else
-                            لايوجد تحديث
-                            @endif
+                           @else
+                           لايوجد تحديث
+                           @endif
 
                         </td>
 
-                        <td>
-                           <a href="{{ route('admin.sales_material_types.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
-                           <a href="{{ route('admin.delete_sales_material_types',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
+                        <td class="text-center">
+                           <a href="{{ route('admin.sales_material_types.edit',$info->id) }}" class="btn btn-sm  btn-primary ">تعديل</a>
+                           <!-- <a href="{{ route('admin.delete_sales_material_types',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a> -->
                         </td>
                      </tr>
                      @php

@@ -63,14 +63,14 @@
                         @endforeach
                         @endif
                      </select>
-                    
+                  
                   </div>
                </div>
                <div class="col-md-4">
                   <div class="form-group">
                      <label> بحث من تاريخ </label>
                      <input name="from_order_date" id="from_order_date" type="date" class="form-control" >
-                    
+                  
                   </div>
 
                </div>
@@ -78,7 +78,7 @@
                   <div class="form-group">
                      <label> بحث الى تاريخ </label>
                      <input name="to_order_date" id="to_order_date" type="date"  class="form-control" >
-                    
+                  
                   </div>
 
                </div>

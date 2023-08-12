@@ -27,6 +27,8 @@ class Admin_panel_settings_Request extends FormRequest
             'phone' => 'required',
             'customer_parent_account_number' => 'required',
             'suppliers_parent_account_number' => 'required',
+            'delegates_parent_account_number' => 'required',
+            'employees_parent_account_number' => 'required',
         ];
     }
 
@@ -38,6 +40,11 @@ class Admin_panel_settings_Request extends FormRequest
             'phone.required'=>" هاتف الشركة  مطلوب",
             'customer_parent_account_number.required'=>" رقم الحساب المالي للعملاء الاب مطلوب",
             'suppliers_parent_account_number.required'=>" رقم الحساب المالي للموردين الاب مطلوب",
+            'delegates_parent_account_number.required'=>" رقم الحساب المالي للمناديب الاب مطلوب",
+            'employees_parent_account_number.required'=>" رقم الحساب المالي للموظفين الاب مطلوب",
         ];
+        
     }
+    
+    
 }

@@ -39,6 +39,8 @@ class CustomerController extends Controller
     {
         try {
 
+            
+
             $com_code = auth()->user()->com_code;
             //check if not exsits for name
             $checkExists_name = get_cols_where_row(new Customer(), array("id"), array('name' => $request->name, 'com_code' => $com_code));
@@ -47,7 +49,7 @@ class CustomerController extends Controller
                     ->with(['error' => 'عفوا اسم العميل مسجل من قبل'])
                     ->withInput();
             }
-            //set customer code
+            //set delegate code
             $row = get_cols_where_row_orderby(new Customer(), array("customer_code"), array("com_code" => $com_code), 'id', 'DESC');
             if (!empty($row)) {
                 $data_insert['customer_code'] = $row['customer_code'] + 1;
@@ -67,6 +69,7 @@ class CustomerController extends Controller
 
             $data_insert['name'] = $request->name;
             $data_insert['address'] = $request->address;
+            $data_insert['phones'] = $request->phones;
         
 
             $data_insert['start_balance_status'] = $request->start_balance_status;
@@ -88,6 +91,7 @@ class CustomerController extends Controller
             }
 
             
+            $data_insert['current_blance'] = $data_insert['start_balance'];
             $data_insert['notes'] = $request->notes;
             $data_insert['active'] = $request->active;
             $data_insert['added_by'] = auth()->user()->id;
@@ -120,13 +124,15 @@ class CustomerController extends Controller
                     $data_insert_account['start_balance'] = 0;
                 }
 
+                $data_insert_account['current_blance'] = $data_insert_account['start_balance'];
+
                 $customer_parent_account_number =get_field_value(new Admin_setting(),'customer_parent_account_number',array('com_code'=>$com_code));
                 $data_insert_account['parent_account_number'] =$customer_parent_account_number;
                 $data_insert_account['is_parent']=0;
                 $data_insert_account['notes'] = $request->notes;
                 $data_insert_account['account_number'] = $data_insert['account_number'];
                 $data_insert_account['account_type'] = 3;
-                $data_insert_account['is_archived'] = $request->active;
+                $data_insert_account['active'] = $request->active;
                 $data_insert_account['added_by'] =  auth()->user()->name;
                 $data_insert_account['created_at'] = date("Y-m-d H:i:s");
                 $data_insert_account['date'] = date("Y-m-d");
@@ -147,7 +153,7 @@ class CustomerController extends Controller
     {
         $com_code = auth()->user()->com_code;
         $data = get_cols_where_row(new Customer(), array('*'), array('id' => $id, "com_code" => $com_code));
-       
+    
 
         return view('admin.customers.edit', ['data' => $data]);
     }
@@ -170,7 +176,7 @@ class CustomerController extends Controller
             }
 
 
-
+            $data_to_update['phones'] = $request->phones;
             $data_to_update['name'] = $request->name;
             $data_to_update['address'] = $request->address;
             $data_to_update['notes'] = $request->notes;
@@ -182,6 +188,7 @@ class CustomerController extends Controller
             $flag= update(new Customer(), $data_to_update, array('id' => $id, 'com_code' => $com_code));
 
             if($flag){
+                $data_to_update_account['active'] = $request->active;
                 $data_to_update_account['name'] = $request->name;
                 $data_to_update_account['updated_by'] = auth()->user()->name;
                 $data_to_update_account['updated_at'] = date("Y-m-d H:i:s");

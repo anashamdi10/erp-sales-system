@@ -18,12 +18,12 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title card_title_center"> تعديل حساب مالي  </h3>
+        <h3 class="card-title card_title_center"> تعديل حساب مالي </h3>
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-        
-        <form action="{{route('admin.accounts.update',$data['id'])}}" method="post" >
+
+        <form action="{{route('admin.accounts.update',$data['id'])}}" method="post">
             @csrf
             <div class="row">
                 <div class="col-md-6">
@@ -84,11 +84,11 @@
                 </div>
 
 
-               
+
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>  ملاحظات </label>
+                        <label> ملاحظات </label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{old('notes',$data['notes'])}}">
                         @error('notes')
                         <span class="text-danger">{{$message}}</span>
@@ -101,12 +101,12 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> حاله التفعيل</label>
-                        <select class="form-control" name="is_archived" id="is_archived">
+                        <select class="form-control" name="active" id="active">
                             <option value="" selected="selected">اختر الحاله </option>
-                            <option {{ old('is_archived',$data['is_archived'])==0? 'selected':'' }} value="0">نعم </option>
-                            <option {{ old('is_archived',$data['is_archived'])==1? 'selected':'' }} value="1">لا </option>
+                            <option {{ old('is_archived',$data['is_archived'])==1? 'selected':'' }} value="1">نعم </option>
+                            <option {{ old('is_archived',$data['is_archived'])==2? 'selected':'' }} value="2">لا </option>
                         </select>
-                        @error('is_archived')
+                        @error('active')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>

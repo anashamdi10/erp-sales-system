@@ -160,6 +160,29 @@ function refresh_account_blance_customer($account_number= null , $AccountModel =
   }
 
 }
+// function احتساب و تحديث رصيد الحساب المالي العميل 
+function refresh_account_blance_general($account_number= null , $AccountModel =null  , $Treasuries_transactionModel , $returnFlage = false){
+    $com_code = auth()->user()->com_code;
+    // نجيب رصيد الافتتاحي للعميل 
+    $AccountData =  $AccountModel::select('start_balance', 'account_type')->where(['com_code'=>$com_code,'account_number'=>$account_number ])->first();
+    if($AccountData['account_type'] !=2 && $AccountData['account_type'] != 3 && $AccountData['account_type'] !=4 && $AccountData['account_type'] != 5 && $AccountData['account_type'] != 8){
+    // صافي حركة النقدية بالخزنة على حساب العميل
+
+      $Net_in_treasuries_transaction = $Treasuries_transactionModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->sum('money_for_account');
+
+
+      // الرصيد النهائي للعميل 
+      $the_final_balance = $AccountData['start_balance'] +  $Net_in_treasuries_transaction ; 
+
+      $dataToUpdateAccount['current_blance'] =  $the_final_balance ;
+                  //  تحديث جدول الحسابات المالية 
+                  $dataToUpdateSupplier['current_blance'] =  $the_final_balance ;
+                  $AccountModel::where(['com_code'=>$com_code,'account_number'=>$account_number ])->update($dataToUpdateAccount);        
+      if($returnFlage){
+        return $the_final_balance ;
+      }
+    }
+}
 
 function DoUpdateItemCard($item_card_model , $item_code, $Inv_itemcard_batches,$retail_uom_quantityToParent,$does_has_retailunit){
   
@@ -192,6 +215,12 @@ function DoUpdateItemCard($item_card_model , $item_code, $Inv_itemcard_batches,$
 
   update($item_card_model, $DataToUpdateQuantity,array('com_code'=>$com_code , 'item_code' =>$item_code) ); 
 
+}
+
+function get_counter($model, $where = array())
+{
+  $counter = $model::where($where)->count();
+  return $counter;
 }
 
 

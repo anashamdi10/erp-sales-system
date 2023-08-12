@@ -42,10 +42,9 @@ class SuppliersController extends Controller
 
     public function store(SuppliersRequest $request)
     {
-      
         try {
 
-             
+            
             $com_code = auth()->user()->com_code;
             //check if not exsits for name
             $checkExists_name = get_cols_where_row(new SuppliersModel(), array("id"), array('name' => $request->name, 'com_code' => $com_code));
@@ -63,19 +62,19 @@ class SuppliersController extends Controller
             }
 
              //set account number
-             $row = get_cols_where_row_orderby(new AccountModel(), array("account_number"), array("com_code" => $com_code), 'id', 'DESC');
-             if (!empty($row)) {
-                 $data_insert['account_number'] = $row['account_number'] + 1;
-             } else {
-                 $data_insert['account_number'] = 1;
-             }
+            $row = get_cols_where_row_orderby(new AccountModel(), array("account_number"), array("com_code" => $com_code), 'id', 'DESC');
+            if (!empty($row)) {
+                $data_insert['account_number'] = $row['account_number'] + 1;
+            } else {
+                $data_insert['account_number'] = 1;
+            }
 
 
 
             $data_insert['name'] = $request->name;
             $data_insert['suppliers_categories_id'] = $request->suppliers_categories_id;
             $data_insert['address'] = $request->address;
-          
+        
 
             $data_insert['start_balance_status'] = $request->start_balance_status;
             if ($data_insert['start_balance_status'] == 1) {
@@ -95,8 +94,9 @@ class SuppliersController extends Controller
                 $data_insert['start_balance'] = 0;
             }
 
-            
+            $data_insert['current_blance'] = $data_insert['start_balance'];
             $data_insert['notes'] = $request->notes;
+            $data_insert['phones'] = $request->phones;
             $data_insert['active'] = $request->active;
             $data_insert['added_by'] = auth()->user()->name;
             $data_insert['created_at'] = date("Y-m-d H:i:s");
@@ -107,7 +107,7 @@ class SuppliersController extends Controller
             if($flag){
                 // insert into accounts 
                 $data_insert_account['name'] = $request->name;
-               
+            
             
 
                 $data_insert_account['start_balance_status'] = $request->start_balance_status;
@@ -133,8 +133,9 @@ class SuppliersController extends Controller
                 $data_insert_account['is_parent']=0;
                 $data_insert_account['notes'] = $request->notes;
                 $data_insert_account['account_number'] = $data_insert['account_number'];
+                $data_insert_account['current_blance'] = $data_insert['start_balance'];
                 $data_insert_account['account_type'] = 2;
-                $data_insert_account['is_archived'] = $request->active;
+                $data_insert_account['active'] = $request->active;
                 $data_insert_account['added_by'] = auth()->user()->id;
                 $data_insert_account['created_at'] = date("Y-m-d H:i:s");
                 $data_insert_account['date'] = date("Y-m-d");
@@ -156,15 +157,12 @@ class SuppliersController extends Controller
         $com_code = auth()->user()->com_code;
         $suppliers_categories = get_cols_where_p(new SupplierCategories(), array('*'), array("com_code" => $com_code,), 'id', "DESC", PAGINATEION_COUNT);
         $data = get_cols_where_row(new SuppliersModel(), array('*'), array('id' => $id, "com_code" => $com_code));
-       
-
+    
         return view('admin.suppliers.edit', ['data' => $data , "suppliers_categories" => $suppliers_categories]);
     }
 
     public function update($id, SuppliersEditRequest $request)
     {
-       
-
         try {
 
             $com_code = auth()->user()->com_code;
@@ -180,28 +178,34 @@ class SuppliersController extends Controller
             }
 
 
-
             $data_to_update['name'] = $request->name;
             $data_to_update['suppliers_categories_id'] = $request->suppliers_categories_id;
             $data_to_update['address'] = $request->address;
             $data_to_update['notes'] = $request->notes;
+            $data_to_update['phones'] = $request->phones;
             
             $data_to_update['active'] = $request->active;
             $data_to_update['updated_by'] = auth()->user()->name;
             $data_to_update['updated_at'] = date("Y-m-d H:i:s");
 
             $flag= update(new SuppliersModel(), $data_to_update, array('id' => $id, 'com_code' => $com_code));
-           
             if($flag){
+                $data_to_update_account['active'] = $request->active;
                 $data_to_update_account['name'] = $request->name;
                 $data_to_update_account['updated_by'] = auth()->user()->name;
                 $data_to_update_account['updated_at'] = date("Y-m-d H:i:s");
                 
-                update(new AccountModel(), $data_to_update_account, array('account_number' => $data['account_number'],'other_table_FK'=>$data['supplier_code'], 'com_code' => $com_code, 'account_type'=>3));
+                $flag1 = update(new AccountModel(), $data_to_update_account, array('account_number' => $data['account_number'],
+                        'other_table_FK'=>$data['supplier_code'],'com_code' => $com_code, 'account_type'=>2));
                 
-            }
+                if($flag1){
+                    return redirect()->route('admin.suppliers.index')->with(['success' => 'لقد تم تحديث بيانات بنجاح']);
+                }else{
+                    return redirect()->route('admin.suppliers.index')->with(['error' => ' لم يتم التحديث بيانات  في شجرة المحاسبية ']);
 
-            return redirect()->route('admin.suppliers.index')->with(['success' => 'لقد تم تحديث بيانات بنجاح']);
+                }
+            }
+        
         } catch (\Exception $ex) {
             return redirect()->back()->with(['error' => 'عفوا حصل خطأ' . $ex->getMessage()])->withInput();
         }
@@ -233,8 +237,7 @@ class SuppliersController extends Controller
         $com_code = auth()->user()->com_code;
         if ($request->ajax()) {
             $search_by_text = $request->search_by_text;
-           
-           
+        
             $searchbyradio = $request->searchbyradio;
 
             if ($search_by_text != '') {
@@ -257,7 +260,7 @@ class SuppliersController extends Controller
                 $operator1 = ">";
                 $value1 = 0;
             }
-           
+        
             $data = SuppliersModel::where($field1, $operator1, $value1)->where(['com_code'=>$com_code])->orderBy('id', 'DESC')->paginate(PAGINATEION_COUNT);
             if (!empty($data)) {
                 foreach ($data as $info) {

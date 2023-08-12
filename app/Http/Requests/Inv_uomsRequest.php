@@ -23,8 +23,8 @@ class Inv_uomsRequest extends FormRequest
     {
         return [
             'name'=> 'required',
-             'active' => 'required',
-             'is_master'=> 'required'
+            'active' => 'required',
+            'is_master'=> 'required'
 
         ];
     }

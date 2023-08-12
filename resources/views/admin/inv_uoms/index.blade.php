@@ -35,13 +35,12 @@
                         <option value="all"> بحث بالكل </option>
                         <option value="1">وحده أب
                         </option>
-                        <option  value="0">وحدة تجزئة
+                        <option value="0">وحدة تجزئة
                         </option>
                      </select>
-                    
                   </div>
                </div>
-            </div>   
+            </div>
 
 
             <div id="ajax_responce_serarchDiv">
@@ -53,7 +52,6 @@
                   <thead class="custom_thead">
                      <th>مسلسل</th>
                      <th>اسم المخزن</th>
-                     <th> هل الرئيسية</th>
                      <th>نوع الوحدات </th>
                      <th>حالة التفعيل</th>
                      <th> تاريخ الاضافة</th>
@@ -67,7 +65,7 @@
                         <td>{{ $i }}</td>
                         <td>{{ $info->name }}</td>
                         <td>@if($info->is_master==1) وحدات أب @else وحدة تجزئة @endif</td>
-                        <td>{{ $info->address }}</td>
+                        
                         <td>@if($info->active==1) مفعل @else معطل @endif</td>
                         <td>
 
@@ -113,9 +111,9 @@
 
                         </td>
 
-                        <td>
+                        <td class="text-center">
                            <a href="{{ route('admin.uoms.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
-                           <a href="{{ route('admin.uoms.delete',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
+                           <!-- <a href="{{ route('admin.uoms.delete',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a> -->
                         </td>
                      </tr>
                      @php
@@ -125,9 +123,9 @@
                   </tbody>
                </table>
                <br>
-                  <div >
-                     {{ $data->links() }}
-                  </div>
+               <div>
+                  {{ $data->links() }}
+               </div>
                @else
                <div class="alert alert-danger">
                   عفوا لاتوجد بيانات لعرضها !!

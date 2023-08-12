@@ -11,8 +11,8 @@ class Delegate extends Model
     protected $table = 'delegates';
     protected $fillable = [
         'delegate_code', 'name', 'account_number', 'start_balance', 'start_balance_status', 'current_blance', 'notes',
-         'added_by', 'updated_by', 'created_at', 'updated_at', 'active', 'com_code', 'date', 'city_id', 'address', 
-         'percent_type', 'percent_collect_commiission', 'percent_sales_commission_kataei', 'percent_sales_commission_nosjomla',
-          'percent_sales_commission_jomla'
+        'added_by', 'updated_by', 'created_at', 'updated_at', 'active', 'com_code', 'date', 'city_id', 'address', 
+        'percent_type', 'percent_collect_commiission', 'percent_sales_commission_kataei', 'percent_sales_commission_nosjomla',
+        'percent_sales_commission_jomla' , 'phones'
     ];
 }

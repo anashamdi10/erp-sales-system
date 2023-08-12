@@ -11,6 +11,8 @@
          <th>اسم الفئة </th>
          <th> رقم الحساب </th>
          <th> الرصيد </th>
+         <th> الجوال </th>
+         <th> ملاحظات </th>
          <th>حالة التفعيل</th>
 
          <th></th>
@@ -25,17 +27,20 @@
             <td>{{ $info->supplier_code }}</td>
             <td>{{ $info->categories_name }}</td>
             <td>{{ $info->	account_number }}</td>
+            <td>
+               @if($info->is_parent==0)
+               @if($info->current_blance > 0 )
+               مدين ب ({{ $info->current_blance *1 }}) جنيه
+               @elseif($info->current_blance < 0) دائن ب ({{ $info->current_blance *(-1) }}) جنيه @else متزن @endif @else من ميزان المراجعه @endif </td>
 
-            <td></td>
-
-
-
+            <td>{{ $info->	phones }}</td>
+            <td>{{ $info->	notes }}</td>
             <td>@if($info->active==1) مفعل @else معطل @endif</td>
 
-            <td>
+            <td class="text-center">
                <a href="{{ route('admin.suppliers.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
-               <a href="{{ route ('admin.suppliers.delete',$info->id)}}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
-               <a href="{{ route('inv_itemcard.show',$info->id) }}" class="btn btn-sm   btn-info">عرض</a>
+               <!-- <a href="{{ route ('admin.suppliers.delete',$info->id)}}" class="btn btn-sm  are_you_sure btn-danger">حذف</a> -->
+
             </td>
          </tr>
          @php
@@ -46,9 +51,7 @@
    </table>
    <br>
 
-   <div class="col-md-12" id="ajax_pagination_in_search">
-      {{ $data->links() }}
-   </div>
+   {{ $data->links() }}
 
    @else
    <div class="alert alert-danger">

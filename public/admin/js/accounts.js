@@ -40,7 +40,11 @@ $(document).ready(function() {
         
         make_search();
     });
- 
+    $(document).on('input', '#active_search', function(e) {
+        
+        make_search();
+    });
+
     $('input[type=radio][name=searchbyradio]').change(function() {
         
         make_search();
@@ -52,11 +56,13 @@ $(document).ready(function() {
         var is_parent = $("#is_parent_search").val();
         var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
         var token_search = $("#token_search").val();
-        var ajax_search_url = $("#ajax_search_url").val();
+        var url = $("#ajax_search_url").val();
+        var active_search = $("#active_search").val();
+
 
         
         jQuery.ajax({
-            url: ajax_search_url,
+            url: url,
             type: 'post',
             dataType: 'html',
             cache: false,
@@ -66,6 +72,7 @@ $(document).ready(function() {
                 searchbyradio: searchbyradio,
                 account_type: account_type,
                 is_parent: is_parent,
+                active_search: active_search
             },
             success: function(data) {
                 $("#ajax_responce_serarchDiv").html(data);

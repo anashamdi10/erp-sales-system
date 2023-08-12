@@ -73,7 +73,7 @@
                             <option value="">اختر الحساب الاب</option>
                             @if (@isset($parent_acounts) && !@empty($parent_acounts))
                             @foreach ($parent_acounts as $info )
-                           
+
                             <option @if(old('parent_account_number')==$info->account_number) selected="selected" @endif value="{{ $info->account_number }}"> {{ $info->name }} </option>
                             @endforeach
                             @endif
@@ -113,7 +113,7 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>  ملاحظات </label>
+                        <label> ملاحظات </label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{old('notes')}}">
                         @error('notes')
                         <span class="text-danger">{{$message}}</span>
@@ -126,12 +126,12 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> حاله التفعيل</label>
-                        <select class="form-control" name="is_archived" id="is_archived">
+                        <select class="form-control" name="active" id="active">
                             <option value="" selected="selected">اختر الحاله </option>
-                            <option @if(old('is_archived')==0 and old('is_archived'!='' )) selected="selected" @endif value="0">نعم </option>
-                            <option @if(old('is_archived')==1 ) selected="selected" @endif value="1">لا </option>
+                            <option @if(old('active')==1 ) selected="selected" @endif value="1">نعم </option>
+                            <option @if(old('active')==0 and old('active'!='' )) selected="selected" @endif value="0">لا </option>
                         </select>
-                        @error('is_archived')
+                        @error('active')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>

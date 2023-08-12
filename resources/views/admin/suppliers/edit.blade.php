@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 @section('title')
-تعديل الموردين  
+تعديل الموردين
 @endsection
 @section('contentheader')
-حسابات  
+حسابات
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.suppliers.index') }}">  الموردين </a>
+<a href="{{ route('admin.suppliers.index') }}"> الموردين </a>
 @endsection
 
 @section('contentheaderactive')
@@ -21,8 +21,8 @@
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-       
-        <form action="{{route('admin.suppliers.update',$data['id'])}}" method="post" >
+
+        <form action="{{route('admin.suppliers.update',$data['id'])}}" method="post">
             @csrf
             <div class="row">
                 <div class="col-md-6">
@@ -41,21 +41,21 @@
                         <select name="suppliers_categories_id" id="suppliers_categories_id" class="form-control ">
                             <option value="">اختر الفئة</option>
                             @if (@isset($suppliers_categories) && !@empty($suppliers_categories))
-                                @foreach ($suppliers_categories as $info )
-                                    <option @if(old('suppliers_categories_id',$data['suppliers_categories_id'])==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
-                                @endforeach
+                            @foreach ($suppliers_categories as $info )
+                            <option @if(old('suppliers_categories_id',$data['suppliers_categories_id'])==$info->id) selected="selected" @endif value="{{ $info->id }}"> {{ $info->name }} </option>
+                            @endforeach
                             @endif
                         </select>
                         @error('suppliers_categories_id')
-                            <span class="text-danger">{{$message}}</span>
+                        <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
                 </div>
-               
+
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>  العنوان </label>
+                        <label> العنوان </label>
                         <input type="text" name="address" id="address" class="form-control" value="{{old('address',$data['address'])}}">
                         @error('address')
                         <span class="text-danger">{{$message}}</span>
@@ -65,7 +65,14 @@
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>  ملاحظات </label>
+                        <label> الجوال</label>
+                        <input type="text" name="phones" id="phones" class="form-control" value="{{old('phones')}}">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label> ملاحظات </label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{old('notes',$data['notes'])}}">
                         @error('notes')
                         <span class="text-danger">{{$message}}</span>

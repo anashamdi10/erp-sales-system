@@ -1,5 +1,5 @@
 @if(Session::has('error'))
     <div class="alert alert-danger" role="alert">
-       {{Session::get('error')}}
+        {{Session::get('error')}}
     </div>
 @endif

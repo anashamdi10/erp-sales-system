@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Inv_ums;
 use App\Models\Admin;
 use App\Http\Requests\Inv_uomsRequest;
+use App\Http\Requests\InvUomUpdateRequest;
+use App\Models\Sales_invoices_details;
+use App\Models\Suppliers_with_orders_detailsModel;
 use Illuminate\Http\Request;
 
 class Inv_ums_UomController extends Controller
@@ -63,11 +66,18 @@ class Inv_ums_UomController extends Controller
 
     public function edit($id)
     {
+        $com_code = auth()->user()->com_code;
         $data = Inv_ums::select()->find($id);
-        return view('admin.inv_uoms.edit', ['data' => $data]);
+        
+        $suppliers_order_details = get_counter(new Suppliers_with_orders_detailsModel(), array('com_code'=>$com_code, 'uom_id'=>$data->id));
+        $sales_invoice_details = get_counter(new Sales_invoices_details(), array('com_code'=>$com_code, 'uom_id'=>$data->id));
+
+        $total_counter_used = $suppliers_order_details +  $sales_invoice_details ; 
+
+        return view('admin.inv_uoms.edit', ['data' => $data , 'total_counter_used' => $total_counter_used]);
     }
 
-    public function update($id, Inv_uomsRequest $request)
+    public function update($id, InvUomUpdateRequest $request)
     {
         try {
 
@@ -84,9 +94,20 @@ class Inv_ums_UomController extends Controller
             }
 
 
+            if($request->has('is_master')){
+                if($request->is_master == ""){
+                    return redirect()->back()->with(['error' => 'عفوا من فضلك اختر نوع الوحدة   '])->withInput();
+                }
+                $suppliers_order_details = get_counter(new Suppliers_with_orders_detailsModel(), array('com_code' => $com_code, 'uom_id' => $data->id));
+                $sales_invoice_details = get_counter(new Sales_invoices_details(), array('com_code' => $com_code, 'uom_id' => $data->id));
+                $total_counter_used = $suppliers_order_details +  $sales_invoice_details;
+                if ($total_counter_used == 0) {
+                    $data_to_update['is_master'] = $request->is_master;
+                }
+            }
 
             $data_to_update['name'] = $request->name;
-            $data_to_update['is_master'] = $request->is_master;
+            
             $data_to_update['active'] = $request->active;
             $data_to_update['updated_by'] = auth()->user()->name;
             $data_to_update['updated_at'] = date("Y-m-d H:i:s");
@@ -102,7 +123,7 @@ class Inv_ums_UomController extends Controller
     {
         
         try {
-           
+        
             $treasures_delivery = Inv_ums::find($id);
             
             if (!empty($treasures_delivery)) {
@@ -133,7 +154,7 @@ class Inv_ums_UomController extends Controller
                 $operator1 = ">";
                 $value1 = 0;
 
-               
+            
             }else{
                 $field1 = 'name';
                 $operator1 = "LIKE";
@@ -145,7 +166,7 @@ class Inv_ums_UomController extends Controller
                 $operator2 = ">";
                 $value2 = 0;
 
-               
+            
             }else{
                 $field2 = 'is_master';
                 $operator2 = "=";

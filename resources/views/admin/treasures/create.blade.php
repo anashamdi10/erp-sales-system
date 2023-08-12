@@ -52,7 +52,7 @@
                         <div class="form-group">
                             <label> اخر رقم ايصال صرف نقدية لهذه الخزنة</label>
                             <input oninput="this.value=this.value.replace(/[^0-9]/g,'');" type="text" name="last_isal_exchange"
-                             id="last_isal_exchange" class="form-control"  placeholder="ادخل  اخر رقم ايصال صرف نقدية" value="{{old('last_isal_exchange')}}">
+                                id="last_isal_exchange" class="form-control"  placeholder="ادخل  اخر رقم ايصال صرف نقدية" value="{{old('last_isal_exchange')}}">
                                 @error('last_isal_exchange')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror    
@@ -71,8 +71,8 @@
                             <label>    حاله التفعيل</label>
                             <select class="form-control" name="active" id="active">
                                 <option  value="">اختر الحاله  </option>
-                                <option  @if(old('active')==1) selected="selected" @endif value="1">نعم  </option>
-                                <option  @if(old('active')==0) selected="selected" @endif  value="0">لا </option>
+                                <option  value="1">نعم  </option>
+                                <option  value="0">لا </option>
                             </select>
                                 @error('active')
                                     <span class="text-danger">{{$message}}</span>
@@ -85,10 +85,7 @@
                         </div>
 
                     </form>
-               
-
-
-
+            
             </div>
         </div>
     </div>

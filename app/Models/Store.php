@@ -11,6 +11,6 @@ class Store extends Model
     protected $table = "stores";
     protected $fillable = [
         'id', 'name', 'created_at', 'updated_at', 'added_by',
-         'updated_by', 'com_code', 'date', 'active',"phones","address"
+        'updated_by', 'com_code', 'date', 'active',"phones","address"
     ];
 }

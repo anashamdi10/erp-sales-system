@@ -59,7 +59,7 @@ $(document).ready(function() {
     $(document).on('click', '#ajax_pagination_in_search ', function(e) {
         e.preventDefault();
         var search_by_text = $("#search_by_text").val();
-       
+    
         var searchbyradio = $("input[type=radio][name=searchbyradio]:checked").val();
         
         var token_search = $("#token_search").val();

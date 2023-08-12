@@ -11,6 +11,6 @@ class AccountModel extends Model
     protected $table = "accounts";
     protected $fillable = ['id','name','account_type','parent_account_number','account_number',
                 'start_balance','current_blance','other_table_FK','notes','added_by','updated_by',
-                'created_at', 'updated_at','is_archived','com_code','date', 'is_parent','start_balance_status' ];
+                'created_at', 'updated_at', 'active','com_code','date', 'is_parent','start_balance_status' ];
 
 }

@@ -1,0 +1,295 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\DelegatesRequestAdd;
+use App\Http\Requests\DelegatesRequestEdit;
+use App\Models\Admin;
+use App\Models\Delegate;
+use App\Models\AccountModel;
+use App\Models\Admin_setting;
+use Illuminate\Http\Request;
+
+class DelegatesController extends Controller
+{
+    public function index()
+    {
+        $com_code = auth()->user()->com_code;
+        $data = get_cols_where_p(new Delegate(), array('*'), array("com_code" => $com_code,), 'id', "DESC", PAGINATEION_COUNT);
+
+        if (!empty($data)) {
+            foreach ($data as $info) {
+                $info->added_by_admin = Admin::where('id', $info->added_by)->value('name');
+                if ($info->updated_by > 0 and $info->updated_by != null) {
+                    $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
+                }
+            }
+        };
+
+        return view('admin.delegates.index', ['data' => $data]);
+    }
+
+    public function create()
+    {
+        return view('admin.delegates.create');
+    }
+
+    public function store(DelegatesRequestAdd $request)
+    {
+        try {
+
+            $com_code = auth()->user()->com_code;
+            //check if not exsits for name
+            $checkExists_name = get_cols_where_row(new Delegate(), array("id"), array('name' => $request->name, 'com_code' => $com_code));
+            if (!empty($checkExists_name)) {
+                return redirect()->back()
+                    ->with(['error' => 'عفوا اسم العميل المندوب  من قبل'])
+                    ->withInput();
+            }
+            if($request->percent_type == 2){
+                if($request->percent_collect_commiission >100 || $request->percent_sales_commission_kataei ||
+                    $request->percent_sales_commission_nosjomla || $request->percent_sales_commission_jomla ){
+                    return redirect()->back()
+                        ->with(['error' => 'عفوا عمولة المندوب لا تتجاوز 100 %'])
+                        ->withInput();
+                }
+            }
+
+
+
+            
+            //set customer code
+            $row = get_cols_where_row_orderby(new Delegate(), array("delegate_code"), array("com_code" => $com_code), 'id', 'DESC');
+            if (!empty($row)) {
+                $data_insert['delegate_code'] = $row['delegate_code'] + 1;
+            } else {
+                $data_insert['customer_code'] = 1;
+            }
+
+            //set account number
+            $row = get_cols_where_row_orderby(new AccountModel(), array("account_number"), array("com_code" => $com_code), 'id', 'DESC');
+            if (!empty($row)) {
+                $data_insert['account_number'] = $row['account_number'] + 1;
+            } else {
+                $data_insert['account_number'] = 1;
+            }
+
+
+
+            $data_insert['name'] = $request->name;
+            $data_insert['address'] = $request->address;
+            $data_insert['phones'] = $request->phones;
+
+
+            $data_insert['start_balance_status'] = $request->start_balance_status;
+            if ($data_insert['start_balance_status'] == 1) {
+                //credit
+                $data_insert['start_balance'] = $request->start_balance * (-1);
+            } elseif ($data_insert['start_balance_status'] == 2) {
+                //debit
+                $data_insert['start_balance'] = $request->start_balance;
+                if ($data_insert['start_balance'] < 0) {
+                    $data_insert['start_balance'] = $data_insert['start_balance'] * (-1);
+                }
+            } elseif ($data_insert['start_balance_status'] == 3) {
+                //balanced
+                $data_insert['start_balance'] = 0;
+            } else {
+                $data_insert['start_balance_status'] = 3;
+                $data_insert['start_balance'] = 0;
+            }
+
+            $data_insert['percent_type'] = $request->percent_type;
+            $data_insert['percent_collect_commiission'] = $request->percent_collect_commiission;
+            $data_insert['percent_sales_commission_kataei'] = $request->percent_sales_commission_kataei;
+            $data_insert['percent_sales_commission_nosjomla'] = $request->percent_sales_commission_nosjomla;
+            $data_insert['percent_sales_commission_jomla'] = $request->percent_sales_commission_jomla;
+
+
+            $data_insert['current_blance'] = $data_insert['start_balance'];
+            $data_insert['notes'] = $request->notes;
+            $data_insert['active'] = $request->active;
+            $data_insert['added_by'] = auth()->user()->id;
+            $data_insert['created_at'] = date("Y-m-d H:i:s");
+            $data_insert['date'] = date("Y-m-d");
+            $data_insert['com_code'] = $com_code;
+
+            $flag = insert(new Delegate(), $data_insert);
+            if ($flag) {
+                // insert into accounts 
+                $data_insert_account['name'] = $request->name;
+
+
+
+                $data_insert_account['start_balance_status'] = $request->start_balance_status;
+                if ($data_insert_account['start_balance_status'] == 1) {
+                    //credit
+                    $data_insert_account['start_balance'] = $request->start_balance * (-1);
+                } elseif ($data_insert_account['start_balance_status'] == 2) {
+                    //debit
+                    $data_insert_account['start_balance'] = $request->start_balance;
+                    if ($data_insert_account['start_balance'] < 0) {
+                        $data_insert_account['start_balance'] = $data_insert_account['start_balance'] * (-1);
+                    }
+                } elseif ($data_insert_account['start_balance_status'] == 3) {
+                    //balanced
+                    $data_insert_account['start_balance'] = 0;
+                } else {
+                    $data_insert_account['start_balance_status'] = 3;
+                    $data_insert_account['start_balance'] = 0;
+                }
+
+                $data_insert_account['current_blance'] = $data_insert_account['start_balance'];
+
+                $delegates_parent_account_number = get_field_value(new Admin_setting(), 'delegates_parent_account_number', array('com_code' => $com_code));
+                $data_insert_account['parent_account_number'] = $delegates_parent_account_number;
+                $data_insert_account['is_parent'] = 0;
+                $data_insert_account['notes'] = $request->notes;
+                $data_insert_account['account_number'] = $data_insert['account_number'];
+                $data_insert_account['account_type'] = 4;
+                $data_insert_account['active'] = $request->active;
+                $data_insert_account['added_by'] =  auth()->user()->name;
+                $data_insert_account['created_at'] = date("Y-m-d H:i:s");
+                $data_insert_account['date'] = date("Y-m-d");
+                $data_insert_account['com_code'] = $com_code;
+                $data_insert_account['other_table_FK'] =  $data_insert['delegate_code'];
+                insert(new AccountModel(), $data_insert_account);
+            }
+            return redirect()->route('admin.delegates.index')->with(['success' => 'لقد تم اضافة البيانات بنجاح']);
+        } catch (\Exception $ex) {
+            return redirect()->back()
+                ->with(['error' => 'عفوا حدث خطأ ما' . $ex->getMessage()])
+                ->withInput();
+        }
+    }
+
+    public function edit($id)
+    {
+        $com_code = auth()->user()->com_code;
+        $data = get_cols_where_row(new Delegate(), array('*'), array('id' => $id, "com_code" => $com_code));
+        return view('admin.delegates.edit', ['data' => $data]);
+    }
+
+    public function update($id, DelegatesRequestEdit $request)
+    {   
+        
+
+        try {
+
+            $com_code = auth()->user()->com_code;
+            $data = get_cols_where_row(new Delegate(), array('id', 'account_number', 'delegate_code'), array('id' => $id, "com_code" => $com_code));
+
+            if (empty($data)) {
+                return redirect()->route('admin.customer.index')->with(['error' => 'غير قادر على الوصول للبيانات المطلوبة ']);
+            };
+
+            $checkExists = Delegate::where(['name' => $request->name, 'com_code' => $com_code])->where('id', '!=', $id)->first();
+            if ($checkExists != null) {
+                return redirect()->back()->with(['error' => 'عفوا اسم العميل مسجل من قبل '])->withInput();
+            }
+
+
+            $data_to_update['phones'] = $request->phones;
+            $data_to_update['name'] = $request->name;
+            $data_to_update['address'] = $request->address;
+            $data_to_update['notes'] = $request->notes;
+            $data_to_update['phones'] = $request->phones;
+            $data_to_update['percent_type'] = $request->percent_type;
+            $data_to_update['percent_sales_commission_kataei'] = $request->percent_sales_commission_kataei;
+            $data_to_update['percent_sales_commission_nosjomla'] = $request->percent_sales_commission_nosjomla;
+            $data_to_update['percent_sales_commission_jomla'] = $request->percent_sales_commission_jomla;
+            $data_to_update['percent_sales_commission_jomla'] = $request->percent_sales_commission_jomla;
+            
+
+            $data_to_update['active'] = $request->active;
+            $data_to_update['updated_by'] = auth()->user()->name;
+            $data_to_update['updated_at'] = date("Y-m-d H:i:s");
+
+            $flag = update(new Delegate(), $data_to_update, array('id' => $id, 'com_code' => $com_code));
+
+            if ($flag) {
+                $data_to_update_account['active'] = $request->active;
+                $data_to_update_account['name'] = $request->name;
+                $data_to_update_account['updated_by'] = auth()->user()->name;
+                $data_to_update_account['updated_at'] = date("Y-m-d H:i:s");
+
+                $flag1 = update(new AccountModel(), $data_to_update_account, array('account_number' => $data['account_number'], 'other_table_FK' => $data['delegate_code'], 'com_code' => $com_code, 'account_type' => 4));
+                if($flag1){
+                    return redirect()->route('admin.delegates.index')->with(['success' => 'لقد تم تحديث بيانات بنجاح']);
+                }else{
+                    return redirect()->back()->with(['error' => 'عفوا لم يتم تحديث البيانات في شجرة المحاسبيه  '])->withInput();
+                }
+            }
+
+        } catch (\Exception $ex) {
+            return redirect()->back()->with(['error' => 'عفوا حصل خطأ' . $ex->getMessage()])->withInput();
+        }
+    }
+    // public function delete($id)
+    // {
+    //     try {
+
+    //         $com_code = auth()->user()->com_code;
+    //         $item_row = get_cols_where_row(new Customer(), array('id'), array('id' => $id, "com_code" => $com_code));
+    //         if (!empty($item_row)) {
+    //             $flag = delete(new Customer(), array('id' => $id, "com_code" => $com_code));
+    //             if ($flag) {
+    //                 return redirect()->back()->with(['success' => ' تم حذف بيانات بنجاح']);
+    //             } else {
+    //                 return redirect()->back()->with(['error' => 'عفوا حدث خطأ ما !!']);
+    //             };
+    //         } else {
+    //             return redirect()->back()->with(['error' => 'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+    //         };
+    //     } catch (\Exception $ex) {
+    //         return redirect()->back()->with(['error' => 'عفوا حصل خطأ' . $ex->getMessage()])->withInput();
+    //     }
+    // }
+
+    public function ajax_search(Request $request)
+    {
+        $com_code = auth()->user()->com_code;
+        if ($request->ajax()) {
+            $search_by_text = $request->search_by_text;
+
+            $searchbyradio = $request->searchbyradio;
+
+            if ($search_by_text != '') {
+                if ($searchbyradio == 'account_number') {
+                    $field1 = "account_number";
+                    $operator1 = "=";
+                    $value1 = $search_by_text;
+                } elseif ($searchbyradio == 'code') {
+                    $field1 = "delegate_code";
+                    $operator1 = "=";
+                    $value1 = $search_by_text;
+                } else {
+                    $field1 = "name";
+                    $operator1 = "like";
+                    $value1 = "%{$search_by_text}%";
+                }
+            } else {
+                //true 
+                $field1 = "id";
+                $operator1 = ">";
+                $value1 = 0;
+            }
+
+            $data = Delegate::where($field1, $operator1, $value1)->where(['com_code' => $com_code])->orderBy('id', 'DESC')->paginate(PAGINATEION_COUNT);
+            if (!empty($data)) {
+                return view('admin.delegates.ajax_search', ['data' => $data]);
+            };
+        }
+    }
+
+    public function show_details(Request $request)
+    {
+        $com_code = auth()->user()->com_code;
+        if ($request->ajax()) {
+            $data = get_cols_where_row(new Delegate(), array('*'),array('com_code'=>$com_code, 'delegate_code'=>$request->delegate_code));
+            return view('admin.delegates.load_show_details', ['data' => $data]);
+        }
+
+    }
+}

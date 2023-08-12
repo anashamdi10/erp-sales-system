@@ -3,10 +3,10 @@
 العملاء
 @endsection
 @section('contentheader')
-الحسابات المالية 
+الحسابات المالية
 @endsection
 @section('contentheaderlink')
-<a href="{{ route('admin.customer.index') }}">  العملاء </a>
+<a href="{{ route('admin.customer.index') }}"> العملاء </a>
 @endsection
 @section('contentheaderactive')
 إضافة
@@ -26,19 +26,13 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label> اسم  العميل</label>
+                        <label> اسم العميل</label>
                         <input type="text" name="name" id="name" class="form-control" value="{{old('name')}}">
                         @error('name')
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
                 </div>
-               
-
-
-              
-
-
                 <div class="col-md-6">
                     <div class="form-group">
                         <label> حاله الرصيد اول المدة</label>
@@ -53,10 +47,9 @@
                         @enderror
                     </div>
                 </div>
-
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label> عنوان  العميل</label>
+                        <label> عنوان العميل</label>
                         <input type="text" name="address" id="address" class="form-control" value="{{old('address')}}">
                         @error('address')
                         <span class="text-danger">{{$message}}</span>
@@ -74,10 +67,17 @@
                     </div>
                 </div>
 
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label> الجوال</label>
+                        <input type="text" name="phones" id="phones" class="form-control" value="{{old('phones')}}">
+                    </div>
+                </div>
+
 
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>  ملاحظات </label>
+                        <label> ملاحظات </label>
                         <input type="text" name="notes" id="notes" class="form-control" value="{{old('notes')}}">
                         @error('notes')
                         <span class="text-danger">{{$message}}</span>
@@ -92,7 +92,7 @@
                         <label> حاله التفعيل</label>
                         <select class="form-control" name="active" id="active">
                             <option value="" selected="selected">اختر الحاله </option>
-                            <option @if(old('active')==1 || old('active') =="")) selected="selected" @endif value="1">نعم </option>
+                            <option @if(old('active')==1 || old('active')=="" )) selected="selected" @endif value="1">نعم </option>
                             <option @if(old('active')==0 and old('active'!='' )) selected="selected" @endif value="0">لا </option>
                         </select>
                         @error('active')

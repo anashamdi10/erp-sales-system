@@ -27,7 +27,7 @@ class AccountsRequest extends FormRequest
             'is_parent' => 'required',
             'start_balance_status' => 'required',
             'start_balance' => 'required|min:0',
-            'is_archived' => 'required',
+            'active' => 'required',
         ];
     }
 
@@ -39,7 +39,7 @@ class AccountsRequest extends FormRequest
             'is_parent.required'=>" هل الحساب اب  مطلوب",
             'start_balance_status.required'=>" حاله الحساب اول المده مطلوب",
             'start_balance.required'=>"رصيد اول المده مطلوب",
-            'is_archived.required' => 'حاله التفعيل مطلوبة'
+            'active.required' => 'حاله التفعيل مطلوبة'
         ];
     }
 }

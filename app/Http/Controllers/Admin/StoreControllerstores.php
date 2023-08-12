@@ -84,7 +84,7 @@ class StoreControllerstores extends Controller
             
 
             $data_to_update['name'] = $request->name;
-            $data_to_update['phones'] = $request->phones;
+            $data_to_update['phones'] = $request->phone;
             $data_to_update['address'] = $request->address;
             $data_to_update['active'] = $request->active;
             $data_to_update['updated_by'] = auth()->user()->name;
@@ -101,19 +101,19 @@ class StoreControllerstores extends Controller
 
     public function delete($id){
         try {
-             $treasures_delivery = Store::find($id);
-             if(!empty($treasures_delivery)){
-                 $flag = $treasures_delivery->delete();
-                 if($flag){
-                     return redirect()->back()->with(['success'=>' تم حذف بيانات بنجاح']);
-                 }else{
-                     return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما !!']);
-                 };
-             }else{
-                 return redirect()->back()->with(['error'=>'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
+                $treasures_delivery = Store::find($id);
+                if(!empty($treasures_delivery)){
+                    $flag = $treasures_delivery->delete();
+                    if($flag){
+                        return redirect()->back()->with(['success'=>' تم حذف بيانات بنجاح']);
+                    }else{
+                        return redirect()->back()->with(['error'=>'عفوا حدث خطأ ما !!']);
+                    };
+                }else{
+                    return redirect()->back()->with(['error'=>'عفوا غير قادر علي الوصول الي البيانات المطلوبة !!']);
         };
         } catch (\Exception $ex) {
-         return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
+            return redirect()->back()->with(['error'=>'عفوا حصل خطأ'.$ex->getMessage()])->withInput();
         }
     }
 

@@ -20,3 +20,7 @@
 body{
     height: 100% !important;
 }
+
+.customh3{
+    font-size: 18px; text-align: center; color: brown;
+}

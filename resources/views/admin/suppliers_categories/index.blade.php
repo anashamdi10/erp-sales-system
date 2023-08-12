@@ -3,7 +3,7 @@
 فئات الموردين 
 @endsection
 @section('contentheader')
-حسابات  
+الظبط  
 @endsection
 @section('contentheaderlink')
 <a href="{{ route('admin.suppliers_categories.index') }}"> فئات الموردين </a>
@@ -66,28 +66,28 @@
 
                         <td>
                         @if( $info->updated_at!=null )
-                            @php
-                              $dt=new DateTime($info->updated_at);
-                              $date=$dt->format("Y-m-d");
-                              $time=$dt->format("h:i ");
-                              $newDateTime=date("A",strtotime($time));
-                              $newDateTimeType= (($newDateTime=='AM')?'مساء ':'صباحا');
-                            @endphp
-                            {{ $date }}<br>
-                            {{ $time }}
-                            {{ $newDateTimeType }}<br>
-                            <span >بواسطة</span>
-                            {{ $info->updated_by }}
+                           @php
+                           $dt=new DateTime($info->updated_at);
+                           $date=$dt->format("Y-m-d");
+                           $time=$dt->format("h:i ");
+                           $newDateTime=date("A",strtotime($time));
+                           $newDateTimeType= (($newDateTime=='AM')?'مساء ':'صباحا');
+                           @endphp
+                           {{ $date }}<br>
+                           {{ $time }}
+                           {{ $newDateTimeType }}<br>
+                           <span >بواسطة</span>
+                           {{ $info->updated_by }}
 
-                            @else
-                            لايوجد تحديث
-                            @endif
+                           @else
+                           لايوجد تحديث
+                           @endif
 
                         </td>
 
-                        <td>
+                        <td class="text-center">
                            <a href="{{ route('admin.suppliers_categories.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
-                           <a href="{{ route('admin.suppliers_categories.delete',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a>
+                           <!-- <a href="{{ route('admin.suppliers_categories.delete',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a> -->
                         </td>
                      </tr>
                      @php

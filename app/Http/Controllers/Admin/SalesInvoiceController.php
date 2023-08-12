@@ -459,6 +459,7 @@ class SalesInvoiceController extends Controller
     // reload_items_in_invoice
     function add_new_item_sales_row(Request $request)
     {
+        
         if ($request->ajax()) {
 
             $com_code = auth()->user()->com_code;
@@ -1002,12 +1003,6 @@ class SalesInvoiceController extends Controller
                 $operator9 = ">";
                 $value9 = 0;
             }
-
-
-
-            
-
-
             $data = Sales_invoices::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)
                 ->where($field3, $operator3, $value3)->where($field4, $operator4, $value4)->where($field5, $operator5, $value5)
                 ->where($field6, $operator6, $value6)->where($field7, $operator7, $value7)->where($field8, $operator8,$value8)

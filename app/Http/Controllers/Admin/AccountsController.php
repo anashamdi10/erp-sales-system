@@ -28,6 +28,7 @@ class AccountsController extends Controller
 
 
                 $info->account_type_name = account_typeModel::where('id', $info->account_type)->value('name');
+                $info->relatediternalaccounts = account_typeModel::where('id', $info->account_type)->value('relatediternalaccounts');
 
                 if ($info->is_parent == 0) {
                     $info->parent_account_name = AccountModel::where('account_number', $info->parent_account_number)->value('name');
@@ -110,9 +111,9 @@ class AccountsController extends Controller
                 $data_insert['start_balance'] = 0;
             }
 
-            $data_insert['current_balance'] = $data_insert['start_balance'];
+            $data_insert['current_blance'] = $data_insert['start_balance'];
             $data_insert['notes'] = $request->notes;
-            $data_insert['is_archived'] = $request->is_archived;
+            $data_insert['active'] = $request->active;
             $data_insert['added_by'] = auth()->user()->name;
             $data_insert['created_at'] = date("Y-m-d H:i:s");
             $data_insert['date'] = date("Y-m-d");
@@ -132,16 +133,19 @@ class AccountsController extends Controller
     {
         $com_code = auth()->user()->com_code;
         $data = get_cols_where_row(new AccountModel(), array('*'), array('id' => $id, "com_code" => $com_code));
-        $account_type = get_cols_where(
-            new account_typeModel(),
-            array('id', 'name'),
-            array('active' => 1),
-            "id",
-            'ASC'
-        );
+        if (empty($data)) {
+            return redirect()->back()
+                ->with(['error' => 'عفوا غير قادر على الوصول الى بيانات المطلوبة '])
+                ->withInput();
+        }
+        $relatediternalaccounts = account_typeModel::where('id', $data['account_type'])->value('relatediternalaccounts');
+        
+
+        if ($relatediternalaccounts == 1) {
+            return redirect()->route('admin.accounts.index')->with(['error' => 'عفوا لا بمكن تحديث الا من شاشته الخاصة حسب نوعه  '])->withInput();
+        }
+        $account_type = get_cols_where(new account_typeModel(),array('id', 'name'),array('active' => 1),"id",'ASC');
         $parent_accounts = get_cols_where(new AccountModel(), array("account_number", "name"), array("is_parent" => 1, "com_code" => $com_code), 'id', 'ASC');
-
-
         return view('admin.accounts.edit', ['data' => $data, 'account_type' => $account_type, 'parent_acounts' => $parent_accounts]);
     }
 
@@ -158,12 +162,17 @@ class AccountsController extends Controller
                 return redirect()->route('admin.accounts.index')->with(['error' => 'غير قادر على الوصول للبيانات المطلوبة ']);
             };
 
+            $relatediternalaccounts = account_typeModel::where('id', $data['account_type'])->value('relatediternalaccounts');
+
+
+            if ($relatediternalaccounts == 1) {
+                return redirect()->route('admin.accounts.index')->with(['error' => 'عفوا لا بمكن تحديث الا من شاشته الخاصة حسب نوعه  '])->withInput();
+            }
+
             $checkExists = AccountModel::where(['name' => $request->name, 'com_code' => $com_code])->where('id', '!=', $id)->first();
             if ($checkExists != null) {
                 return redirect()->back()->with(['error' => 'عفوا اسم الحساب مسجل من قبل '])->withInput();
             }
-
-
 
             $data_to_update['name'] = $request->name;
             $data_to_update['account_type'] = $request->account_type;
@@ -171,23 +180,10 @@ class AccountsController extends Controller
             if ($data_to_update['is_parent'] == 0) {
                 $data_insert['parent_account_number'] = $request->parent_account_number;
             }
-            $data_to_update['is_archived'] = $request->is_archived;
+            $data_to_update['active'] = $request->active;
             $data_to_update['updated_by'] = auth()->user()->name;
             $data_to_update['updated_at'] = date("Y-m-d H:i:s");
-
-           $flag = update(new AccountModel(), $data_to_update, array('id' => $id, 'com_code' => $com_code));
-            if($flag){
-                if($data['account_type']==3){
-                    $data_to_update_customer['name'] = $request->name;
-
-                   
-                    $data_to_update_customer['updated_by'] = auth()->user()->name;
-                    $data_to_update_customer['updated_at'] = date("Y-m-d H:i:s");
-        
-                     update(new Customer(), $data_to_update_customer, array('account_number' => $data['account_number'],'customer_code'=>$data['other_table_FK'], 'com_code' => $com_code));
-                }
-            }
-
+            update(new AccountModel(), $data_to_update, array('id' => $id, 'com_code' => $com_code));
             return redirect()->route('admin.accounts.index')->with(['success' => 'لقد تم تحديث بيانات بنجاح']);
         } catch (\Exception $ex) {
             return redirect()->back()->with(['error' => 'عفوا حصل خطأ' . $ex->getMessage()])->withInput();
@@ -222,10 +218,10 @@ class AccountsController extends Controller
             $search_by_text = $request->search_by_text;
             $is_parent = $request->is_parent;
             $account_type = $request->account_type;
-           
             $searchbyradio = $request->searchbyradio;
+            $active = $request->active_search;
 
-             
+            
             if ($is_parent == 'all') {
                 $field1 = "id";
                 $operator1 = ">";
@@ -235,7 +231,7 @@ class AccountsController extends Controller
                 $operator1 = "=";
                 $value1 = $is_parent;
             }
-             
+            
             if ($account_type == 'all') {
                 $field2 = "id";
                 $operator2 = ">";
@@ -263,8 +259,25 @@ class AccountsController extends Controller
                 $operator3 = ">";
                 $value3 = 0;
             }
-           
-            $data = AccountModel::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)->orderBy('id', 'DESC')->paginate(PAGINATEION_COUNT);
+
+            if ($active == 'all') {
+                $field4 = "id";
+                $operator4 = ">";
+                $value4 = 0;
+            } elseif($active == 1) {
+                $field4 = "active";
+                $operator4 = "=";
+                $value4 = $active;
+            } elseif ($active == 0) {
+                $field4 = "active";
+                $operator4 = "=";
+                $value4 = $active;
+            }
+
+            
+        
+            $data = AccountModel::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)->where($field3, $operator3, $value3)
+                ->where($field4, $operator4, $value4)->orderBy('id', 'DESC')->paginate(PAGINATEION_COUNT);
             
             
             if (!empty($data)) {
@@ -273,9 +286,10 @@ class AccountsController extends Controller
                     if ($info->updated_by > 0 and $info->updated_by != null) {
                         $info->updated_by_admin = Admin::where('id', $info->updated_by)->value('name');
                     }
-    
-    
-    
+
+
+                    $info->relatediternalaccounts = account_typeModel::where('id', $info->account_type)->value('relatediternalaccounts');
+
                     $info->account_type_name = account_typeModel::where('id', $info->account_type)->value('name');
     
                     if ($info->is_parent == 0) {
