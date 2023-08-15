@@ -193,7 +193,7 @@ class Inv_itemcardController extends Controller
     public function show($id)
     {
         $com_code = auth()->user()->com_code;
-        $data = get_cols_where_row(new Inv_itemCard(), array('*'), array('id' => $id));    
+        $data = get_cols_where_row(new Inv_itemCard(), array('*'), array('id' => $id , 'com_code'=> $com_code));    
         $data['added_by_admin'] = get_field_value(new Admin(), 'name', array('id' => auth()->user()->id));
         $data['inv_itemcard_categories_name'] = get_field_value(new Inv_itemcard_category(), 'name', array('id' => $data['inv_itemcard_categories_id']));
         $data['parent_item_name'] = get_field_value(new Inv_itemCard(), 'name', array('id' => $data['parent_inv_itemcard_id']));
@@ -202,6 +202,7 @@ class Inv_itemcardController extends Controller
         if ($data['updated_by'] > 0 and $data['updated_by'] != null) {
             $data['updated_by_admin'] =  get_field_value(new Admin(), 'name', array('id' => $data['added_by']));
         }
+
 
 
         $inv_itemcard_movements_categories = get_cols(new inv_itemcard_movements_categories(), array('*'),'id','DESC');

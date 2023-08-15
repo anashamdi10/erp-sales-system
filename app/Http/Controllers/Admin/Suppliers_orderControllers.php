@@ -52,8 +52,9 @@ class Suppliers_orderControllers extends Controller
     public function create()
     {
         $com_code = auth()->user()->com_code;
-        $suppliers = get_cols_where(new SuppliersModel(), array('supplier_code', 'name'), array('com_code' => $com_code, 'active' => 0), 'id', 'DESC');
+        $suppliers = get_cols_where(new SuppliersModel(), array('supplier_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
         $stores = get_cols_where(new Store(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
+        
         return view('admin.suppliers_with_orders.create', ['suppliers' => $suppliers, 'stores' => $stores]);
     }
     public function store(Suppliers_ordersRequest $request)
@@ -237,7 +238,7 @@ class Suppliers_orderControllers extends Controller
 
             $com_code = auth()->user()->com_code;
             $auto_serial = $request->autoserailparent;
-            $data = get_cols_where_row(new Suppliers_orderModel(), array('is_approved', 'auto_serial'), array('auto_serial' => $auto_serial, "com_code" => $com_code, 'order_type' => 1));
+            $data = get_cols_where_row(new Suppliers_orderModel(), array('is_approved', 'auto_serial', 'id'), array('auto_serial' => $auto_serial, "com_code" => $com_code, 'order_type' => 1));
 
             if (!empty($data)) {
 
@@ -553,14 +554,16 @@ class Suppliers_orderControllers extends Controller
             $auto_serial = $request->autoserailparent;
         
             $com_code = auth()->user()->com_code;
-            $data = get_cols_where_row(new Suppliers_orderModel(), array('*'), array('auto_serial' => $auto_serial, "com_code" => 
-                                        $com_code, 'order_type' => 1));
+            $data = get_cols_where_row(new Suppliers_orderModel(), array('*'), array('auto_serial' => $auto_serial, "com_code" => $com_code,
+                                        'order_type' => 1));
             
             $user_shifts = get_user_shift(new Admin_shifts(),new Treasure(),new Treasuries_transactionModel());
-    
-            return view("admin.suppliers_with_orders.load_model_approve_invoice" , ["data"=>$data , 'user_shifts'=> $user_shifts]);
+
+            $get_counter_items = get_sum_where(new Suppliers_with_orders_detailsModel(), 'id',
+            array('suppliers_with_orders_auto_serial'=> $auto_serial, "com_code" => $com_code, 'order_type' => 1));
             
-            
+            return view("admin.suppliers_with_orders.load_model_approve_invoice" , ["data"=>$data , 'user_shifts'=> $user_shifts ,
+                        'get_counter_items'=> $get_counter_items]);
         }
     }
     public function load_usershiftDiv(Request $request){
@@ -583,6 +586,14 @@ class Suppliers_orderControllers extends Controller
         if($data['is_approved']== 1){
             return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا لا يمكن اعتماد الفاتورة معتمده من قبل');
         }
+
+        $get_counter_items = get_sum_where(new Suppliers_with_orders_detailsModel(),'id',
+        array('suppliers_with_orders_auto_serial' => $auto_serial, "com_code" => $com_code, 'order_type' => 1));
+
+        if ($get_counter_items == 0) {
+            return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error', 'عفوا لا يمكن الاعتماد الفاتورة قبل اضافة الاصناف عليها !!');
+        }
+
 
         $dataUpdateParent['tax_percent']= $request->tax_percent;
         $dataUpdateParent['tax_value']= $request->tax_value;
@@ -619,6 +630,7 @@ class Suppliers_orderControllers extends Controller
             
         }
         
+        
         if($request->what_paid >0 ){
             if($request->what_paid > $request->total_cost ){
                 return redirect()->route('admin.suppliers_orders.show', $data['id'])->with('error','عفوا يجب ان يكون المبلغ  مدفوع اكبر من المبلغ الفاتورة ');
@@ -646,13 +658,9 @@ class Suppliers_orderControllers extends Controller
 
         
             // حركات مختلفة 
-            if($request->what_paid>0){
+            if($request->what_paid < 0 ){
 
-
-                // affect on supplier balance هتأثر في وصيد لبمورد 
-
-                refresh_account_blance_suppliers($data['account_number'],new AccountModel(),new SuppliersModel(),new Treasuries_transactionModel(),
-                                        new Suppliers_orderModel(),false);
+                
 
                 $trussery_data = get_cols_where_row(new Treasure(),array('last_isal_exchange'),array('com_code'=>$com_code, 'id'=>$user_shift['treasures_id']));
                 if(empty($trussery_data)){
@@ -700,8 +708,13 @@ class Suppliers_orderControllers extends Controller
 
                 }
             }
-                
-        }
+
+
+            // affect on supplier balance هتأثر في وصيد لبمورد 
+            if($request->pill_type == 2){
+                refresh_account_blance_suppliers($data['account_number'],new AccountModel(),new SuppliersModel(),
+                    new Treasuries_transactionModel(),new Suppliers_orderModel(),false);
+            }
 
         // store  move 
         $items = get_cols_where(new Suppliers_with_orders_detailsModel(), array("*"), array("suppliers_with_orders_auto_serial" => $auto_serial, "com_code" => $com_code, "order_type" => 1), "id", "ASC");
@@ -883,6 +896,7 @@ class Suppliers_orderControllers extends Controller
         }
 
     }
+}
 
     public function ajax_search(Request $request)
     {

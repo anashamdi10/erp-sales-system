@@ -133,9 +133,13 @@
             </tr>
 
             <tr>
-                <td colspan="3">
+                <td colspan="1">
                     <label> سعر تكلفة الشراء بوحده ({{ $data['retail_uom_name']}} )</label> <br>
                     {{ $data['cost_price_retail']}}
+                </td>
+                <td colspan="2">
+                    <label> كمية الصنف الحالية : ({{ $data['all_quantity'] *1}} {{ $data['retail_uom_name']}} )</label> <br>
+
                 </td>
             </tr>
 

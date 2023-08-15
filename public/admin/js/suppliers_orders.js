@@ -284,7 +284,8 @@ $(document).ready(function() {
         });
     });
 
-    $(document).on('click', '.load_edit_item_details', function(e) {
+    $(document).on('click', '.load_edit_item_details', function (e) {
+        
         var id = $(this).data('id');
         var  autoserailparent = $('#autoserailparent').val();
         var token_search = $("#token_search").val();
@@ -584,7 +585,7 @@ $(document).ready(function() {
         }
 
         if(pill_type == 1){
-            if(what_remain>0){
+            if(what_remain > 0){
                 alert('عفوا لا يمكن ان يكون المبلغ المتبقي اكبر من صفر في حالة ان الفاتورة كاش !!!');
                 return false ;
             }
@@ -765,6 +766,9 @@ $(document).ready(function() {
         total_cost = parseFloat(total_cost);
         $what_remain = total_cost - what_paid;
         $("#what_remain").val($what_remain * 1);
+
+
+        
     
     
     }

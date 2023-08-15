@@ -44,7 +44,7 @@
                         <div class="form-group">
                             <label>  رقم الفاتورة المسجل بأصل فاتورة المشتريات</label>
                             <input type="text" name="Doc_No" id="Doc_No" class="form-control" value="{{old('Doc_No')}}" >
-                           
+                        
                         </div>
                         <div class="form-group">
                             <label> بيانات  الموردين</label>
@@ -62,7 +62,7 @@
                         </div>
                         
                     
-                       
+                    
                         <div class="form-group">
                             <label>     نوع الفاتورة</label>
                             <select class="form-control" name="pill_type" id="pill_type">
@@ -74,9 +74,6 @@
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror    
                         </div>
-
-
-
 
 
                         <div class="form-group">

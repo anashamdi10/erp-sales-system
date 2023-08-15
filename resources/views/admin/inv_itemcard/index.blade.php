@@ -76,7 +76,7 @@
                      <th> النوع </th>
                      <th>الفئة </th>
                      <th>وحدة الاب </th>
-                     <th>صنف التجزئة </th>
+                     <th> الكمية الحالية </th>
                      <th>حالة التفعيل</th>
                      <th></th>
                   </thead>
@@ -88,7 +88,7 @@
                         <td>@if($info->item_type==1) مخزني @elseif($info->item_type==2) استهلاكي بصلاحية @elseif($info->item_type==3) عهده @else غير محدد @endif</td>
                         <td>{{ $info->inv_itemcard_categories_name }}</td>
                         <td>{{ $info->uom_name }}</td>
-                        <td>{{ $info->retail_uom_name }}</td>
+                        <td>{{ $info->all_quantity *1 }}</td>
 
 
 
