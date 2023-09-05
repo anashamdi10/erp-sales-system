@@ -28,7 +28,7 @@ class Suppliers_orderControllers extends Controller
     {
         $com_code = auth()->user()->com_code;
 
-        $data = get_cols_where_p(new Suppliers_orderModel(), array('*'), array("com_code" => $com_code,), 'id', "DESC", PAGINATEION_COUNT);
+        $data = get_cols_where_p(new Suppliers_orderModel(), array('*'), array("com_code" => $com_code, 'order_type'=>1), 'id', "DESC", PAGINATEION_COUNT);
 
         if (!empty($data)) {
             foreach ($data as $info) {
@@ -71,7 +71,7 @@ class Suppliers_orderControllers extends Controller
 
 
             // set item code  for itemcard
-            $row  = get_cols_where_row_orderby(new Suppliers_orderModel, array("auto_serial"), array("com_code" => $com_code), 'id', 'DESC');
+            $row  = get_cols_where_row_orderby(new Suppliers_orderModel, array("auto_serial"), array("com_code" => $com_code , 'order_type' => 1), 'id', 'DESC');
             if (!empty($row)) {
                 $data_insert['auto_serial'] = $row['auto_serial'] + 1;
             } else {
@@ -895,8 +895,8 @@ class Suppliers_orderControllers extends Controller
 
         }
 
+        }
     }
-}
 
     public function ajax_search(Request $request)
     {
@@ -983,7 +983,7 @@ class Suppliers_orderControllers extends Controller
 
             $data = Suppliers_orderModel::where($field1, $operator1, $value1)->where($field2, $operator2, $value2)
                 ->where($field3, $operator3, $value3)->where($field4,$operator4,$value4)->where($field5,$operator5,$value5)
-                ->orderBy('id', 'DESC')->paginate(PAGINATEION_COUNT);
+                ->where('order_type','=',1)->orderBy('id', 'DESC')->paginate(PAGINATEION_COUNT);
 
 
 

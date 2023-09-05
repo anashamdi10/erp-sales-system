@@ -340,7 +340,7 @@
 
 
 <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
-<script src="{{asset('admin/js/collect_tranaction.js')}}"></script>
+<script src="{{asset('admin/js/sales_invoice.js')}}"></script>
 <script>
     $(function() {
         //Initialize Select2 Elements

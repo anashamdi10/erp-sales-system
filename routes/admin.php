@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\CollectController;
 use App\Http\Controllers\Admin\ExchangeController;
 use App\Http\Controllers\Admin\SalesInvoiceController;
 use App\Http\Controllers\Admin\DelegatesController;
+use App\Http\Controllers\Admin\Suppliers_orders_general_returns;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -323,7 +324,41 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
     Route::post('/delegates/update/{id}', [DelegatesController::class, 'update'])->name('admin.delegates.update');
     Route::post('/delegates/ajax_search', [DelegatesController::class, 'ajax_search'])->name('admin.delegates.ajax_search');
     Route::post('/delegates/show_details', [DelegatesController::class, 'show_details'])->name('admin.delegates.show_details');
-        // end delegates
+    // end delegates
+
+
+
+
+
+    // start suppliers orders general returns  purchases
+    Route::get('/suppliers_orders_general_return/index', [Suppliers_orders_general_returns::class, 'index'])->name('admin.suppliers_orders_general_return.index');
+    Route::get('/suppliers_orders_general_return/create', [Suppliers_orders_general_returns::class, 'create'])->name('admin.suppliers_orders_general_return.create');
+    Route::get('/suppliers_orders_general_return/edit/{id}', [Suppliers_orders_general_returns::class, 'edit'])->name('admin.suppliers_orders_general_return.edit');
+    Route::get('/suppliers_orders_general_return/delete_stores/{id}', [Suppliers_orders_general_returns::class, 'delete'])->name('admin.suppliers_orders_general_return.delete');
+    Route::get('/suppliers_orders_general_return/show/{id}', [Suppliers_orders_general_returns::class, 'show'])->name('admin.suppliers_orders_general_return.show');
+    Route::get('/suppliers_orders_general_return/delete_details/{id}/{id_parent}', [Suppliers_orders_general_returns::class, 'delete_details'])->name('admin.suppliers_orders_general_return.delete_details');
+    Route::get('/suppliers_orders_general_return/do_approve/{id}', [Suppliers_orders_general_returns::class, 'do_approve'])->name('admin.suppliers_orders_general_return.do_approve');
+
+
+    Route::post('/suppliers_orders_general_return/store', [Suppliers_orders_general_returns::class, 'store'])->name('admin.suppliers_orders_general_return.store');
+    Route::post('/suppliers_orders_general_return/update/{id}', [Suppliers_orders_general_returns::class, 'update'])->name('admin.suppliers_orders_general_return.update');
+    Route::post('/suppliers_orders_general_return/add_new_details', [Suppliers_orders_general_returns::class, 'add_new_details'])->name('admin.suppliers_orders_general_return.ajax_add_new_details');
+    Route::post('/suppliers_orders_general_return/get_item_uoms', [Suppliers_orders_general_returns::class, 'get_item_uoms'])->name('admin.suppliers_orders_general_return.get_item_uoms');
+    Route::post('/suppliers_orders_general_return/reload_itemsdetails', [Suppliers_orders_general_returns::class, 'reload_itemsdetails'])->name('admin.suppliers_orders_general_return.reload_itemsdetails');
+    Route::post('/suppliers_orders_general_return/reload_parent_pill', [Suppliers_orders_general_returns::class, 'reload_parent_pill'])->name('admin.suppliers_orders_general_return.reload_parent_pill');
+    Route::post('/suppliers_orders_general_return/load_edit_item_details', [Suppliers_orders_general_returns::class, 'load_edit_item_details'])->name('admin.suppliers_orders_general_return.load_edit_item_details');
+    Route::post('/suppliers_orders_general_return/load_model_add_details', [Suppliers_orders_general_returns::class, 'load_model_add_details'])->name('admin.suppliers_orders_general_return.load_model_add_details');
+    Route::post('/suppliers_orders_general_return/edit_item_details', [Suppliers_orders_general_returns::class, 'edit_item_details'])->name('admin.suppliers_orders_general_return.edit_item_details');
+    Route::post('/suppliers_orders_general_return/load_model_approve_invoice', [Suppliers_orders_general_returns::class, 'load_model_approve_invoice'])->name('admin.suppliers_orders_general_return.load_model_approve_invoice');
+    Route::post('/suppliers_orders_general_return/load_usershiftDiv', [Suppliers_orders_general_returns::class, 'load_usershiftDiv'])->name('admin.suppliers_orders_general_return.load_usershiftDiv');
+    Route::post('/suppliers_orders_general_return/do_approve/{id}', [Suppliers_orders_general_returns::class, 'do_approve'])->name('admin.suppliers_orders_general_return.do_approve');
+    Route::post('/suppliers_orders_general_return/ajax_search', [Suppliers_orders_general_returns::class, 'ajax_search'])->name('admin.suppliers_orders_general_return.ajax_search');
+    Route::post('/suppliers_orders_general_return/get_itemcard_batches', [Suppliers_orders_general_returns::class, 'get_item_batches'])->name('admin.suppliers_orders_general_return.get_inv_itemcard_batches');
+    Route::post('/suppliers_orders_general_return/add_return_items_from_invoice', [Suppliers_orders_general_returns::class, 'add_return_items_from_invoice'])->name('admin.suppliers_orders_general_return.add_return_items_from_invoice');
+
+        
+        
+        // end suppliers orders general returns  purchases
 
 
 } );

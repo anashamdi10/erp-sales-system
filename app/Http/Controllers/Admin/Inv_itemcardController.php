@@ -593,6 +593,7 @@ class Inv_itemcardController extends Controller
                 ->where($field3, $operator3, $value3)->where($field4, $operator4, $value4)
                 ->where($field5, $operator5, $value5)->orderBy('id', $sort_id )->paginate(PAGINATEION_COUNT);
 
+        
             if (!empty($data)) {
                 foreach ($data as $info) {
 

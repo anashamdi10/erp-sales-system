@@ -5,33 +5,58 @@
    @endphp
    <table id="example2" class="table table-bordered table-hover">
       <thead class="custom_thead">
-         <th>كود الي</th>
-         <th>الاسم </th>
-         <th> النوع </th>
-         <th>الفئة </th>
-         <th>وحدة الاب </th>
-         <th> الكمية الحالية </th>
-         <th>حالة التفعيل</th>
+         <th> المخزن</th>
+         <th>القسم </th>
+         <th> الحركة </th>
+         <th>الكمية قبل الحركة </th>
+         <th>الكمية بعد الحركة </th>
+
+
+
          <th></th>
       </thead>
       <tbody>
          @foreach ($data as $info )
          <tr>
-            <td>{{ $info->item_code }}</td>
-            <td>{{ $info->name }}</td>
-            <td>@if($info->item_type==1) مخزني @elseif($info->item_type==2) استهلاكي بصلاحية @elseif($info->item_type==3) عهده @else غير محدد @endif</td>
-            <td>{{ $info->inv_itemcard_categories_name }}</td>
-            <td>{{ $info->uom_name }}</td>
-            <td>{{ $info->all_quantity *1 }}</td>
+            <td>{{ $info->store_name }}</td>
+            <td>{{$info->categories_name}}</td>
+            <td>{{ $info->type_name }}</td>
 
-
-
-            <td>@if($info->active==1) مفعل @else معطل @endif</td>
 
             <td>
-               <a href="{{ route('inv_itemcard.edit',$info->id) }}" class="btn btn-sm  btn-primary">تعديل</a>
-               <!-- <a href="{{ route('inv_itemcard.delete',$info->id) }}" class="btn btn-sm  are_you_sure btn-danger">حذف</a> -->
-               <a href="{{ route('inv_itemcard.show',$info->id) }}" class="btn btn-sm   btn-info">عرض</a>
+               <span style="color: brown;"> الكمية بالمخزن الحالي <br>{{ $info->quantity_befor_move_store }} </span>
+
+               <br>
+               <span style="color:blue;"> الكمية بكل المخازن <br>{{ $info->quantity_befor_movement }} </span>
+
+            </td>
+
+            <td>
+               <span style="color: brown;"> الكمية بالمخزن الحالي <br>{{ $info->quantity_after_move_store }} </span>
+
+               <br>
+               <span style="color:blue;"> الكمية بكل المخازن <br>{{ $info->quantity_after_move }} </span>
+
+            </td>
+
+
+
+            <td>
+
+               @php
+               $dt=new DateTime($info->created_at);
+               $date=$dt->format("Y-m-d");
+               $time=$dt->format("h:i");
+               $newDateTime=date("A",strtotime($time));
+               $newDateTimeType= (($newDateTime=='AM')?'صباحا ':'مساء');
+               @endphp
+               {{ $date }} <br>
+               {{ $time }}
+               {{ $newDateTimeType }} <br>
+               بواسطة
+               {{ $info->added_by}}
+
+
             </td>
          </tr>
          @php

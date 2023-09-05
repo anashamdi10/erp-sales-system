@@ -17,10 +17,6 @@
 @endsection
 
 
-@section('contentheaderactive')
-إضافة 
-@endsection
-
 @section('content')
 <div class="row">
     <div class="col-12">

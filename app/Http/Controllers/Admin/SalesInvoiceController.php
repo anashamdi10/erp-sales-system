@@ -359,13 +359,15 @@ class SalesInvoiceController extends Controller
                                             array('item_code' => $request->item_code, 'com_code' => $com_code, 'store_id' => $request->store_id)
                                         );
 
-
-
-
-
-
-
-                                        $dataupdate_batch['quantity'] = $batch_data['quantity'] - $request->item_quantity;
+                                        // اذا كان الوحدة المباعة  كانت اب او تجزئة 
+                                        if ($request->isparentuom == 1) {
+                                            // اذا كانت اب نقص كمية من باتش 
+                                            $dataupdate_batch['quantity'] = $batch_data['quantity'] - $request->item_quantity;
+                                        } else {
+                                            //لو كان الوحدة تجزئة نحولها للاب ونقصها من باتش
+                                            $item_quntity_per_parent_uom = $request->item_quantity / $itemCard_data['retail_uom_quantityToParent'];
+                                            $dataupdate_batch['quantity'] = $batch_data['quantity'] -  $item_quntity_per_parent_uom;
+                                        }
 
                                         $dataupdate_batch['toatal_cost_price'] = $batch_data['unit_cost_price'] * $dataupdate_batch['quantity'];
 

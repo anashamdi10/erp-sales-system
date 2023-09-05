@@ -213,7 +213,7 @@
                     <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.suppliers_orders.load_usershiftDiv') }}">
                     <input type="hidden" id="autoserailparent" value="{{$data['auto_serial'] }}">
 
-               
+            
                 <div id="ajax_responce_serarchDivDetails">
                     @if (@isset($details) && !@empty($details) && count($details) >0 )
                     @php
@@ -314,7 +314,7 @@
                     </button>
                 </div>
                 <div class="modal-body" id="Edit_item_model_body" style="background-color: white !important; color:black">
-                  
+                
                 </div>
             </div>
             <div class="modal-footer justify-content-between bg-info">
