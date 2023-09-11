@@ -29,9 +29,15 @@ function get_cols_where2_p($model, $columns_names = array(), $where = array(),$w
   return $data;
 }
 /*get some cols  table */
-function get_cols_where($model, $columns_names = array(), $where = array(), $order_field,$order_type)
+function get_cols_where($model, $columns_names = array(), $where = array(), $order_field ='id',$order_type='DESC')
 {
   $data = $model::select($columns_names)->where($where)->orderby($order_field, $order_type)->get();
+  return $data;
+}
+/*get some cols  table order 2 */
+function get_cols_where_order2($model, $columns_names = array(), $where = array(), $order_field ='id',$order_type='DESC', $order_field2 = 'id', $order_type2 = 'DESC')
+{
+  $data = $model::select($columns_names)->where($where)->orderby($order_field, $order_type)->orderby($order_field2, $order_type2)->get();
   return $data;
 }
 function get_cols($model, $columns_names = array(), $order_field,$order_type)

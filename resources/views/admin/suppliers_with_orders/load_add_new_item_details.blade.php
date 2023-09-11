@@ -27,14 +27,6 @@
         </div>
 
     </div>
-    <div class="col-md-4 related_to_date" style="display: none;">
-        <div class="form-group ">
-            <label> تاريخ الانتاج </label>
-            <input type="date" id="production_date" class="form-control">
-
-        </div>
-
-    </div>
 
     <div class="col-md-4 related_to_itemCard" style="display: none;">
         <div class="form-group ">
@@ -44,6 +36,16 @@
         </div>
 
     </div>
+    <div class="col-md-4 related_to_date" style="display: none;">
+        <div class="form-group ">
+            <label> تاريخ الانتاج </label>
+            <input type="date" id="production_date" class="form-control">
+
+        </div>
+
+    </div>
+
+
 
 
     <div class="col-md-4 related_to_date" style="display: none;">

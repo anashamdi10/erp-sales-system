@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ExchangeController;
 use App\Http\Controllers\Admin\SalesInvoiceController;
 use App\Http\Controllers\Admin\DelegatesController;
 use App\Http\Controllers\Admin\Suppliers_orders_general_returns;
+use App\Http\Controllers\Admin\ItemCardBalanceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -356,10 +357,16 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
     Route::post('/suppliers_orders_general_return/get_itemcard_batches', [Suppliers_orders_general_returns::class, 'get_item_batches'])->name('admin.suppliers_orders_general_return.get_inv_itemcard_batches');
     Route::post('/suppliers_orders_general_return/add_return_items_from_invoice', [Suppliers_orders_general_returns::class, 'add_return_items_from_invoice'])->name('admin.suppliers_orders_general_return.add_return_items_from_invoice');
 
-        
-        
-        // end suppliers orders general returns  purchases
 
+
+    // end suppliers orders general returns  purchases
+
+
+    // start itemc_ard_balance
+    Route::get('/item_card_balance/index', [ItemCardBalanceController::class, 'index'])->name('admin.item_card_balance.index');
+    Route::post('/item_card_balance/ajax_search', [ItemCardBalanceController::class, 'ajax_search'])->name('admin.item_card_balance.ajax_search');
+
+        // end itemc_ard_balance
 
 } );
 

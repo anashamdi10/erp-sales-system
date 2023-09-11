@@ -176,8 +176,8 @@
           </ul>
         </li>
 
-        <li class="nav-item has-treeview  {{  (request()->is('admin/suppliers_orders*') || request()->is('admin/suppliers_orders_general_return*') )? 'menu-open':''}} ">
-          <a href="#" class="nav-link {{  ( request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*') )? 'active':''}} ">
+        <li class="nav-item has-treeview  {{  (request()->is('admin/suppliers_orders*') || request()->is('admin/suppliers_orders_general_return*')  || request()->is('admin/suppliers_orders_general_return*'))? 'menu-open':''}} ">
+          <a href="#" class="nav-link {{  ( request()->is('admin/suppliers_orders*') ||request()->is('admin/suppliers_orders_general_return*')  ||request()->is('admin/item_card_balance*') )? 'active':''}} ">
             <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>
               حركات مخزنية
@@ -198,6 +198,14 @@
                 *
                 <p>
                   فواتير مرتجع المشتريات العام
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('admin.item_card_balance.index')}}" class="nav-link {{  (request()->is('admin/item_card_balance*')  )? 'active':''}}">
+                *
+                <p>
+                  أرصدة الاصناف
                 </p>
               </a>
             </li>
