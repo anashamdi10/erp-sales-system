@@ -38,6 +38,10 @@
         <input type="hidden" id="ajax_do_close_and_approve" value="{{ route('admin.SalesInvoices.do_close_and_approve') }}">
         <input type="hidden" id="ajax_load_usershiftDiv" value="{{ route('admin.SalesInvoices.load_usershiftDiv') }}">
         <input type="hidden" id="ajax_sales_invoice_details" value="{{ route('admin.SalesInvoices.load_sales_invoice_details') }}">
+        <input type="hidden" id="ajax_add_new_customer" value="{{ route('admin.SalesInvoices.add_new_customer') }}">
+        <input type="hidden" id="ajax_reload_customers" value="{{ route('admin.SalesInvoices.reload_customers') }}">
+        <input type="hidden" id="ajax_customer_search" value="{{ route('admin.SalesInvoices.customers_search') }}">
+        <input type="hidden" id="ajax_customer_search_update" value="{{ route('admin.SalesInvoices.customers_search_update') }}">
         <button id="AddNewOfferPrice_show" class="btn btn-sm btn-success" data-toggle="modal"> عرض سعر </button>
         <button id="AddNewSalesInvoice" class="btn btn-sm btn-primary" data-toggle="modal"> فاتورة مبيعات </button>
     </div>
@@ -236,7 +240,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content bg-info">
             <div class="modal-header">
-                <h4 class="modal-title text-center"> إضافة فاتورة مبيهات </h4>
+                <h4 class="modal-title text-center"> إضافة فاتورة مبيعات </h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span></button>
             </div>
@@ -275,7 +279,7 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-<div class="modal fade  " id="DetailsSalesInvoiceModal">
+<div class="modal fade" id="DetailsSalesInvoiceModal">
     <div class="modal-dialog modal-xl">
         <div class="modal-content bg-info">
             <div class="modal-header ">
@@ -294,6 +298,105 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<div class="modal fade" id="AddNewCustomereModal">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-info">
+            <div class="modal-header ">
+                <h4 class="modal-title ">إضافة عميل جديد </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body" id="AddNewCustomerBody" style="background-color: white !important; color:black;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> اسم العميل</label>
+                            <input autofocus type="text" name="name" id="name" class="form-control">
+                            @error('name')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> حاله الرصيد اول المدة</label>
+                            <select name="start_balance_status" id="start_balance_status" class="form-control">
+                                <option value="">اختر الحالة</option>
+                                <option value="1"> دائن</option>
+                                <option value="2"> مدين</option>
+                                <option selected='selected' value="3"> متزن</option>
+                            </select>
+                            @error('start_blance_status')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> عنوان العميل</label>
+                            <input type="text" name="address" id="address" class="form-control">
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> رصيد اول المده للحساب </label>
+                            <input oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="start_balance" id="start_balance" class="form-control" value="0">
+                            @error('start_blance')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> الجوال</label>
+                            <input type="text" name="phones" id="phones" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> ملاحظات </label>
+                            <input type="text" name="notes" id="notes" class="form-control">
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label> حاله التفعيل</label>
+                            <select class="form-control" name="active" id="active">
+                                <option value="1">نعم </option>
+                                <option value="0">لا </option>
+                            </select>
+                            @error('active')
+                            <span class="text-danger">{{$message}}</span>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group text-center" style="margin-top: 35px;">
+                            <button id="add_new_customer" type="submit" class="btn btn-primary btn-sm"> إضافة </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">اغلاق</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
 </div>
 
 

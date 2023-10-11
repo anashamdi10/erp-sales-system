@@ -48,9 +48,6 @@ $(document).ready(function () {
             success: function (data) {
                 $("#AddNewSalesInvoiceModal").modal("show");
                 $("#AddNewSalesInvoiceModaMlBody").html(data);
-
-
-
             },
             error: function () {
                 alert("  error in AddNewSalesInvoice");
@@ -77,8 +74,114 @@ $(document).ready(function () {
         recalculate();
     });
 
+    $(document).on("click", "#do_add_new_customer", function (e) {
+        e.preventDefault();
+    
+        $('#AddNewCustomereModal').modal('show');
+    });
+
+  
 
 
+
+
+    $(document).on("click", "#add_new_customer", function (e) {
+        e.preventDefault();
+        var name = $("#name").val();
+        var start_balance_status = $("#start_balance_status").val();
+        var start_balance = $("#start_balance").val();
+        var active = $("#active").val();
+
+        if (name == '') {
+            alert('اسم العميل مطلوب ');
+            $("#name").focus();
+            return false;
+        }
+        
+        if (start_balance_status == '') {
+            alert('   حال الرصيد العميل اول المدة مطلوب ');
+            $("#start_balance_status").focus();
+            return false;
+        }
+        if (start_balance == '') {
+            alert('رصيد العميل اول المدة مطلوب ');
+            $("#start_balance_status").focus();
+            return false;
+        }
+        if (start_balance == 3 && start_balance == 0) {
+            alert('هفوا لا بد ان يكون اول المدة في حالة الاتزان ');
+            $("#start_balance").val(0); 
+            $("#start_balance").focus();
+            return false;
+        }
+        if (active == '') {
+            alert('حالة التفعيل مطلوبة  ');
+            $("#active").focus();
+            return false;
+        };
+        var phones = $("#phones").val();
+        var address = $("#address").val();
+        var notes = $("#notes").val();
+        var token_search = $("#token_search").val();
+        var url = $("#ajax_add_new_customer").val();
+        jQuery.ajax({
+            url: url,
+            type: "post",
+            dataType: "json",
+            cache: false,
+            data: {
+                _token: token_search,
+                name: name, start_balance_status: start_balance_status, start_balance: start_balance,
+                active: active,phones: phones,address: address, notes: notes
+            },
+            success: function (data) {
+                if (data == 'exsits') {
+                    alert('اسم العميل مسجل من قبل ');
+                    $("#name").focus();
+                } else {
+                    alert('تم الإضافة العميل بنجاح ');
+                    $("#notes").val("");
+                    $("#address").val('');
+                    $("#phones").val('');
+                    $("#active").val(1);
+                    $("#start_balance").val(0);
+                    $("#start_balance_status").val('');
+                    $('#AddNewCustomereModal').modal('hide'); 
+
+                    get_last_added_customer();
+                }
+            },
+            error: function () {
+                alert("  error in AddNewSalesInvoice");
+            },
+        });
+
+        
+    });
+
+
+    $(document).on('change', '#start_balance_status', function (e) {
+        if ($(this).val() == "") {
+            $("#start_balance").val("");
+        } else {
+            if ($(this).val() == 3) {
+                $("#start_balance").val(0);
+            }
+        }
+    });
+    $(document).on('input', '#start_balance', function (e) {
+        var start_balance_status = $("#start_balance_status").val();
+        if (start_balance_status == "") {
+            alert("من فضلك اختر حالة الحساب اولا");
+            $(this).val("");
+            return false;
+        }
+        if ($(this).val() == 0 && start_balance_status != 3) {
+            alert("يجب ادخال مبلغ اكبر من الصفر");
+            $(this).val("");
+            return false;
+        }
+    });
 
 
 
@@ -365,6 +468,7 @@ $(document).ready(function () {
             success: function (auto_serial) {
                 alert("تم الحفظ ");
                 update_sales_invoice(auto_serial);
+                make_search();
             },
             error: function () {
                 alert("  error in do_add_new_sales_invoice ");
@@ -374,6 +478,17 @@ $(document).ready(function () {
 
     $(document).on("change", "#is_has_customer", function (e) {
         $("#customer_code").val("");
+
+        var is_has_customer = $(this).val();
+
+        if (is_has_customer == 0) {
+            $("#customerDiv").hide();
+        } else {
+            $("#customerDiv").show();
+        }
+    });
+    $(document).on("change", "#is_has_customer_create", function (e) {
+        $("#customer_code_create").val("");
 
         var is_has_customer = $(this).val();
 
@@ -497,8 +612,6 @@ $(document).ready(function () {
     });
 
 
-
-
     $(document).on("click", ".remove_current_row", function (e) {
 
 
@@ -526,9 +639,6 @@ $(document).ready(function () {
 
 
     $(document).on("click", "#do_close_approve_invoice", function (e) {
-
-
-
 
         var invoice_date = $("#invoice_date").val();
         if (invoice_date == "") {
@@ -811,6 +921,37 @@ $(document).ready(function () {
 
 
 
+    $(document).on("input", "#searchbytextcustomer", function (e) {
+        var searchbytextcustomer = $("#searchbytextcustomer").val();
+        if (searchbytextcustomer == '') {
+            $("#searchcustomerdiv").hide();
+            return false ;
+        } else {
+            $("#searchcustomerdiv").show();
+        }
+        
+        var token_search = $("#token_search").val();
+        var url = $("#ajax_customer_search").val();
+        
+        jQuery.ajax({
+            url: url,
+            type: "post",
+            dataType: "html",
+            cache: false,
+            data: {
+                _token: token_search,
+                searchbytextcustomer: searchbytextcustomer
+                
+            },
+            success: function (data) {
+                $("#searchcustomerdiv").html(data);
+            },
+            error: function () {
+                alert("error in searchbytextcustomer");
+            },
+        });
+    });
+
 
 
 
@@ -1083,6 +1224,7 @@ $(document).ready(function () {
 
 
     function update_sales_invoice(auto_serial) {
+        
         var token_search = $("#token_search").val();
         var ajax_load_add_invoice = $("#ajax_do_update_sales_invoice").val();
         jQuery.ajax({
@@ -1144,6 +1286,25 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $("#ajax_responce_serarchDiv").html(data);
+            },
+            error: function () { }
+        });
+    }
+
+
+    function get_last_added_customer() {
+        var url = $("#ajax_reload_customers").val();
+        var token_search = $("#token_search").val();
+        jQuery.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'html',
+            cache: false,
+            data: {
+                "_token": token_search,
+            },
+            success: function (data) {
+                $("#customerDiv").html(data);
             },
             error: function () { }
         });

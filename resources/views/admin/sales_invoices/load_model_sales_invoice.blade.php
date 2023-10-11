@@ -37,17 +37,12 @@
     <div class="col-md-2" id="customerDiv">
         <div class="form-group">
             <label> بيانات العملاء
-                ( <a title="إيضافة عميل جديد " href="#"> جديد <i class="fa fa-plus-circle"></i></a>)
+                ( <a id="do_add_new_customer" title="إيضافة عميل جديد " href="#"> جديد <i class="fa fa-plus-circle"></i></a>)
             </label>
-            <select name="customer_code_create" id="customer_code_create" class="form-control select2 ">
-                <option value=""> لا يوجد عميل </option>
-                @if (@isset($customers) && !@empty($customers))
-                @foreach ($customers as $info )
-                <option value="{{ $info->customer_code }}"> {{ $info->name }} </option>
-                @endforeach
-                @endif
-            </select>
+            <input type="text" class="form-control" id="searchbytextcustomer" placeholder="اسم العميل - كود العميل" />
+            <div id="searchcustomerdiv">
 
+            </div>
         </div>
     </div>
     <div class="col-md-2">
@@ -68,9 +63,9 @@
     <div class="form-group col-md-2">
         <div class="form-group">
             <label> نوع الفاتروة </label>
-            <select class="form-control" name="pill_type_create" id="pill_type">
+            <select class="form-control" name="pill_type_create" id="pill_type_create">
                 <option value="1"> كاش</option>
-                <option  value="2"> اجل</option>
+                <option value="2"> اجل</option>
 
             </select>
 
@@ -79,20 +74,20 @@
     </div>
 </div>
 
-    <hr style="border: 1px solid #3c8dbc;">
-    <div class="form-group col-lg-12 text-center">
-        <button type="submit" id="do_add_new_sales_invoice" style="padding: 10px;" class="btn btn-sm   btn-success"> اضف الفاتورة </button>
-    </div>
+<hr style="border: 1px solid #3c8dbc;">
+<div class="form-group col-lg-12 text-center">
+    <button type="submit" id="do_add_new_sales_invoice" style="padding: 10px;" class="btn btn-sm   btn-success"> اضف الفاتورة </button>
+</div>
 
 
 
-    <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
-    <script src="{{asset('admin/js/collect_tranaction.js')}}"></script>
-    <script>
-        $(function() {
-            //Initialize Select2 Elements
-            $('.select2').select2({
-                theme: 'bootstrap4'
-            });
+<script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
+<script src="{{asset('admin/js/collect_tranaction.js')}}"></script>
+<script>
+    $(function() {
+        //Initialize Select2 Elements
+        $('.select2').select2({
+            theme: 'bootstrap4'
         });
-    </script>
+    });
+</script>

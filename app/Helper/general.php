@@ -34,6 +34,11 @@ function get_cols_where($model, $columns_names = array(), $where = array(), $ord
   $data = $model::select($columns_names)->where($where)->orderby($order_field, $order_type)->get();
   return $data;
 }
+function get_cols_where_limit($model, $columns_names = array(), $where = array(), $order_field ='id',$order_type='DESC',$limit = 1)
+{
+  $data = $model::select($columns_names)->where($where)->orderby($order_field, $order_type)->limit($limit)->get();
+  return $data;
+}
 /*get some cols  table order 2 */
 function get_cols_where_order2($model, $columns_names = array(), $where = array(), $order_field ='id',$order_type='DESC', $order_field2 = 'id', $order_type2 = 'DESC')
 {

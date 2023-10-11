@@ -1,3 +1,10 @@
+@section("css")
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+
+@endsection
+
+
 <div class="row">
     <div class="col-md-2">
         <div class="form-group">
@@ -24,8 +31,7 @@
         <div class="form-group">
             <label> هل يوجد عميل </label>
             <select disabled class="form-control" name="is_has_customer" id="is_has_customer">
-                <option @if($invoice_data['is_has_customer']==1 ) selected @endif value="1" selected>نعم يوجد عميل
-                </option>
+                <option @if($invoice_data['is_has_customer']==1 ) selected @endif value="1" selected>نعم يوجد عميل</option>
                 <option @if($invoice_data['is_has_customer']==0 ) selected @endif value="0">لا يوجد عميل</option>
             </select>
         </div>
@@ -33,7 +39,7 @@
     <div class="col-md-2" id="customerDiv" @if($invoice_data['is_has_customer']==0 ) style="display: none;" @endif>
         <div class="form-group">
             <label> بيانات العملاء
-                ( <a title="إيضافة عميل جديد " href="#"> جديد <i class="fa fa-plus-circle"></i></a>)
+                ( <a id='do_add_new_customer' title="إيضافة عميل جديد " href="#"> جديد <i class="fa fa-plus-circle"></i></a>)
             </label>
             <select disabled name="customer_code" id="customer_code" class="form-control  ">
                 <option value=""> لا يوجد عميل </option>
@@ -74,6 +80,7 @@
     <h3 class="card-title card_title_center"> الأصناف المضافة على الفاتورة</h3>
     <table id="example2" class="table table-bordered table-hover">
         <thead class="custom_thead">
+            <td></td>
             <th>المخزن </th>
             <th> نوع البيع </th>
             <th> الصنف</th>
@@ -110,6 +117,9 @@
                 </td>
             </tr>
             @endforeach
+            <tr>
+                <td> <button type="button" style="background-color: blue;"><i class="el-icon-plus"></i></button></td>
+            </tr>
         </tbody>
 
     </table>
@@ -187,3 +197,13 @@
 </div>
 
 
+
+@section("script")
+<script src="{{asset('admin/js/sales_invoice.js')}}"></script>
+<script src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"> </script>
+<script>
+    //Initialize Select2 Elements
+    $('.select2').select2({
+        theme: 'bootstrap4'
+    });
+</script>

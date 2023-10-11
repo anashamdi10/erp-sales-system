@@ -192,6 +192,7 @@
     <h3 class="card-title card_title_center"> الأصناف المضافة على الفاتورة</h3>
     <table id="example2" class="table table-bordered table-hover">
         <thead class="custom_thead">
+            <td></td>
             <th>المخزن </th>
             <th> نوع البيع </th>
             <th> الصنف</th>
@@ -207,11 +208,10 @@
         <tbody id='itemsrowtableContainterBody'>
             @foreach ($items_sales_details as $info )
             <tr>
+                <td> <button type="button" style="background-color: blue;"><i class="el-icon-plus"></i></button></td>
                 <td>
                     {{ $info->store_name }}
                     <input type="hidden" name="item_total_array[]" class="item_total_array" value="{{$info->total_price}}">
-
-
                 </td>
                 <td>
                     @if ($info->sales_item_type == 1)
@@ -233,7 +233,14 @@
 
             </tr>
             @endforeach
+
         </tbody>
+        <tfoot>
+            <tr>
+                <td> <button type="button" style="background-color: #007bff;"><i class="fa-solid fa-plus" style="color:white"></i></button></td>
+                
+            </tr>
+        </tfoot>
 
     </table>
 </div>
@@ -302,15 +309,7 @@
             <label> الرصيد متاح للخزنة </label>
             <input readonly type="text" name="treasures_balance" id="treasures_balance" class="form-control" @if(!@empty($user_shifts)) value=" {{$user_shifts['current_blance']*1}} " @else value="0" @endif>
         </div>
-
-
     </div>
-
-
-
-
-
-
     <div class="row col-lg-6">
         <div class="form-group col-lg-6">
             <label> المحصل الان</label>
@@ -331,14 +330,8 @@
         <button type="submit" id="do_close_approve_invoice" style="padding: 10px;" class="btn btn-sm   btn-success"> اعتماد وترحيل </button>
 
     </div>
-
-
-
 </div>
 </div>
-
-
-
 <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
 <script src="{{asset('admin/js/sales_invoice.js')}}"></script>
 <script>

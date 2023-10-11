@@ -299,14 +299,15 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/SalesInvoices/do_close_and_approve', [SalesInvoiceController::class, 'do_close_and_approve'])->name('admin.SalesInvoices.do_close_and_approve');
         Route::post('/SalesInvoices/load_usershiftDiv', [SalesInvoiceController::class, 'load_usershiftDiv'])->name('admin.SalesInvoices.load_usershiftDiv');
         Route::post('/SalesInvoices/load_sales_invoice_details', [SalesInvoiceController::class, 'load_sales_invoice_details'])->name('admin.SalesInvoices.load_sales_invoice_details');
-
-
-
         Route::post('/SalesInvoices/edit_item_details', [SalesInvoiceController::class, 'edit_item_details'])->name('admin.SalesInvoices.edit_item_details');
         Route::post('/SalesInvoices/load_model_approve_invoice', [SalesInvoiceController::class, 'load_model_approve_invoice'])->name('admin.SalesInvoices.load_model_approve_invoice');
         Route::post('/SalesInvoices/load_usershiftDiv', [SalesInvoiceController::class, 'load_usershiftDiv'])->name('admin.SalesInvoices.load_usershiftDiv');
         Route::post('/SalesInvoices/do_approve/{id}', [SalesInvoiceController::class, 'do_approve'])->name('admin.SalesInvoices.do_approve');
         Route::post('/SalesInvoices/ajax_search', [SalesInvoiceController::class, 'ajax_search'])->name('admin.SalesInvoices.ajax_search');
+        Route::post('/SalesInvoices/add_new_customer', [SalesInvoiceController::class, 'add_new_customer'])->name('admin.SalesInvoices.add_new_customer');
+        Route::post('/SalesInvoices/reload_customers', [SalesInvoiceController::class, 'reload_customers'])->name('admin.SalesInvoices.reload_customers');
+        Route::post('/SalesInvoices/customers_search', [SalesInvoiceController::class, 'customers_search'])->name('admin.SalesInvoices.customers_search');
+        Route::post('/SalesInvoices/customers_search_update', [SalesInvoiceController::class, 'customers_search_update'])->name('admin.SalesInvoices.customers_search_update');
 
 
 
