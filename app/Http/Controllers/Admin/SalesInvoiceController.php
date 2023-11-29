@@ -196,7 +196,7 @@ class SalesInvoiceController extends Controller
 
     public function add_sales_row(Request $request)
     {
-        $com_code = auth()->user()->com_code;
+       
         if ($request->ajax()) {
             $received_data['store_id'] = $request->store_id;
             $received_data['sales_item_type'] = $request->sales_item_type;
@@ -267,13 +267,12 @@ class SalesInvoiceController extends Controller
         if ($request->ajax()) {
             $com_code = auth()->user()->com_code;
             $invoice_data = get_cols_where_row(new Sales_invoices(), array('*'), array('com_code' => $com_code, 'auto_serial' => $request->auto_serial));
-            $items_cards = get_cols_where(new Inv_itemCard(), array('item_code', 'name', 'item_type'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
+            // $items_cards = get_cols_where(new Inv_itemCard(), array('item_code', 'name', 'item_type'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
             $stores = get_cols_where(new Store(), array('name', 'id'), array('com_code' => $com_code), 'id', 'DESC');
             $user_shifts = get_user_shift(new Admin_shifts(), new Treasure(), new Treasuries_transactionModel());
             $delegates = get_cols_where(new Delegate(), array('delegate_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
-            $customers = get_cols_where(new Customer(), array('customer_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
             $Sales_material_type = get_cols_where(new Sales_material_type(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
-
+            
             $items_sales_details = get_cols_where(
                 new Sales_invoices_details(),
                 array('*'),
@@ -289,10 +288,13 @@ class SalesInvoiceController extends Controller
                     $info->uom_name  = get_field_value(new Inv_ums(), 'name', array('com_code' => $com_code, 'id' => $info->uom_id));
                 }
             }
+            $customer_name = get_field_value(new Customer(), 'name', array('com_code'=>$com_code ,'customer_code'=>$invoice_data->customer_code ) );
+           
                 
             return view('admin.sales_invoices.load_model_update_sales_invoice', [
-                'items_cards' => $items_cards, 'Sales_material_type' => $Sales_material_type,
-                'stores' => $stores, 'user_shifts' => $user_shifts, 'delegates' => $delegates, 'customers' => $customers,
+                // 'items_cards' => $items_cards,
+                 'Sales_material_type' => $Sales_material_type,'customer_name'=>$customer_name,
+                'stores' => $stores, 'user_shifts' => $user_shifts, 'delegates' => $delegates, 
                 'invoice_data' => $invoice_data, 'items_sales_details' => $items_sales_details
             ]);
         }
@@ -707,6 +709,11 @@ class SalesInvoiceController extends Controller
                 array('is_approved', 'total_cost', 'customer_code', 'is_has_customer'),
                 array('com_code' => $com_code, 'auto_serial' => $request->auto_serial)
             );
+
+            $is_has_customer = $request->is_has_customer;
+            $is_has_customer = $request->is_has_customer;
+           
+            
             if (!empty($invoiceData)) {
                 if ($invoiceData['is_approved'] == 0) {
                     $dataUpdateParent['money_for_account'] = $invoiceData['total_cost'];
@@ -716,10 +723,12 @@ class SalesInvoiceController extends Controller
                     $dataUpdateParent['approved_by'] = auth()->user()->name;
                     $dataUpdateParent['what_paid'] = $request->what_paid;
                     $dataUpdateParent['what_remain'] = $request->what_remain;
-                    if($invoiceData['is_has_customer'] == 1){
+                    if($is_has_customer == 1){
                         $customerData = get_cols_where_row(new Customer(), array('account_number'), array('com_code' => $com_code, 'customer_code' => $invoiceData['customer_code']));
                         $dataUpdateParent['account_number'] = $customerData['account_number'];
                     }
+                      
+                   
                     $flag = update(new Sales_invoices(), $dataUpdateParent ,array('com_code' => $com_code, 'auto_serial' => $request->auto_serial));
                     if($flag){
                         if ($request->what_paid > 0) {
@@ -835,9 +844,7 @@ class SalesInvoiceController extends Controller
             $stores = get_cols_where(new Store(), array('name', 'id'), array('com_code' => $com_code), 'id', 'DESC');
             $user_shifts = get_user_shift(new Admin_shifts(), new Treasure(), new Treasuries_transactionModel());
             $delegates = get_cols_where(new Delegate(), array('delegate_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
-            $customers = get_cols_where(new Customer(), array('customer_code', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
             $Sales_material_type = get_cols_where(new Sales_material_type(), array('id', 'name'), array('com_code' => $com_code, 'active' => 1), 'id', 'DESC');
-
             $items_sales_details = get_cols_where(
                 new Sales_invoices_details(),
                 array('*'),
@@ -856,7 +863,7 @@ class SalesInvoiceController extends Controller
 
             return view('admin.sales_invoices.load_model_sales_invoicedetails', [
                 'items_cards' => $items_cards, 'Sales_material_type' => $Sales_material_type,
-                'stores' => $stores, 'user_shifts' => $user_shifts, 'delegates' => $delegates, 'customers' => $customers,
+                'stores' => $stores, 'user_shifts' => $user_shifts, 'delegates' => $delegates, 
                 'invoice_data' => $invoice_data, 'items_sales_details' => $items_sales_details
             ]);
         }
@@ -1016,7 +1023,7 @@ class SalesInvoiceController extends Controller
                     }
                 }
             };
-            return view('admin.suppliers_with_orders.ajax_search', ['data' => $data]);
+            return view('admin.sales_invoices.ajax_search', ['data' => $data]);
         }
     }
 
@@ -1147,6 +1154,41 @@ class SalesInvoiceController extends Controller
             $customers = Customer::where('name','like',"%{$customer_search}%")->orwhere('customer_code','=', $customer_search)->orderby('id','asc')->limit(10)->get();
             
             return view('admin.sales_invoices.search_customer',['customers'=> $customers]);
+        }
+    }
+    public function item_card_search(Request $request)
+    {
+        $com_code = auth()->user()->com_code;
+        if ($request->ajax()) {
+        
+
+            $item_card_search = $request->searchbytextItemCard;
+
+            $items_card = Inv_itemCard::where('name','like',"%{$item_card_search}%")->where('com_code', '=' ,$com_code)->orderby('id','asc')->limit(10)->get();
+            
+            return view('admin.sales_invoices.search_item_card',['items_card'=> $items_card]);
+        }
+    }
+    public function customer_update(Request $request)
+    {   
+        
+        $com_code = auth()->user()->com_code;
+        if ($request->ajax()) {
+            
+            $customer_code['customer_code'] = $request->customer_code ;
+            $customer_code['is_has_customer'] = $request->is_has_customer ;
+            $auto_serial = $request->auto_serial;
+
+            $flag = update(
+                new Sales_invoices(),
+                $customer_code,
+                array('auto_serial' => $auto_serial, 'com_code' => $com_code)
+            );
+            if($flag) {
+
+                echo  json_encode("done");
+            }
+
         }
     }
 

@@ -21,7 +21,7 @@ $i=1;
       <tr>
          <td>{{ $info->auto_serial }}</td>
          <td>{{ $info->invoice_date }}</td>
-         <td>{{ $info->customer_name }}</td>
+         <td>{{ $info->customer_name ? $info->customer_name : "بدن عميل" }}</td>
          <td>{{ $info->material_types_name }}</td>
          <td>@if($info->pill_type==1) كاش @elseif($info->pill_type==2) اجل @else غير محدد @endif</td>
          <td>{{ $info->total_cost*(1) }}</td>

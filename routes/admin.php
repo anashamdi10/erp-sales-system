@@ -308,6 +308,8 @@ Route::group(['prefix' =>'admin', 'middleware'=>'auth:admin'],function(){
         Route::post('/SalesInvoices/reload_customers', [SalesInvoiceController::class, 'reload_customers'])->name('admin.SalesInvoices.reload_customers');
         Route::post('/SalesInvoices/customers_search', [SalesInvoiceController::class, 'customers_search'])->name('admin.SalesInvoices.customers_search');
         Route::post('/SalesInvoices/customers_search_update', [SalesInvoiceController::class, 'customers_search_update'])->name('admin.SalesInvoices.customers_search_update');
+        Route::post('/SalesInvoices/item_card_search', [SalesInvoiceController::class, 'item_card_search'])->name('admin.SalesInvoices.item_card_search');
+        Route::post('/SalesInvoices/customer_update', [SalesInvoiceController::class, 'customer_update'])->name('admin.SalesInvoices.customer_update');
 
 
 

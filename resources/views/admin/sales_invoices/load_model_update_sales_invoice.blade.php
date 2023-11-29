@@ -46,19 +46,12 @@
     <div class="col-md-2" id="customerDiv" @if($invoice_data['is_has_customer']==0 ) style="display: none;" @endif>
         <div class="form-group">
             <label> بيانات العملاء
-                ( <a title="إيضافة عميل جديد " href="#"> جديد <i class="fa fa-plus-circle"></i></a>)
+                ( <a id="do_add_new_customer" title="إيضافة عميل جديد " href="#"> جديد <i class="fa fa-plus-circle"></i></a>)
             </label>
-            <select name="customer_code" id="customer_code" class="form-control select2 ">
-                <option value=""> لا يوجد عميل </option>
-                @if (@isset($customers) && !@empty($customers))
-                @foreach ($customers as $info )
-                <option @if($invoice_data['customer_code']==$info->customer_code ) selected @endif value="{{ $info->customer_code }}">
-                    {{ $info->name }}
-                </option>
-                @endforeach
-                @endif
-            </select>
+            <input type="text" class="form-control" id="searchbytextcustomer" placeholder="اسم العميل - كود العميل" value="{{$customer_name}}" />
+            <div id="searchcustomerdiv">
 
+            </div>
         </div>
     </div>
 
@@ -113,21 +106,18 @@
         </div>
     </div>
 
-    <div class="col-md-3">
+
+
+    <div class="col-md-3" id="customerDiv">
         <div class="form-group">
             <label> بيانات الاصناف</label>
-            <select name="item_code" id="item_code" class="form-control select2 ">
-                <option value="">اختر الصنف</option>
-                @if (@isset($items_cards) && !@empty($items_cards))
-                @foreach ($items_cards as $info )
-                <option data-item-type="{{$info->item_type}}" value="{{ $info->item_code }}"> {{ $info->name }}
-                </option>
-                @endforeach
-                @endif
-            </select>
+            <input type="text" class="form-control" id="searchbytextitem_code" placeholder="اسم الصنف" />
+            <div id="searchItemdiv">
+
+            </div>
             @error('supplier_code')
             <span class="text-danger">{{$message}}</span>
-            @enderror
+            @enderror  
         </div>
     </div>
     <div class="col-md-3">
@@ -190,25 +180,22 @@
 
 <div class="row" id='active_items_salesDiv'>
     <h3 class="card-title card_title_center"> الأصناف المضافة على الفاتورة</h3>
-    <table id="example2" class="table table-bordered table-hover">
-        <thead class="custom_thead">
-            <td></td>
+    <table id="example2" class="table table-bordered table-hover" >
+        <thead class="custom_thead" sty>
+           
             <th>المخزن </th>
             <th> نوع البيع </th>
             <th> الصنف</th>
             <th> وحدة البيع </th>
             <th> سعر الوحدة </th>
             <th>الكمية </th>
-
             <th>الإجمالي </th>
             <th></th>
-
         </thead>
 
         <tbody id='itemsrowtableContainterBody'>
             @foreach ($items_sales_details as $info )
             <tr>
-                <td> <button type="button" style="background-color: blue;"><i class="el-icon-plus"></i></button></td>
                 <td>
                     {{ $info->store_name }}
                     <input type="hidden" name="item_total_array[]" class="item_total_array" value="{{$info->total_price}}">
@@ -235,20 +222,12 @@
             @endforeach
 
         </tbody>
-        <tfoot>
-            <tr>
-                <td> <button type="button" style="background-color: #007bff;"><i class="fa-solid fa-plus" style="color:white"></i></button></td>
-                
-            </tr>
-        </tfoot>
-
     </table>
 </div>
+
 <hr style="border: 1px solid #3c8dbc;">
 
 <div class="row">
-
-
     <div class="form-group col-lg-3">
         <label> إجمالي الاصناف </label>
         <input readonly type="text" name="total_cost_items" id="total_cost_items" class="form-control" value="{{$invoice_data['total_cost_items']}}">
@@ -265,7 +244,6 @@
         <label> الاجمالي قبل الخصم </label>
         <input readonly type="text" name="total_befor_discount" id="total_befor_discount" class="form-control" value="{{$invoice_data['total_befor_discount']}}">
     </div>
-
     <div class="form-group col-lg-3">
         <label> نوع الخصم </label>
         <select class="form-control" id="discount_type" name="discount_type">
@@ -274,10 +252,7 @@
             <option @if ($invoice_data['discount_type']==2) selected @endif value="2"> قيمة يدوي</option>
 
         </select>
-
     </div>
-
-
     <div class="form-group col-lg-3">
         <label> نسبة الخصم </label>
         <input @if($invoice_data['discount_type']==null ||$invoice_data['discount_type']=="" ) readonly @endif oninput="this.value=this.value.replace(/[^0-9.]/g,'');" type="text" name="discount_percent" id="discount_percent" class="form-control" value="{{$invoice_data['discount_percent']}}">
@@ -333,7 +308,7 @@
 </div>
 </div>
 <script src="{{asset('admin/plugins/select2/js/select2.full.min.js')}}"></script>
-<script src="{{asset('admin/js/sales_invoice.js')}}"></script>
+
 <script>
     $(function() {
         //Initialize Select2 Elements

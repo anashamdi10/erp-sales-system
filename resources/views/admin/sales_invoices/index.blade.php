@@ -42,6 +42,10 @@
         <input type="hidden" id="ajax_reload_customers" value="{{ route('admin.SalesInvoices.reload_customers') }}">
         <input type="hidden" id="ajax_customer_search" value="{{ route('admin.SalesInvoices.customers_search') }}">
         <input type="hidden" id="ajax_customer_search_update" value="{{ route('admin.SalesInvoices.customers_search_update') }}">
+        <input type="hidden" id="ajax_item_card_search_update" value="{{ route('admin.SalesInvoices.item_card_search') }}">
+        <input type="hidden" id="ajax_customer_update" value="{{ route('admin.SalesInvoices.customer_update') }}">
+        
+        
         <button id="AddNewOfferPrice_show" class="btn btn-sm btn-success" data-toggle="modal"> عرض سعر </button>
         <button id="AddNewSalesInvoice" class="btn btn-sm btn-primary" data-toggle="modal"> فاتورة مبيعات </button>
     </div>

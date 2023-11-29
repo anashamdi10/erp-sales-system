@@ -803,6 +803,7 @@ $(document).ready(function () {
         var url = $("#ajax_do_close_and_approve").val();
         var auto_serial = $("#invoice_auto_serial").val();
         var treasures_id = $("#treasures_id").val();
+        var customer_code
 
 
 
@@ -816,6 +817,7 @@ $(document).ready(function () {
                 auto_serial: auto_serial,
                 treasures_id: treasures_id,
                 what_paid: what_paid,
+                is_has_customer:is_has_customer,
                 what_remain: what_remain
             },
             success: function (data) {
@@ -945,6 +947,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 $("#searchcustomerdiv").html(data);
+               
             },
             error: function () {
                 alert("error in searchbytextcustomer");
@@ -953,7 +956,53 @@ $(document).ready(function () {
     });
 
 
+    $(document).on("input", "#searchbytextitem_code", function (e) {
 
+       
+        var searchbytextItemCard = $("#searchbytextitem_code").val();
+        if (searchbytextItemCard == '') {
+            $("#searchItemdiv").hide();
+            return false ;
+        } else {
+            $("#searchItemdiv").show();
+        }
+        
+        var token_search = $("#token_search").val();
+        var url = $("#ajax_item_card_search_update").val();
+        
+        jQuery.ajax({
+            url: url,
+            type: "post",
+            dataType: "html",
+            cache: false,
+            data: {
+                _token: token_search,
+                searchbytextItemCard: searchbytextItemCard
+                
+            },
+            success: function (data) {
+                $("#searchItemdiv").html(data);
+                get_item_uoms();
+                get_inv_itemcard_batches();
+               
+            },
+            error: function () {
+                alert("error in searchbytextcItemCard");
+            },
+        });
+    });
+
+    $(document).on("keypress", "#searchbytextitem_code", function (e) {
+        
+        if(e.keycode==13){
+            alert("aaa");
+            make_enter_add();
+        }
+    });
+    $(document).on("change ", "#customer_code_create", function (e) {
+        changes_customer_invoice_details();
+        
+    });
 
     function get_item_uoms() {
         var item_code = $("#item_code").val();
@@ -1111,7 +1160,7 @@ $(document).ready(function () {
             $("#total_cost").val(total_cost);
         }
         what_paid = $("#what_paid").val();
-
+        var pill_type = $("#pill_type").val();
         what_paid = parseFloat(what_paid);
         total_cost = parseFloat(total_cost);
         $what_remain = total_cost - what_paid;
@@ -1137,7 +1186,7 @@ $(document).ready(function () {
         var sales_material_type = $("#sales_material_type").val();
         var delegate_code = $("#delegate_code").val();
         var is_has_customer = $("#is_has_customer").val();
-        var pill_type = $("#pill_type").val();
+        
 
 
 
@@ -1307,6 +1356,43 @@ $(document).ready(function () {
                 $("#customerDiv").html(data);
             },
             error: function () { }
+        });
+    }
+
+
+
+    function changes_customer_invoice_details(){
+
+        var url = $("#ajax_customer_update").val();
+        var token_search = $("#token_search").val();
+        var customer_code = $("#customer_code_create").val();
+        var auto_serial = $("#invoice_auto_serial").val();
+        var is_has_customer = $("#is_has_customer").val();
+
+        if(customer_code == "100" ){
+            alert("أختر العميل ")
+            return false
+        }
+
+        
+        
+        jQuery.ajax({
+            url: url,
+            type: 'post',
+            dataType: 'html',
+            cache: false,
+            data: {
+                "_token": token_search,
+                customer_code:customer_code,
+                auto_serial:auto_serial,
+                is_has_customer:is_has_customer
+            },
+            success: function (data) {
+                alert('تم التحديث')
+            },
+            error: function () { 
+                alert(' error in changes_invoice_details')
+            }
         });
     }
 
